@@ -1,0 +1,34 @@
+<%- include("../partials/header") %>
+
+<div class="col-lg-4 offset-lg-4   ">
+    <div class="login_wrap widget-taber-content p-30 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5">
+        <div class="padding_eight_all bg-white">
+            <div class="heading_s1">
+                <h3 class="mb-30">Enter The OTP</h3>
+            </div>
+            <form method="post" action="/verifyotp">
+                <% if(locals.message) { %>
+                    <div class="alert alert-danger"> <%= locals.message %></div>
+                      <% } %>
+      
+                   
+                <div class="form-group">
+                    <input type="text" required="" name="otp" id="otp" placeholder="enter otp">
+                </div>
+               
+                <div class="login_footer form-group">
+                    <div class="chek-form">
+                       
+                    </div>
+                    
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Enter</button><br>
+                    <div class="text-muted text-center">Didn't get the otp ? <a href="/signin">Resend</a></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- include("../partials/footer") %>
