@@ -11,6 +11,11 @@ router.post("/signin",userController.signInUser);
 router.get("/verifyotp",userController.loadOtpPage);
 router.post("/verifyotp", userController.otpPage);
 router.post("/login",userController.logIn);
+router.get("/forgetpassword",userController.forgetPasswordLoad);
+router.post("/forgetpassword",userController.forgetpassword);
+router.post("/forgetpasswordverify",userController.otpVerifyPasswordReset);
+
+
 
 
 

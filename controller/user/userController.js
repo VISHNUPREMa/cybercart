@@ -2,6 +2,8 @@ const User = require("../../model/userModel");
 const { generateRandomOtp } = require("../helper/otpGenerate");
 const bcrypt = require("bcrypt");
 const nodemailer = require('nodemailer');
+const {sendOtpEmail} = require("../helper/emailService");
+
 
 
 
@@ -68,35 +70,7 @@ const signInUser = async (req, res) => {
         }
 
 
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_ID, 
-                pass: process.env.EMAIL_PASS, 
-            },
-        });
-
-
-
-    //    set email option
-
-        const mailOptions = {
-            from: process.env.EMAIL_ID, 
-            to: email,
-            subject: 'Your OTP for verification',
-            text: `Your OTP is: ${otp}`,
-        };
-
-         transporter.sendMail(mailOptions,(error,info)=>{
-            if(error){
-                console.log("failed to sent the mail",error);
-            }else{
-                console.log("otp sent to mail: ");
-            }
-
-        });
-
-        console.log(otp);
+        await sendOtpEmail(email, otp);
 
 
         
@@ -178,6 +152,85 @@ const signInUser = async (req, res) => {
 }
 
 
+const forgetPasswordLoad = async(req,res)=>{
+    try{
+        res.render("user/forgetpassword")
+
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+
+const forgetpassword = async(req,res)=>{
+    try{
+        const {email , password , confirmpassword} = req.body;
+        const existUser = await User.findOne({email:email});
+        if(existUser){
+            const otp = generateRandomOtp();
+            await sendOtpEmail(email, otp);
+            console.log(otp);
+     
+            if(!req.session){
+                req.session = {}
+            }
+            if(!req.session.tempUser){
+                req.session.tempUser = {}
+            }
+
+            req.session.tempUser.password = password;
+            req.session.tempUser.email = email;
+            req.session.tempUser.otp = otp;
+            
+           
+            
+            
+          
+               
+            res.render("user/otpPasswordVerify");
+
+            
+        }else{
+            res.render("user/forgetpassword",{message: "user not found"})
+        }
+
+
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+
+const otpVerifyPasswordReset = async(req,res)=>{
+   
+    try{
+        const userEnteredOtp = req.body.otp;
+        const storedOtp = req.session.tempUser.otp;
+        const newHashedPassword = await bcrypt.hash(req.session.tempUser.password , 6)
+       
+        if(userEnteredOtp === storedOtp){
+            const updateUser = await User.updateOne({email:req.session.tempUser.email } , 
+                {$set: {password:newHashedPassword}});
+                res.redirect("/login")
+
+                
+        }else{
+            res.render("user/otpPasswordVerify",{message:"OTP mismatch try again"})
+        }
+        
+
+
+    }
+    catch(error){
+        console.log(error,"otpVerifyPasswordReset  page  error ");
+
+    }
+}
+
+
+
+
+
   
 
 
@@ -188,4 +241,9 @@ loadSignIn,
 logIn,
 signInUser,
 loadOtpPage,
-otpPage}
+otpPage,
+forgetPasswordLoad,
+forgetpassword,
+otpVerifyPasswordReset
+
+}
