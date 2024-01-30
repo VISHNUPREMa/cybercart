@@ -9,26 +9,27 @@
             <form method="post" action="/verifyotp">
                 <% if(locals.message) { %>
                     <div class="alert alert-danger"> <%= locals.message %></div>
-                      <% } %>
-      
-                   
+                <% } %>
+
                 <div class="form-group">
-                    <input type="text" required="" name="otp" id="otp" placeholder="enter otp">
+                    <input type="text" required="" name="otp" id="otp" placeholder="Enter OTP">
                 </div>
-               
-                <div class="login_footer form-group">
-                    <div class="chek-form">
-                       
-                    </div>
-                    
-                </div>
+
                 <div class="form-group">
                     <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Enter</button><br>
-                    <div class="text-muted text-center">Didn't get the otp ? <a href="/signin">Resend</a></div>
+                    <div class="text-muted text-center" id="resend-section">
+                        Didn't get the OTP? <span id="timer">60</span> seconds 
+                    </div>
                 </div>
             </form>
+            <div><a href="/resendotp" id="resend-link" onclick="resendOtp()">Resend</a></div>
         </div>
     </div>
 </div>
 
 <%- include("../partials/footer") %>
+
+
+
+
+

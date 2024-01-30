@@ -1,8 +1,8 @@
 const User = require("../../model/userModel");
-const { generateRandomOtp } = require("../helper/otpGenerate");
+const { generateRandomOtp } = require("../../helper/otpGenerate");
 const bcrypt = require("bcrypt");
 const nodemailer = require('nodemailer');
-const {sendOtpEmail} = require("../helper/emailService");
+const {sendOtpEmail} = require("../../helper/emailService");
 
 
 
@@ -18,13 +18,12 @@ const getHomePage = async(req,res)=>{
     }
 }
 
+
+
 const loadlogIn = async(req,res)=>{
     try{
-        
-            res.render("user/login")
-        
-
-    }
+        res.render("user/login")
+         }
     catch(error){
         console.log(error);
     }
@@ -35,7 +34,7 @@ const loadlogIn = async(req,res)=>{
 
 const loadSignIn = async(req,res)=>{
     try{
-        res.render("user/signup")
+        res.render("user/signup");
     }
     catch(error){
         console.log(error);
@@ -100,6 +99,7 @@ const signInUser = async (req, res) => {
     try {
       const userEnteredOtp = req.body.otp;
       const storedOtp = req.session.tempUser.otp;
+      console.log(storedOtp);
   
       if (userEnteredOtp === storedOtp) {
         const userData = {
@@ -120,36 +120,86 @@ const signInUser = async (req, res) => {
     }
   };
 
-  const logIn = async(req,res)=>{
-    try{
-        const {email,password} = req.body;
-        
-
-        const existingUser = await User.findOne({email:email});
-        
-        if(!existingUser){
-            res.render("user/login",{message: "user not found"})
-        }else{      
-        
-        const isPasswordMatch = await bcrypt.compare(password, existingUser.password);
-        
-        
-        
-                if(isPasswordMatch){
-                    req.session.user = existingUser;
-                    res.redirect("/");
-                }else{
-                    res.render("user/login",{message:"Invalid Password"})
-                }}
 
   
+const resendOtp = async (req, res) => {
+    try {
+        
+        const email = req.session.tempUser.email;
+        const inputOtp = req.body.otp
 
+ 
+        delete req.session.tempUser.otp;
+
+        const newOtp = generateRandomOtp();
+        await sendOtpEmail(email, newOtp);
+    
+        
+       
+        req.session.tempUser.otp = newOtp;
+
+
+        updateTimer();
+
+
+        if (inputOtp === newOtp) {
+            const userData = {
+                name: req.session.tempUser.username,
+                email: req.session.tempUser.email,
+                mobile: req.session.tempUser.mobile,
+                password: req.session.tempUser.password,
+            }
+            const newUser = await User.create(userData);
+            console.log(userData);
+            
+            res.render("user/login");
+
+        
+
+        
        
     }
-    catch(error){
-        console.log(error);
+ } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 }
+
+
+
+
+
+
+
+  
+  const logIn = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const existingUser = await User.findOne({ email: email });
+
+        if (!existingUser) {
+            return res.render("user/login", { message: "User not found" });
+        }
+
+        const isPasswordMatch = await bcrypt.compare(password, existingUser.password);
+
+        if (isPasswordMatch) {
+            if (existingUser.isBlocked) {
+                return res.render("user/login", { message: "User is blocked" });
+            }
+
+            req.session.user = existingUser;
+            return res.redirect("/");
+        } else {
+            return res.render("user/login", { message: "Invalid password" });
+        }
+    } catch (error) {
+        console.log(error);
+        
+    }
+};
+
 
 
 const forgetPasswordLoad = async(req,res)=>{
@@ -244,6 +294,8 @@ loadOtpPage,
 otpPage,
 forgetPasswordLoad,
 forgetpassword,
-otpVerifyPasswordReset
+otpVerifyPasswordReset,
+resendOtp , 
+
 
 }

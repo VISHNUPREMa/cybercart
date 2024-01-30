@@ -1,5 +1,5 @@
 const User = require("../../model/userModel");
-const Admin = require("../../model/adminModel");
+const Admin = require("../../model/category");
 const bcrypt = require("bcrypt");
 
 
@@ -53,11 +53,21 @@ const loadDashboardHome = async(req,res)=>{
 
 
 
-module.exports ={
-getAdminHomePage ,
-adminHomePagePost ,
-loadDashboardHome
-}
+
+
+module.exports = {
+    getAdminHomePage,
+    adminHomePagePost,
+    loadDashboardHome,
+    
+   };
+
+
+
+
+
+
+
 
 
 

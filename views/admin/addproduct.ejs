@@ -1,0 +1,248 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Evara Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/admin_assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link href="/admin_assets/css/main.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="index.html" class="brand-wrap">
+                <img src="/admin_assets/imgs/theme/logo.svg" class="logo" alt="Evara Dashboard">
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+            </div>
+        </div>
+        <nav>
+           
+            <ul class="menu-aside">
+                <li class="menu-item active">
+                    <a class="menu-link" href="index.html"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+
+                  
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/userlist"> <i class="icon material-icons md-store"></i>
+                        <span class="text">users</span>
+                    </a>
+                   
+                </li>
+
+
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-store"></i>
+                        <span class="text">category</span>
+                    </a>
+                </li>
+
+
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/addproduct"> <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Add product</span>
+                    </a>
+                    >
+                </li>
+                       
+                    
+             
+                
+               
+               
+               
+                
+               
+            </ul>
+            <br>
+            <br>
+
+            <ul class="menu-aside">
+                <li class="menu-item ">
+                    <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
+                        <span class="text">Settings</span>
+                    </a>
+                   
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text"> Starter page </span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+                    <div class="input-group">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+                    </div>
+                    
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon" href="#">
+                            <i class="material-icons md-notifications animation-shake"></i>
+                            <span class="badge rounded-pill">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                            <a class="dropdown-item text-brand" href="#"><img src="/admin_assets/imgs/theme/flag-us.png" alt="English">English</a>
+                            <a class="dropdown-item" href="#"><img src="/admin_assets/imgs/theme/flag-fr.png" alt="Français">Français</a>
+                            <a class="dropdown-item" href="#"><img src="/admin_assets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
+                            <a class="dropdown-item" href="#"><img src="/admin_assets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
+                        </div>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/admin_assets/imgs/people/avatar2.jpg" alt="User"></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                           
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="row">
+                <div class="col-10">
+                    <div class="content-header">
+                        <h2 class="content-title">Add New Product</h2>
+                        <div>
+                            <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+                            <button class="btn btn-md rounded font-sm hover-up">Publich</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>1. General info</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label">Product title</label>
+                                        <input type="text" placeholder="Type here" class="form-control" name="name">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Description</label>
+                                        <textarea placeholder="Type here" class="form-control" rows="4" name="description"></textarea>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Brand name</label>
+                                        <input type="text" placeholder="Type here" class="form-control" name="brand">
+                                        
+                                    </div>
+                                </div> 
+                            </div> 
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>2. Pricing</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label"> Price</label>
+                                        <input type="text" placeholder="$00.0" class="form-control" name="price">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Offered Price</label>
+                                        <input type="text" placeholder="$00.0" class="form-control" name="offerprice">
+                                    </div>
+                                </div>
+                               
+                            </div>
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>3. Category</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <% categories.forEach(function(category) { %>
+                                            <label class="mb-2 form-check form-check-inline" style="width: 45%;">
+                                                <input class="form-check-input" name="mycategory" type="radio" value="<%= category.name %>">
+                                                <span class="form-check-label"> <%= category.name %> </span>
+                                            </label>
+                                        <% }); %>
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div>
+                             <!-- row.// -->
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>4. Media</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label">Images</label>
+                                        <input class="form-control" type="file">
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section> <!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                    document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script src="/admin_assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/admin_assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/admin_assets/js/vendors/select2.min.js"></script>
+    <script src="/admin_assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/admin_assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/admin_assets/js/main.js" type="text/javascript"></script>
+</body>
+
+</html>
