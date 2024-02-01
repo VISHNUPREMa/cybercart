@@ -1,4 +1,6 @@
 const User = require("../../model/userModel");
+const Category = require("../../model/category");
+const Products = require("../../model/productmanage");
 const { generateRandomOtp } = require("../../helper/otpGenerate");
 const bcrypt = require("bcrypt");
 const nodemailer = require('nodemailer');
@@ -10,7 +12,21 @@ const {sendOtpEmail} = require("../../helper/emailService");
 
 const getHomePage = async(req,res)=>{
     try{
-        res.render("user/home")
+        const user = req.session.user;
+        
+        const userData = await User.find({isBlocked:false});
+        const categoryData = await Category.find({isList:true});
+        
+        const productData = await Products.find({isListed:true})
+        
+        if(user){
+            res.render("user/home",{user:user,category:categoryData,products:productData});
+
+        }else{
+            res.render("user/home");
+        }
+
+        
 
     }
     catch(error){
@@ -22,7 +38,11 @@ const getHomePage = async(req,res)=>{
 
 const loadlogIn = async(req,res)=>{
     try{
-        res.render("user/login")
+        if(!req.session.user){
+            res.render("user/login");
+        }else{
+            res.redirect("/");
+        }
          }
     catch(error){
         console.log(error);
@@ -172,7 +192,7 @@ const resendOtp = async (req, res) => {
 
 
   
-  const logIn = async (req, res) => {
+const logIn = async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -183,13 +203,19 @@ const resendOtp = async (req, res) => {
         }
 
         const isPasswordMatch = await bcrypt.compare(password, existingUser.password);
+      
 
         if (isPasswordMatch) {
             if (existingUser.isBlocked) {
                 return res.render("user/login", { message: "User is blocked" });
             }
 
-            req.session.user = existingUser;
+            
+            req.session.user = existingUser.id;
+            console.log(req.session.user);
+            
+            
+
             return res.redirect("/");
         } else {
             return res.render("user/login", { message: "Invalid password" });
@@ -197,8 +223,10 @@ const resendOtp = async (req, res) => {
     } catch (error) {
         console.log(error);
         
+        res.status(500).send("Internal Server Error");
     }
 };
+
 
 
 
@@ -278,6 +306,23 @@ const otpVerifyPasswordReset = async(req,res)=>{
 }
 
 
+const logoutUser = async(req,res)=>{
+    try{
+        req.session.destroy((error)=>{
+            if(error){
+                console.log(error,"  error in log out");
+            }else{
+                res.redirect("/login");
+            }
+
+        })
+
+    }catch(error){
+
+    }
+}
+
+
 
 
 
@@ -296,6 +341,7 @@ forgetPasswordLoad,
 forgetpassword,
 otpVerifyPasswordReset,
 resendOtp , 
+logoutUser
 
 
 }

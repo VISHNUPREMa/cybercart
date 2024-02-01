@@ -1,0 +1,437 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Evara Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/admin_assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link href="/admin_assets/css/main.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="index.html" class="brand-wrap">
+                <img src="/admin_assets/imgs/theme/logo.svg" class="logo" alt="Evara Dashboard">
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+            </div>
+        </div>
+        <nav>
+           
+            <ul class="menu-aside">
+                <li class="menu-item active">
+                    <a class="menu-link" href="index.html"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+
+                  
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/userlist"> <i class="icon material-icons md-store"></i>
+                        <span class="text">users</span>
+                    </a>
+                   
+                </li>
+
+
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-store"></i>
+                        <span class="text">category</span>
+                    </a>
+                </li>
+
+
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/addproduct"> <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Add product</span>
+                    </a>
+                    >
+                </li>
+                
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/productlist"> <i class="icon material-icons md-store"></i>
+                        <span class="text">View Products</span>
+                    </a>
+                </li>
+                       
+                    
+             
+                
+               
+               
+               
+                
+               
+            </ul>
+            <br>
+            <br>
+
+            <ul class="menu-aside">
+                <li class="menu-item ">
+                    <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
+                        <span class="text">Settings</span>
+                    </a>
+                   
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text"> Starter page </span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+                    <div class="input-group">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+                    </div>
+                    
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon" href="#">
+                            <i class="material-icons md-notifications animation-shake"></i>
+                            <span class="badge rounded-pill">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
+                            <a class="dropdown-item text-brand" href="#"><img src="/admin_assets/imgs/theme/flag-us.png" alt="English">English</a>
+                            <a class="dropdown-item" href="#"><img src="/admin_assets/imgs/theme/flag-fr.png" alt="Français">Français</a>
+                            <a class="dropdown-item" href="#"><img src="/admin_assets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
+                            <a class="dropdown-item" href="#"><img src="/admin_assets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
+                        </div>
+                    </li>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/admin_assets/imgs/people/avatar2.jpg" alt="User"></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                           
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="row">
+                <div class="col-10">
+                    <div class="content-header">
+                        <h2 class="content-title">Edit Product Details</h2>
+                        
+                    </div>
+                </div>
+            </div>
+            <form action="/admin/productlist/edit/<%= editProduct.id %>" method="post" enctype="multipart/form-data">
+
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>1. General info</h6>
+                                </div>
+                                <% if(locals.message) { %>
+                                    <div class="alert alert-danger"> <%= locals.message %></div>
+                                      <% } %>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label">Product title</label>
+                                        <input type="text" placeholder="Type here" class="form-control" id="name" name="name" onkeyup="validateName()" value="<%= editProduct.name %>">
+                                        <div id="name_error" class="alert alert-danger" style="display: none;"></div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Specification</label>
+                                        <textarea placeholder="Type here" class="form-control" rows="4" id="specification" name="specification" onkeyup="validateSpec()">value="<%= editProduct.specification %>"</textarea>
+                                        <div id="spec_error" class="alert alert-danger" style="display: none;"></div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Brand name</label>
+                                        <input type="text" placeholder="Type here" class="form-control" name="brand" id="brand" onkeyup="validateBrand()"  value="<%= editProduct.brand %>">
+                                        <div id="brand_error" class="alert alert-danger" style="display: none;"></div>
+                                        
+                                    </div>
+                                </div> 
+                            </div> 
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>2. Pricing</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label"> Price</label>
+                                        <input type="text" placeholder="$00.0" class="form-control" name="price" id="price" onkeyup="validatePrice()"  value="<%= editProduct.price %>">
+                                        <div id="price_error" class="alert alert-danger" style="display: none;"></div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Offered Price</label>
+                                        <input type="text" placeholder="$00.0" class="form-control" name="offerprice" id="offerprice" onkeyup="validateOfferprice()"  value="<%= editProduct.offerprice %>">
+                                        <div id="offerprice_error" class="alert alert-danger" style="display: none;"></div>
+                                    </div>
+                                </div>
+                               
+                            </div>
+
+
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>3. Quantity</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label"> Quantity</label>
+                                        <input type="text" placeholder="$00.0" class="form-control" name="quantity" id="quantity" onkeyup="validateQuantity()" value="<%= editProduct.quantity %>">
+                                        <div id="quantity_error" class="alert alert-danger" style="display: none;"></div>
+                                    </div>
+                                   
+                                </div>
+                               
+                            </div>
+
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>4. Category</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label"> Category</label>
+                                        <input type="text" placeholder="$00.0" class="form-control" name="category" id="category"  value="<%= editProduct.category %>">
+                                        <div id="quantity_error" class="alert alert-danger" style="display: none;"></div>
+                                    </div>
+                                   
+                                </div>
+                                
+                                 <!-- col.// -->
+                            </div>
+                             <!-- row.// -->
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>5. Media</h6>
+                                </div>
+                                <div class="col-md-9">
+
+                                    
+        
+        
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">Images</label>
+                                        <input class="form-control" type="file" name="image"  id="imageInput" onchange="validateImage()" multiple   value="<%= editProduct.image[0] %>" >
+                                        <div id="image_error" class="alert alert-danger" style="display: none;">Select at least one image</div>
+                                    </div>
+                                
+                                    
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <form action="/admin/productlist/edit/<%= editProduct.id %>" method="post" enctype="multipart/form-data">
+            <div>
+              
+                <button class="btn btn-md rounded " type="submit" id="button" >Edit</button>
+                <div id="error-message" style="display: none; color: red;"></div>
+               
+                
+            </div>
+        </form>
+
+        
+     
+            </div>
+        </section> <!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                    document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script>
+
+
+        const nameInput = document.getElementById("name");
+        const specInput = document.getElementById("specification");
+        const brandInput = document.getElementById("brand");
+        const priceInput = document.getElementById("price");
+        const offerpriceInput = document.getElementById("offerprice");
+        const quantityInput = document.getElementById("quantity");
+        const publishButton = document.getElementById("button");
+        
+  
+
+        const imageInput = document.getElementById("imageInput");
+        const imageError = document.getElementById("image_error");
+
+        
+        
+        function validateName(){
+            const name = nameInput.value.trim();
+            if (name === "" ) {
+        name_error.style.display = "block";
+        name_error.style.color = "red";
+        name_error.textContent = "Enter a valid name";
+    } else if(name.length > 25){
+        name_error.style.display = "block";
+        name_error.style.color = "red";
+        name_error.textContent = "Enter a smaller name";
+
+    } else{
+        name_error.style.display = "none";
+    }
+        }
+
+
+        function validateSpec(){
+            const spec = specInput.value.trim();
+            if (spec === "") {
+        spec_error.style.display = "block";
+        spec_error.style.color = "red";
+        spec_error.textContent = "Enter a valid specification";
+    } else {
+        spec_error.style.display = "none";
+    }
+        }
+
+        function validateBrand(){
+            const brand = brandInput.value.trim();
+            if (brand === "") {
+        brand_error.style.display = "block";
+        brand_error.style.color = "red";
+        brand_error.textContent = "Enter a valid brand name";
+    } else {
+        brand_error.style.display = "none";
+    }
+        }
+
+
+        function validatePrice(){
+            const price = priceInput.value.trim();
+            if (price === '' || !/^\d+$/.test(price)) {
+        price_error.style.display = "block";
+        price_error.style.color = "red";
+        price_error.textContent = "Enter a valid price";
+    } else {
+        price_error.style.display = "none";
+    }
+        }
+
+        function validateOfferprice() {
+    const offerprice = offerpriceInput.value.trim();
+    const price = priceInput.value.trim();
+
+    
+    if (offerprice === '' || !/^\d+$/.test(offerprice)) {
+        offerprice_error.style.display = "block";
+        offerprice_error.style.color = "red";
+        offerprice_error.textContent = "Enter a valid offer price";
+    } else if (parseInt(offerprice) >= parseInt(price)) {
+        
+        offerprice_error.style.display = "block";
+        offerprice_error.style.color = "red";
+        offerprice_error.textContent = "Offer price must be less than the original price";
+    } else {
+        
+        offerprice_error.style.display = "none";
+    }
+}
+
+
+
+
+        function validateQuantity(){
+            const quantity = quantityInput.value.trim();
+            if (quantity === '' || !/^\d+$/.test(quantity)) {
+        quantity_error.style.display = "block";
+        quantity_error.style.color = "red";
+        quantity_error.textContent = "Enter a valid quantity";
+    } else if(quantity<= 0){
+        quantity_error.style.display = "block";
+        quantity_error.style.color = "red";
+        quantity_error.textContent = "Enter a positive quantity number";
+
+    }else {
+        quantity_error.style.display = "none";
+    }
+        }
+
+
+
+
+
+
+
+function validateImage() {
+    const selectedFiles = imageInput.files;
+
+    if (selectedFiles.length === 0) {
+        imageError.style.display = "block";
+        imageError.style.color = "red";
+        imageError.textContent = "Select at least one image";
+    } else {
+        imageError.style.display = "none";
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+    <script src="/admin_assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/admin_assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/admin_assets/js/vendors/select2.min.js"></script>
+    <script src="/admin_assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/admin_assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/admin_assets/js/main.js" type="text/javascript"></script>
+</body>
+
+</html>

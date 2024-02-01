@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { array } = require("../helper/multerConfig");
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -9,8 +10,9 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    description: {
+    specification: {
         type: String,
+        required:true
     },
     isListed: {
         type: Boolean,
@@ -18,9 +20,8 @@ const productSchema = new mongoose.Schema({
         default: true,
     },
     category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Category",
-        required: true,
+        type: String,
+        required: true
     },
     price: {
         type: Number,
@@ -35,10 +36,11 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    image:{
-        data: Buffer,
-        contentType: String,
+    image:[{
+        type:String,
+        required:true
     }
+    ]
    
 }, { versionKey: false });
 

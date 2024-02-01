@@ -16,6 +16,8 @@ router.get("/forgetpassword",userController.forgetPasswordLoad);
 router.post("/forgetpassword",userController.forgetpassword);
 router.post("/forgetpasswordverify",userController.otpVerifyPasswordReset);
 
+router.get("/logout",userController.logoutUser);
+
 
 
 

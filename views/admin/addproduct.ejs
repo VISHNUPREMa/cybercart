@@ -59,6 +59,12 @@
                     </a>
                     >
                 </li>
+                
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/productlist"> <i class="icon material-icons md-store"></i>
+                        <span class="text">View Products</span>
+                    </a>
+                </li>
                        
                     
              
@@ -138,13 +144,11 @@
                 <div class="col-10">
                     <div class="content-header">
                         <h2 class="content-title">Add New Product</h2>
-                        <div>
-                            <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
-                            <button class="btn btn-md rounded font-sm hover-up">Publich</button>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
+            <form action="/admin/addproduct" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-lg-10">
                     <div class="card mb-4">
@@ -153,18 +157,24 @@
                                 <div class="col-md-3">
                                     <h6>1. General info</h6>
                                 </div>
+                                <% if(locals.message) { %>
+                                    <div class="alert alert-danger"> <%= locals.message %></div>
+                                      <% } %>
                                 <div class="col-md-9">
                                     <div class="mb-4">
                                         <label class="form-label">Product title</label>
-                                        <input type="text" placeholder="Type here" class="form-control" name="name">
+                                        <input type="text" placeholder="Type here" class="form-control" id="name" name="name" onkeyup="validateName()">
+                                        <div id="name_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                     <div class="mb-4">
-                                        <label class="form-label">Description</label>
-                                        <textarea placeholder="Type here" class="form-control" rows="4" name="description"></textarea>
+                                        <label class="form-label">Specification</label>
+                                        <textarea placeholder="Type here" class="form-control" rows="4" id="specification" name="specification" onkeyup="validateSpec()"></textarea>
+                                        <div id="spec_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Brand name</label>
-                                        <input type="text" placeholder="Type here" class="form-control" name="brand">
+                                        <input type="text" placeholder="Type here" class="form-control" name="brand" id="brand" onkeyup="validateBrand()">
+                                        <div id="brand_error" class="alert alert-danger" style="display: none;"></div>
                                         
                                     </div>
                                 </div> 
@@ -177,48 +187,86 @@
                                 <div class="col-md-9">
                                     <div class="mb-4">
                                         <label class="form-label"> Price</label>
-                                        <input type="text" placeholder="$00.0" class="form-control" name="price">
+                                        <input type="text" placeholder="$00.0" class="form-control" name="price" id="price" onkeyup="validatePrice()">
+                                        <div id="price_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Offered Price</label>
-                                        <input type="text" placeholder="$00.0" class="form-control" name="offerprice">
+                                        <input type="text" placeholder="$00.0" class="form-control" name="offerprice" id="offerprice" onkeyup="validateOfferprice()">
+                                        <div id="offerprice_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                 </div>
                                
                             </div>
-                            <hr class="mb-4 mt-0">
+
+
+
                             <div class="row">
                                 <div class="col-md-3">
-                                    <h6>3. Category</h6>
+                                    <h6>3. Quantity</h6>
                                 </div>
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <% categories.forEach(function(category) { %>
-                                            <label class="mb-2 form-check form-check-inline" style="width: 45%;">
-                                                <input class="form-check-input" name="mycategory" type="radio" value="<%= category.name %>">
-                                                <span class="form-check-label"> <%= category.name %> </span>
-                                            </label>
-                                        <% }); %>
+                                        <label class="form-label"> Quantity</label>
+                                        <input type="text" placeholder="$00.0" class="form-control" name="quantity" id="quantity" onkeyup="validateQuantity()">
+                                        <div id="quantity_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
-                                </div> <!-- col.// -->
+                                   
+                                </div>
+                               
+                            </div>
+
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>4. Category</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row gx-2">
+                                        <div class="col-sm-6 mb-3">
+                                            
+                                            <select class="form-select border" id="category" name="category" style="width: 150px;"
+                                                name="category">
+                                                <% for (let i=0; i < cat.length; i++) { %>
+                                                    <option value="<%= cat[i].name %>">
+                                                        <%= cat[i].name %>
+                                                    </option>
+                                                    <% } %>
+                                            </select>
+                                        </div>
+                                    </div> <!-- row.// -->
+                                </div>
+                                
+                                 <!-- col.// -->
                             </div>
                              <!-- row.// -->
                             <hr class="mb-4 mt-0">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <h6>4. Media</h6>
+                                    <h6>5. Media</h6>
                                 </div>
                                 <div class="col-md-9">
+                                    
                                     <div class="mb-4">
                                         <label class="form-label">Images</label>
-                                        <input class="form-control" type="file">
+                                        <input class="form-control" type="file" name="image"  id="imageInput" onchange="validateImage()" multiple>
+                                        <div id="image_error" class="alert alert-danger" style="display: none;">Select at least one image</div>
                                     </div>
+                                
+                                    
                                 </div> <!-- col.// -->
                             </div> <!-- .row end// -->
                         </div>
                     </div>
                 </div>
             </div>
+            <div>
+                <button class="btn btn-md rounded " type="submit" id="button" >Publish</button>
+                <div id="error-message" style="display: none; color: red;"></div>
+               
+                
+            </div>
+        </form>
             </div>
         </section> <!-- content-main end// -->
         <footer class="main-footer font-xs">
@@ -236,6 +284,154 @@
             </div>
         </footer>
     </main>
+    <script>
+
+
+        const nameInput = document.getElementById("name");
+        const specInput = document.getElementById("specification");
+        const brandInput = document.getElementById("brand");
+        const priceInput = document.getElementById("price");
+        const offerpriceInput = document.getElementById("offerprice");
+        const quantityInput = document.getElementById("quantity");
+        const publishButton = document.getElementById("button");
+        
+  
+
+        const imageInput = document.getElementById("imageInput");
+        const imageError = document.getElementById("image_error");
+
+        
+        
+        function validateName(){
+            const name = nameInput.value.trim();
+            if (name === "" ) {
+        name_error.style.display = "block";
+        name_error.style.color = "red";
+        name_error.textContent = "Enter a valid name";
+    } else if(name.length > 25){
+        name_error.style.display = "block";
+        name_error.style.color = "red";
+        name_error.textContent = "Enter a smaller name";
+
+    } else{
+        name_error.style.display = "none";
+    }
+        }
+
+
+        function validateSpec(){
+            const spec = specInput.value.trim();
+            if (spec === "") {
+        spec_error.style.display = "block";
+        spec_error.style.color = "red";
+        spec_error.textContent = "Enter a valid specification";
+    } else {
+        spec_error.style.display = "none";
+    }
+        }
+
+        function validateBrand(){
+            const brand = brandInput.value.trim();
+            if (brand === "") {
+        brand_error.style.display = "block";
+        brand_error.style.color = "red";
+        brand_error.textContent = "Enter a valid brand name";
+    } else {
+        brand_error.style.display = "none";
+    }
+        }
+
+
+        function validatePrice(){
+            const price = priceInput.value.trim();
+            if (price === '' || !/^\d+$/.test(price)) {
+        price_error.style.display = "block";
+        price_error.style.color = "red";
+        price_error.textContent = "Enter a valid price";
+    } else {
+        price_error.style.display = "none";
+    }
+        }
+
+        function validateOfferprice() {
+    const offerprice = offerpriceInput.value.trim();
+    const price = priceInput.value.trim();
+
+    
+    if (offerprice === '' || !/^\d+$/.test(offerprice)) {
+        offerprice_error.style.display = "block";
+        offerprice_error.style.color = "red";
+        offerprice_error.textContent = "Enter a valid offer price";
+    } else if (parseInt(offerprice) >= parseInt(price)) {
+        
+        offerprice_error.style.display = "block";
+        offerprice_error.style.color = "red";
+        offerprice_error.textContent = "Offer price must be less than the original price";
+    } else {
+        
+        offerprice_error.style.display = "none";
+    }
+}
+
+
+
+
+        function validateQuantity(){
+            const quantity = quantityInput.value.trim();
+            if (quantity === '' || !/^\d+$/.test(quantity)) {
+        quantity_error.style.display = "block";
+        quantity_error.style.color = "red";
+        quantity_error.textContent = "Enter a valid quantity";
+    } else if(quantity<= 0){
+        quantity_error.style.display = "block";
+        quantity_error.style.color = "red";
+        quantity_error.textContent = "Enter a positive quantity number";
+
+    }else {
+        quantity_error.style.display = "none";
+    }
+        }
+
+
+
+
+
+
+
+function validateImage() {
+    const selectedFiles = imageInput.files;
+
+    if (selectedFiles.length === 0) {
+        imageError.style.display = "block";
+        imageError.style.color = "red";
+        imageError.textContent = "Select at least one image";
+    } else {
+        imageError.style.display = "none";
+    }
+}
+
+
+ publishButton.addEventListener("click",(e)=>{
+    const isValidateName = validateName();
+    const isValidateSpec = validateSpec();
+    const isValidateBrand = validateBrand();
+    const isValidatePrice = validatePrice();
+    const isValidateOfferPrice = validateOfferprice();
+    const isValidateQuantity = validateQuantity();
+    const isValidateImage = validateImage();
+
+    if(isValidateName || isValidateSpec || isValidateBrand || isValidatePrice || isValidateOfferPrice || isValidateQuantity || isValidateImage){
+        e.preventDefault();
+
+    }
+
+ })
+
+
+
+
+
+    </script>
     <script src="/admin_assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/admin_assets/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/admin_assets/js/vendors/select2.min.js"></script>

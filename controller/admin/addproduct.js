@@ -1,12 +1,18 @@
+
+const multer = require('multer');
 const Products = require("../../model/productmanage");
 const Category = require("../../model/category");
+
+
+
+
 
 
 const loadAddProduct = async(req,res)=>{
     try{
 
         const categories = await Category.find();
-        res.render("admin/addproduct", { categories });
+        res.render("admin/addproduct", { cat:categories });
 
 
     }
@@ -17,8 +23,42 @@ const loadAddProduct = async(req,res)=>{
 
 
 
+const addProduct = async (req, res) => {
+    try {
+        const productData = req.body;
+        const images = req.files ? req.files.map(file => file.filename) : [];
+
+      
+
+        const newProduct = new Products({
+            name: productData.name,
+            brand: productData.brand,
+            specification: productData.specification,
+            category: productData.category,
+            price: productData.price,
+            offerprice: productData.offerprice,
+            quantity: productData.quantity,
+            image: images,
+        });
+
+        const newData = await newProduct.save();
+       
+        res.redirect("/admin/addproduct");
+
+    } catch (error) {
+        console.error("Error adding product:", error);
+        
+        
+    }
+};
+
+
+
+
+
 
 
 module.exports = {
-    loadAddProduct
+    loadAddProduct,
+    addProduct
 }

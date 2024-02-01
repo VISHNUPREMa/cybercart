@@ -3,7 +3,12 @@ const router = express.Router();
 const adminController = require("../controller/admin/admincontroller");
 const userlisting = require("../controller/admin/userlisting");
 const categoryManagement = require("../controller/admin/categoryManagement");
-const addProduct = require("../controller/admin/addproduct")
+const addProduct = require("../controller/admin/addproduct");
+const productList = require("../controller/admin/productlist");
+
+
+const upload = require("../helper/multerConfig")
+
 
 
 
@@ -29,6 +34,17 @@ router.post("/category",categoryManagement.categoryDetailsPost);
 
 
  router.get("/addproduct",addProduct.loadAddProduct);
+ router.post("/addproduct", upload.array("image",5), addProduct.addProduct);
+
+
+
+ router.get("/productlist",productList.loadProductList);
+ router.get("/productlist/edit/:id", productList.loadEditProductPage);
+ router.post("/productlist/edit/:id",upload.array("image",5),productList.postEditProduct);
+
+
+ router.get("/productlist/delete/:id",productList.deleteProduct);
+ 
 
 
 

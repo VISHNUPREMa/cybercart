@@ -20,10 +20,13 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     secret:  process.env.SESSION_SECRET || "defaultSecret",
-    cookie:{secure:false}
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true
+    }
 }))
 
-app.use(express.static("public"))
+app.use(express.static(path.join(__dirname, 'public')));
 app.set("view engine","ejs");
 
 const connect = mongoose.connect("mongodb://localhost:27017/CyberCart");
