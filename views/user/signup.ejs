@@ -23,21 +23,21 @@
                                                           
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" required="" name="email" id="email" placeholder="Email" onkeyup="validateEmail()">
+                                                <input type="text"  name="email" id="email" placeholder="Email" onkeyup="validateEmail()">
                                                 <div id="email_error" style="display: none;"></div>
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" required="" name="mobile" id="mobile" placeholder="mobile" onkeyup="validateNumber()">
+                                                <input type="text" name="mobile" id="mobile" placeholder="mobile" onkeyup="validateNumber()">
                                                 <div id="mobile_error" class="alert alert-danger" style="display: none;"></div>
 
                                             </div>
                                             <div class="form-group">
-                                                <input required="" type="password" name="password" id="password1" placeholder="Password" onkeyup="validatePassword()" >
+                                                <input  type="password" name="password" id="password1" placeholder="Password" onkeyup="validatePassword()" >
                                                 <div id="password_error" class="alert alert-danger" style="display: none;"></div>
 
                                             </div>
                                             <div class="form-group">
-                                                <input required="" type="password" name="confirmpassword" id="password2" placeholder="Confirm password" onkeyup="validateConfirmPassword()">
+                                                <input  type="password" name="confirmpassword" id="password2" placeholder="Confirm password" onkeyup="validateConfirmPassword()">
                                                 <div id="confirmPassword_error" class="alert alert-danger" style="display: none;"></div>
 
                                             </div>
@@ -50,18 +50,17 @@
                                                 </div>
                                                 <a href="page-privacy-policy.html"><i class="fi-rs-book-alt mr-5 text-muted"></i>Lean more</a>
                                             </div>
-                                            <div class="form-group">
-                                                <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Submit &amp; Register</button>
-                                            </div>
+                                            <form action="/verifyotp">
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login" onclick="validateSubmit(event)">Submit &amp; Register</button>
+                                                </div>
+                                            </form>
                                         </form>
                                         <div class="divider-text-center mt-15 mb-15">
                                             <span> or</span>
                                         </div>
-                                        <ul class="btn-login list_none text-center mb-15">
-                                            <li><a href="#" class="btn btn-facebook hover-up mb-lg-0 mb-sm-4">Login With Facebook</a></li>
-                                            <li><a href="#" class="btn btn-google hover-up">Login With Google</a></li>
-                                        </ul>
-                                        <div class="text-muted text-center">Already have an account? <a href="#">Sign in now</a></div>
+                                        
+                                        <div class="text-muted text-center">Already have an account? <a href="/login">Login in now</a></div>
                                     </div>
                                 </div>
                             </div>
@@ -154,6 +153,20 @@ function validateConfirmPassword() {
     }
 }
 
+
+function validateSubmit(event) {
+   
+    const isNameValid = validateName();
+    const isEmailValid = validateEmail();
+    const isNumberValid = validateNumber();
+    const isPasswordValid = validatePassword();
+    const isConfirmPasswordValid = validateConfirmPassword();
+
+  
+    if(isNameValid  || isEmailValid || isNumberValid  || isPasswordValid || isConfirmPasswordValid ){
+        event.prevenDefault();
+    }
+}
                                 
 
 

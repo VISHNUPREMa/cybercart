@@ -5,7 +5,12 @@ const bcrypt = require("bcrypt");
 
 const getAdminHomePage = async(req,res)=>{
     try{
-        res.render("admin/adminlogin");
+        if(req.session.admin){
+            res.redirect("/admin/dashboard");
+
+        }else{
+            res.render("admin/adminlogin");
+        }
 
     }
     catch(error){
@@ -19,6 +24,8 @@ const adminHomePagePost = async (req, res) => {
     try {
         const{email,password} = req.body;
         const isAdmin = await User.findOne({email:email,isAdmin:1});
+        req.session.admin = isAdmin._id;
+        
         
         if(isAdmin){
             const validatePassword = await bcrypt.compare(password,isAdmin.password);
@@ -51,6 +58,20 @@ const loadDashboardHome = async(req,res)=>{
     }
 }
 
+const logoutAdmin = async(req,res)=>{
+    try{
+        req.session.admin = null;
+        res.redirect("/admin")
+        
+        
+
+
+    }
+    catch(error){
+        console.log(error,"logoutAdmin page error");
+    }
+}
+
 
 
 
@@ -59,6 +80,7 @@ module.exports = {
     getAdminHomePage,
     adminHomePagePost,
     loadDashboardHome,
+    logoutAdmin
     
    };
 

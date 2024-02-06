@@ -17,12 +17,17 @@
 
                 <div class="form-group">
                     <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Enter</button><br>
-                    <div class="text-muted text-center" id="resend-section">
-                        Didn't get the OTP? <span id="timer">60</span> seconds 
-                    </div>
+                    
                 </div>
             </form>
-            <div><a href="/resendotp" id="resend-link" onclick="resendOtp()">Resend</a></div>
+            <form action="/resendotp" method="post">
+               
+            
+                <button type="submit" style="border: none; background: white; color: black; text-decoration: underline; cursor: pointer;" >Resend</button>
+            </form>
+            
+            
+            
         </div>
     </div>
 </div>

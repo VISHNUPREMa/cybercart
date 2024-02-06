@@ -18,7 +18,7 @@ const blockUser = async(req,res)=>{
         const userId = req.params.id;
         const Block = await User.findByIdAndUpdate(userId,{isBlocked:true});
        
-        res.redirect("/admin/userlist")
+        res.redirect("/admin/userlist");
      
         
 

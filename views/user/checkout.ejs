@@ -1,0 +1,126 @@
+<%- include("../partials/header") %>
+    
+    <main class="main">
+       
+        <section class="mt-50 mb-50">
+            <div class="container">
+                
+               
+                <div class="row">
+                    
+                    <div class="col-md-12">
+                        <div class="order_review">
+                            <div class="mb-20">
+                                <h4>Your Orders</h4>
+                            </div>
+                           <div class="col-md-12">
+                            
+
+
+
+                            <div class="table-responsive order_table text-center ">
+                                
+
+                                <table class="table">
+                                    <% for (let i = 0; i < data.length; i++) { %>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">Product</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="image product-thumbnail">
+                                                <% if (data[i].matchedProductDetails[0].image && data[i].matchedProductDetails[0].image.length > 0) { %>
+                                                    <img src="/uploads/products/<%= data[i].matchedProductDetails[0].image[0] %>" alt="<%= data[i].matchedProductDetails[0].name %>">
+                                                <% } else { %>
+                                                    <!-- Provide a default image or handle this case as needed -->
+                                                    <img src="default-image.jpg" alt="Default Item">
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <h5><a href="shop-product-full.html"><%= data[i].matchedProductDetails[0].name %></a></h5> <span class="product-qty"><%= data[i].quantity %></span>
+                                            </td>
+                                            <td><%= data[i].matchedProductDetails[0].offerprice %></td>
+                                        </tr>
+                                       
+                                        
+                                      
+                                    </tbody>
+                                    <% } %>
+                                </table>
+                               
+
+
+                            </div>
+
+                        </div>
+
+
+                         <div class="col-md-6">
+                            <table>
+                              
+                                <tr>
+                                    <th><h5>Shipping</h5></th>
+                                    <td colspan="2"><em>Free Shipping</em></td>
+                                </tr>
+                                <tr>
+                                    <th><h5>Total</h5></th>
+                                    <td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900"></span><%= grandTotal.toFixed(2) %></td>
+                                </tr>
+
+                            </table>
+                           
+
+                         </div>
+
+                         
+                         <div class="col-md-6">
+
+                            <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                            <div class="payment_method">
+                                <div class="mb-25">
+                                    <h5>Payment</h5>
+                                </div>
+                                <div class="payment_option">
+                                    <div class="custome-radio">
+                                        <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios3" checked="">
+                                        <label class="form-check-label" for="exampleRadios3" data-bs-toggle="collapse" data-target="#bankTranfer" aria-controls="bankTranfer">Cash On Delivery</label>
+                                        <div class="form-group collapse in" id="bankTranfer">
+                                         
+                                        </div>
+                                    </div>
+                           </div>
+                                    <div class="custome-radio">
+                                        <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios4" checked="">
+                                        <label class="form-check-label" for="exampleRadios4" data-bs-toggle="collapse" data-target="#checkPayment" aria-controls="checkPayment">UPI</label>
+                                        <div class="form-group collapse in" id="checkPayment">
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="custome-radio">
+                                        <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios5" checked="">
+                                        <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Card Payment</label>
+                                        <div class="form-group collapse in" id="paypal">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                          </div>
+
+
+
+                        
+                    </div>
+                </div>
+
+                            </div>
+                            <a href="#" class="btn btn-fill-out btn-block mt-30">Place Order</a>
+                        </div>
+                   
+                
+           
+        </section>
+    </main>
+    <%- include("../partials/footer") %>

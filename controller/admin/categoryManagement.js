@@ -15,10 +15,10 @@ const loadCategoryPage = async(req,res)=>{
 
 const categoryDetailsPost = async (req, res) => {
     try {
-        const { categoryName, brandName, description } = req.body;
-        await Category.create({ name: categoryName, brand: brandName, description: description });
+        const { categoryName,  description } = req.body;
+        await Category.create({ name: categoryName,  description: description });
 
-        // Redirect to the category page after adding a new category
+       
         res.redirect("/admin/category");
 
     } catch (error) {

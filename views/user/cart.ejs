@@ -1,0 +1,119 @@
+<%- include("../partials/header") %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+    <div class="mobile-header-active mobile-header-wrapper-style">
+        
+    </div>
+    <main class="main">
+       
+        <section class="mt-50 mb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table shopping-summery text-center clean">
+                                <thead>
+                                    <tr class="main-heading">
+                                        <th scope="col">Image</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Subtotal</th>
+                                        <th scope="col">Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% for (let i = 0; i < data.length; i++) { %>
+                                    <tr>
+                                        <td class="image product-thumbnail">
+                                            <% if (data[i].matchedProductDetails[0].image && data[i].matchedProductDetails[0].image.length > 0) { %>
+                                                <img src="/uploads/products/<%= data[i].matchedProductDetails[0].image[0] %>" alt="<%= data[i].matchedProductDetails[0].name %>">
+                                            <% } else { %>
+                                                <!-- Provide a default image or handle this case as needed -->
+                                                <img src="default-image.jpg" alt="Default Item">
+                                            <% } %>
+                                        </td>
+                                        
+                                        <td class="product-des product-name">
+                                            <h5 class="product-name"><a href="shop-product-right.html"><%= data[i].matchedProductDetails[0].name %></a></h5>
+                                            <p class="font-xs"><%= data[i].matchedProductDetails[0].specification %>
+                                            </p>
+                                            <p class="font-xs" id="available"><%= data[i].matchedProductDetails[0].quantity %>  more available  
+                                            </p>
+                                           
+                                        </td>
+                                        <td class="price" data-title="Price"><span><%= data[i].matchedProductDetails[0].offerprice %> </span></td>
+                                        <td class="text-center" data-title="Stock">
+                                            <div class="detail-qty border radius m-auto">
+                                               <!-- Inside the loop where you generate the table rows -->
+                                           
+
+
+                                           <span id="quantity"><%= data[i].quantity %></span>
+
+
+                                          
+                                            </div>
+                                            
+                                        <td class="text-right" data-title="Cart">
+                                            <span id="totalAmount_<%= i %>"><%= data[i].matchedProductDetails[0].offerprice * data[i].quantity  %>  </span>
+                                        </td>
+                                        <td class="action" data-title="Remove">
+                                            <a href="cart/deleteitem?id=<%= data[i].matchedProductDetails[0]._id %>" class="text-muted">
+                                                <i class="fi-rs-trash"></i>
+                                            </a>
+                                        </td>
+                                        
+                               
+                                    </tr>
+                                    <% } %>
+                                  
+                                 
+
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="cart-action text-end">
+                            
+                            <a class="btn " href="/"><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
+                        </div>
+                        <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
+                        <div class="row mb-50">
+                        
+                            <div class="col-lg-6 col-md-12">
+                                <div class="border p-md-4 p-30 border-radius cart-totals">
+                                    <div class="heading_s1 mb-3">
+                                        <h4>Cart Totals</h4>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tbody>
+                                               
+                                                <tr>
+                                                    <td class="cart_total_label">Shipping</td>
+                                                    <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cart_total_label">Total</td>
+                                                    <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand"> <%= grandTotal.toFixed(2) %></span></strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <a href="/checkout" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+
+    <%- include("../partials/footer") %>
+  

@@ -1,0 +1,64 @@
+<%- include("../partials/header") %>
+
+<main class="main">
+    
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 m-auto">
+                    <div class="tab-pane fade show" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Address Details</h5>
+                            </div>
+                            <div class="card-body">
+                                
+                                <form method="post" name="enq">
+                                    <div class="row">
+                                        <div class="form-group col-md-10">
+                                            <label>Username <span class="required">*</span></label>
+                                            <input required="" class="form-control square" name="name" type="text">
+                                        </div>
+                                       
+                                        <div class="form-group col-md-10">
+                                            <label>House Name <span class="required">*</span></label>
+                                            <input required="" class="form-control square" name="housename" type="text">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>Landmark <span class="required">*</span></label>
+                                            <input required="" class="form-control square" name="landmark" type="">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>City <span class="required">*</span></label>
+                                            <input required="" class="form-control square" name="city" type="">
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label>State <span class="required">*</span></label>
+                                            <input required="" class="form-control square" name="state" type="">
+                                        </div>
+                                        <div class="form-group col-md-10">
+                                            <label>Pincode <span class="required">*</span></label>
+                                            <input required="" class="form-control square" name="pincode" type="">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Phone <span class="required">*</span></label>
+                                            <input required="" class="form-control square" name="phone" type="">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label>Alternate Phone <span class="required">*</span></label>
+                                            <input required="" class="form-control square" name="altphone" type="">
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit">Save</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   
+</main>
+
+<%- include("../partials/footer") %>

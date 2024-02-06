@@ -7,12 +7,7 @@ const categorySchema = new mongoose.Schema({
         
 
     },
-    brand:{
-        type:String,
-        required:true,
-
-
-    },
+    
     description:{
         type:String
     },

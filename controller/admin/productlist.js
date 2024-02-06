@@ -95,6 +95,7 @@ const postEditProduct = async (req, res) => {
 const deleteProduct = async(req,res)=>{
     try{
         const productID = req.params.id;
+        console.log('Deleting product with ID:', productID);
         const deleteProduct = await Products.findByIdAndDelete(productID);
         console.log(deleteProduct);
         res.redirect("/admin/productlist")

@@ -13,11 +13,17 @@ const {sendOtpEmail} = require("../../helper/emailService");
 const getHomePage = async(req,res)=>{
     try{
         const user = req.session.user;
+       
+           
+        
         
         const userData = await User.find({isBlocked:false});
         const categoryData = await Category.find({isList:true});
         
         const productData = await Products.find({isListed:true})
+        const cartData = req.session.cartData;
+        const cartTotal = req.session.grandTotal;
+        
         
         if(user){
             res.render("user/home",{user:user,category:categoryData,products:productData});
@@ -107,6 +113,7 @@ const signInUser = async (req, res) => {
     try{
 
         res.render("user/otp")
+        console.log(req.session.tempUser.otp);
        
 
     }
@@ -114,6 +121,37 @@ const signInUser = async (req, res) => {
         console.log(error);
     }
   }
+
+
+  const resendOtp = async (req, res) => {
+    try {
+       
+        delete req.session.tempUser.otp;
+
+        const emailForResend = req.session.tempUser.email; 
+        
+        const newOtp = generateRandomOtp();
+       
+
+       
+        await sendOtpEmail(emailForResend, newOtp);
+
+        req.session.tempUser.otp = newOtp;
+        res.redirect("/verifyotp");
+       
+        
+
+        
+
+       
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+};
+
+
+
 
   const otpPage = async (req, res) => {
     try {
@@ -142,48 +180,7 @@ const signInUser = async (req, res) => {
 
 
   
-const resendOtp = async (req, res) => {
-    try {
-        
-        const email = req.session.tempUser.email;
-        const inputOtp = req.body.otp
 
- 
-        delete req.session.tempUser.otp;
-
-        const newOtp = generateRandomOtp();
-        await sendOtpEmail(email, newOtp);
-    
-        
-       
-        req.session.tempUser.otp = newOtp;
-
-
-        updateTimer();
-
-
-        if (inputOtp === newOtp) {
-            const userData = {
-                name: req.session.tempUser.username,
-                email: req.session.tempUser.email,
-                mobile: req.session.tempUser.mobile,
-                password: req.session.tempUser.password,
-            }
-            const newUser = await User.create(userData);
-            console.log(userData);
-            
-            res.render("user/login");
-
-        
-
-        
-       
-    }
- } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ success: false, error: 'Internal Server Error' });
-    }
-}
 
 
 
@@ -212,7 +209,7 @@ const logIn = async (req, res) => {
 
             
             req.session.user = existingUser.id;
-            console.log(req.session.user);
+          
             
             
 
@@ -283,13 +280,14 @@ const otpVerifyPasswordReset = async(req,res)=>{
    
     try{
         const userEnteredOtp = req.body.otp;
-        const storedOtp = req.session.tempUser.otp;
+        const storedOtp = req.session.tempUser.otp || req.session.newOtp ;
         const newHashedPassword = await bcrypt.hash(req.session.tempUser.password , 6)
        
         if(userEnteredOtp === storedOtp){
             const updateUser = await User.updateOne({email:req.session.tempUser.email } , 
-                {$set: {password:newHashedPassword}});
-                res.redirect("/login")
+                {$set: {password:newHashedPassword}})
+                .then(data=>console.log(data))
+                res.render("user/login",{message:"password changed successfully"})
 
                 
         }else{
@@ -306,13 +304,47 @@ const otpVerifyPasswordReset = async(req,res)=>{
 }
 
 
+const resndOtpForForgetpassword = async(req,res)=>{
+    try{
+        const email = req.session.tempUser.email;
+        
+       
+        
+
+ 
+        delete req.session.tempUser.otp;
+
+        const newOtp = generateRandomOtp();
+        await sendOtpEmail(email, newOtp);
+        req.session.newOtp = newOtp;
+        console.log(req.session.newOtp );
+
+        
+       res.render("user/otpPasswordVerify");
+      
+    
+        
+      
+
+
+    }
+    catch(error){
+        console.log(error,"resndOtpForForgetpassword page error");
+    }
+}
+
+
+
+
+
+
 const logoutUser = async(req,res)=>{
     try{
         req.session.destroy((error)=>{
             if(error){
                 console.log(error,"  error in log out");
             }else{
-                res.redirect("/login");
+                res.render("user/login");
             }
 
         })
@@ -321,6 +353,30 @@ const logoutUser = async(req,res)=>{
 
     }
 }
+
+
+
+
+const laodShopPage = async(req,res)=>{
+    try{
+        const user = req.session.user;
+       
+           
+        
+        
+        const userData = await User.find({isBlocked:false});
+        const categoryData = await Category.find({isList:true});
+        
+        const productData = await Products.find({isListed:true})
+        res.render("user/shop",{user:user,category:categoryData,products:productData})
+
+    }
+    catch(error){
+        console.log(error,"laodShopPage page error");
+    }
+}
+
+
 
 
 
@@ -341,7 +397,10 @@ forgetPasswordLoad,
 forgetpassword,
 otpVerifyPasswordReset,
 resendOtp , 
-logoutUser
+logoutUser,
+resndOtpForForgetpassword,
+laodShopPage
+
 
 
 }

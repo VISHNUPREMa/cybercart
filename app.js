@@ -9,8 +9,8 @@ const dotenv = require('dotenv').config();
 
 
 
-const userAuthRoute = require("./route/userFeature");
-const adminAuthRoute = require("./route/adminFeature")
+const userAuthRoute = require("./route/userRouter");
+const adminAuthRoute = require("./route/adminRouter")
 const { error } = require("console");
 
 app.use(express.json());
@@ -41,7 +41,8 @@ connect.then(()=>{
 
 
 
-
+app.use("/",nocache());
+app.use("/admin",nocache());
 app.use("/",userAuthRoute);
 app.use("/admin",adminAuthRoute);
 
@@ -49,9 +50,9 @@ app.use("/admin",adminAuthRoute);
 
 
 
-app.use("*",(req,res)=>{
-    res.status(404).json("Page not found")
-})
+// app.use("*",(req,res)=>{
+//     res.render("general/error")
+// })
 
 
 app.use((err,req,res,next)=>{
