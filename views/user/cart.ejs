@@ -22,6 +22,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <% if(data!=""){ %>
                                     <% for (let i = 0; i < data.length; i++) { %>
                                     <tr>
                                         <td class="image product-thumbnail">
@@ -43,16 +44,21 @@
                                         </td>
                                         <td class="price" data-title="Price"><span><%= data[i].matchedProductDetails[0].offerprice %> </span></td>
                                         <td class="text-center" data-title="Stock">
-                                            <div class="detail-qty border radius m-auto">
+                                         
                                                <!-- Inside the loop where you generate the table rows -->
+                                               <div class="detail-qty border radius m-auto">
+                                                <a onclick="changeQuantity('<%= data[i].matchedProductDetails[0]._id %>', '<%= data[i].quantity %>', 1, '<%= data[i].matchedProductDetails[0].offerprice %>', '<%= i %>',' <%= data[i].matchedProductDetails[0].quantity %>')" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                                <span class="qty-val" id="quantityvalue_<%= data[i].matchedProductDetails[0]._id %>"><%= data[i].quantity %></span>
+                                                <a onclick="changeQuantity('<%= data[i].matchedProductDetails[0]._id %>', '<%= data[i].quantity %>', -1, '<%= data[i].matchedProductDetails[0].offerprice %>', '<%= i %>', '<%= data[i].matchedProductDetails[0].quantity %>')" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                            </div>
+                                            
                                            
 
 
-                                           <span id="quantity"><%= data[i].quantity %></span>
+                                         
 
 
-                                          
-                                            </div>
+                                      
                                             
                                         <td class="text-right" data-title="Cart">
                                             <span id="totalAmount_<%= i %>"><%= data[i].matchedProductDetails[0].offerprice * data[i].quantity  %>  </span>
@@ -66,6 +72,45 @@
                                
                                     </tr>
                                     <% } %>
+                                    <% }else{ %>
+                                        <tr>
+                                            
+                                            
+                                            <td class="product-des product-name">
+                                                <h5 class="product-name"><a href="shop-product-right.html"></a></h5>
+                                                <p class="font-xs">
+                                                </p>
+                                                <p class="font-xs" id="available">   
+                                                </p>
+                                               
+                                            </td><td class="text-center" data-title="Stock"></td>
+                                            <td class="price" data-title="Price"><h3>Cart is Empty</h3></td>
+                                            
+                                             
+                                                   <!-- Inside the loop where you generate the table rows -->
+                                                
+                                                
+                                               
+    
+    
+                                             
+    
+    
+                                          
+                                                
+                                            <td class="text-right" data-title="Cart">
+                                                <span id="">  </span>
+                                            </td>
+                                            <td class="action" data-title="Remove">
+                                                <a href="" class="text-muted">
+                                                    <i class="fi-rs-trash"></i>
+                                                </a>
+                                            </td>
+                                            
+                                   
+                                        </tr>
+                                        <% } %>
+
                                   
                                  
 
@@ -95,7 +140,12 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="cart_total_label">Total</td>
-                                                    <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand"> <%= grandTotal.toFixed(2) %></span></strong></td>
+                                                    <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">₹
+                                                        <text id="total">
+                                                            <%= grandTotal.toFixed(2) %>
+                                                        </text>
+                                                    </span></td>
+                                                    
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -113,7 +163,89 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+<script>
+function changeQuantity(productId, cartQuantity, count, productPrice, i, productQuantity) {
+    const quantityelementId = `quantityvalue_${productId}`;
+    const quantityElement = document.getElementById(quantityelementId);
+    const quantityValue = parseInt(quantityElement.textContent);
+
+    const subelementId = `totalAmount_${i}`;
+    const subAmountElement = document.getElementById(subelementId);
+    const subAmountValue = parseFloat(subAmountElement.textContent);
+
+    const totalElement = document.getElementById("total");
+    let grandTotal = 0;
+
+    let newQuantity;
+
+    if (count === 1) {
+        newQuantity = quantityValue + 1;
+    } else if (count === -1) {
+        newQuantity = quantityValue - 1;
+    }
+
+    const newSubAmountValue = newQuantity * productPrice;
+
+    if (count === -1 && newQuantity < 1) {
+        Swal.fire({
+            title: "Invalid Entry",
+            text: "Minimum quantity must be 1",
+            icon: "question",
+            timer: 1500
+        });
+        return;
+    }
+
+    if (count === 1 && newQuantity > parseInt(productQuantity)) {
+        Swal.fire({
+            title: "Invalid Entry",
+            text: "Product is out of stock",
+            icon: "question",
+            timer: 1500
+        });
+        return;
+    }
+
+    $.ajax({
+        url: "/updatequantity",
+        method: "POST",
+        data: {
+            productId: productId,
+            quantity: newQuantity,
+            count: count
+        }
+    });
+
+    
+    quantityElement.textContent = newQuantity;
+    subAmountElement.textContent = newSubAmountValue;
+
+  
+    const totalAmountElements = document.querySelectorAll("[id^='totalAmount_']");
+    totalAmountElements.forEach(function(element) {
+        grandTotal += parseFloat(element.textContent);
+    });
+
+  
+    if (totalElement) {
+        totalElement.textContent = grandTotal.toFixed(2);
+    }
+}
+
+
+
+
+    
+</script>
+
+
+
+
 
 
     <%- include("../partials/footer") %>
+
+
+
+
   

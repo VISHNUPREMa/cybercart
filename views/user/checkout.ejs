@@ -1,36 +1,30 @@
 <%- include("../partials/header") %>
-    
-    <main class="main">
-       
-        <section class="mt-50 mb-50">
-            <div class="container">
-                
-               
-                <div class="row">
-                    
-                    <div class="col-md-12">
-                        <div class="order_review">
-                            <div class="mb-20">
-                                <h4>Your Orders</h4>
-                            </div>
-                           <div class="col-md-12">
-                            
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
-
-
+<main class="main">
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="order_review">
+                        <div class="mb-20">
+                            <h4>Your Orders</h4>
+                        </div>
+                        <div class="col-md-12">
                             <div class="table-responsive order_table text-center ">
-                                
-
                                 <table class="table">
-                                    <% for (let i = 0; i < data.length; i++) { %>
                                     <thead>
                                         <tr>
                                             <th colspan="2">Product</th>
+                                          
                                             <th>Total</th>
                                         </tr>
                                     </thead>
+                                    <% for (let i = 0; i < data.length; i++) { %>
+                                  
                                     <tbody>
                                         <tr>
+                                           
                                             <td class="image product-thumbnail">
                                                 <% if (data[i].matchedProductDetails[0].image && data[i].matchedProductDetails[0].image.length > 0) { %>
                                                     <img src="/uploads/products/<%= data[i].matchedProductDetails[0].image[0] %>" alt="<%= data[i].matchedProductDetails[0].name %>">
@@ -43,24 +37,15 @@
                                                 <h5><a href="shop-product-full.html"><%= data[i].matchedProductDetails[0].name %></a></h5> <span class="product-qty"><%= data[i].quantity %></span>
                                             </td>
                                             <td><%= data[i].matchedProductDetails[0].offerprice %></td>
+                                           
                                         </tr>
-                                       
-                                        
-                                      
                                     </tbody>
                                     <% } %>
                                 </table>
-                               
-
-
                             </div>
-
                         </div>
-
-
-                         <div class="col-md-6">
+                        <div class="col-md-6">
                             <table>
-                              
                                 <tr>
                                     <th><h5>Shipping</h5></th>
                                     <td colspan="2"><em>Free Shipping</em></td>
@@ -69,15 +54,9 @@
                                     <th><h5>Total</h5></th>
                                     <td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900"></span><%= grandTotal.toFixed(2) %></td>
                                 </tr>
-
                             </table>
-                           
-
-                         </div>
-
-                         
-                         <div class="col-md-6">
-
+                        </div>
+                        <div class="col-md-6">
                             <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                             <div class="payment_method">
                                 <div class="mb-25">
@@ -85,42 +64,193 @@
                                 </div>
                                 <div class="payment_option">
                                     <div class="custome-radio">
-                                        <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios3" checked="">
-                                        <label class="form-check-label" for="exampleRadios3" data-bs-toggle="collapse" data-target="#bankTranfer" aria-controls="bankTranfer">Cash On Delivery</label>
+                                        <input class="form-check-input payment-radio" required="" type="radio" name="payment_option" id="cashOnDelivery" checked="">
+                                        <label class="form-check-label" for="cashOnDelivery" data-bs-toggle="collapse" data-target="#bankTranfer" aria-controls="bankTranfer">Cash On Delivery</label>
                                         <div class="form-group collapse in" id="bankTranfer">
-                                         
                                         </div>
                                     </div>
-                           </div>
                                     <div class="custome-radio">
-                                        <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios4" checked="">
-                                        <label class="form-check-label" for="exampleRadios4" data-bs-toggle="collapse" data-target="#checkPayment" aria-controls="checkPayment">UPI</label>
+                                        <input class="form-check-input payment-radio" required="" type="radio" name="payment_option" id="upiPayment">
+                                        <label class="form-check-label" for="upiPayment" data-bs-toggle="collapse" data-target="#checkPayment" aria-controls="checkPayment">UPI</label>
                                         <div class="form-group collapse in" id="checkPayment">
-                                            
                                         </div>
                                     </div>
                                     <div class="custome-radio">
-                                        <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios5" checked="">
-                                        <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Card Payment</label>
+                                        <input class="form-check-input payment-radio" required="" type="radio" name="payment_option" id="cardPayment">
+                                        <label class="form-check-label" for="cardPayment" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Card Payment</label>
                                         <div class="form-group collapse in" id="paypal">
-                                            
                                         </div>
                                     </div>
                                 </div>
-                          </div>
-
-
-
-                        
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div class="row justify-content-end">
+                                <% if(address) { %>
+                                <div class="col-lg-6">
+                                    <div class="card mb-3 mb-lg-0">
+                                        <div class="card-header">
+                                            <h5 class="mb-0">Your Address</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <address><%= address.address[0].name %><br> <%= address.address[0].housename %><br> <%= address.address[0].landmark %> <br><%= address.address[0].city %> <br><%= address.address[0].state %> <br> <%= address.address[0].pincode %> <br> <%= address.address[0].phone %> <br> <%= address.address[0].altphone %> </address>
+                                            <br><br>
+                                            <a href="/editaddress?id=<%= address.address[0]._id %> " class="btn-small"><h5>Edit</h5></a>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" id="addressRadio_<%= address.address[0]._id %> %>" name="selectedAddress" value="<%= address.address[0]._id %>">
+                                                <label class="form-check-label" for="addressRadio_<%= address._id %>">Select Address</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <h5>create new address</h5>
+                                    <form action="/createaddress" method="get">
+                                        <button class="submit submit-auto-width" type="submit">Create New</button>
+                                    </form>
+                                </div>
+                                <% } else { %>
+                                <div class="card-body">
+                                    <p>No Address Found <i class="fi-rs-marker mr-10"></i></p>
+                                    <form action="/createaddress" method="get">
+                                        <button class="submit submit-auto-width" type="submit">Create New</button>
+                                    </form>
+                                </div>
+                                <% } %>
+                            </div>
+                            <button id="placeOrderBtn" class="btn btn-fill-out btn-block mt-30">Place Order</button>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+</main>
 
-                            </div>
-                            <a href="#" class="btn btn-fill-out btn-block mt-30">Place Order</a>
-                        </div>
-                   
-                
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    
+    let paymentRadioButtons = document.querySelectorAll('.payment_option input[type="radio"]');
+    let radioInputs = document.querySelectorAll('input[name="selectedAddress"]');
+    let myaddressID;
+    let selectedPaymentOption;
+   
+let productSubtotalElement = document.querySelector('.product-subtotal');
+
+
+ subtotalValue = productSubtotalElement.textContent;
+
+
+
+
+
+  
+    
+
+    function handleAddress() {
+        let selectedRadio = document.querySelector('input[name="selectedAddress"]:checked');
+        if (selectedRadio) {
+            var addressId = selectedRadio.value;
+            myaddressID = addressId;
+            return addressId;
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Please select an address",
+            });
+            return null;
+        }
+    }
+
+    function paymentOptionCheck() {
+        for (let radioButton of paymentRadioButtons) {
+            if (radioButton.checked) {
+                 selectedPaymentOption = radioButton.nextElementSibling.textContent.trim();
+                if (selectedPaymentOption === "Cash On Delivery") {
+                    return true;
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Cash on delivery only available",
+                    });
+                    return false;
+                }
+            }
+        }
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Please select any payment method",
+        });
+        return false;
+    }
+
+    radioInputs.forEach(function(radio) {
+        radio.addEventListener('change', handleAddress);
+    });
+
+    paymentRadioButtons.forEach(function(radioButton) {
+        radioButton.addEventListener('change', paymentOptionCheck);
+    });
+
+    
+    document.getElementById('placeOrderBtn').addEventListener('click', function() {
+        let selectedAddress = handleAddress();
+        if (selectedAddress && paymentOptionCheck()) {
+            
+            $.ajax({
+                url:"/placeorder",
+                method:"POST",
+                data:{
+                    addressId:myaddressID,
+                    total:subtotalValue,
+                    paymentmode:selectedPaymentOption
+                },
+                success:function(response){
+                if(response){
+                    Swal.fire({
+                icon: 'success',
+                title: 'Order Placed Successfully',
+                text: 'Your order has been successfully placed.',
+                showConfirmButton: false,
+                timer: 3000 
+            })
+                }else{
+                    Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Failed to place the order. Please try again later.',
+                showConfirmButton: false,
+                timer: 3000 
+            });
+                }
+
+            },
+            error:function(xhr,status,error){
+                Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Failed to place the order. Please try again later.',
+            showConfirmButton: false,
+            timer: 2000 
+        });
+        console.error(xhr, status, error);
+            }
+            })
+            
+
+            
+            console.log("Place order clicked!");
+            console.log("my address : ",myaddressID);
            
-        </section>
-    </main>
-    <%- include("../partials/footer") %>
+        }
+    });
+});
+
+</script>
+
+<%- include("../partials/footer") %>

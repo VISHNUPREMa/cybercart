@@ -50,6 +50,7 @@ const addToCart = async(req,res)=>{
                             {_id:userID, "cart.id":productID},
                             {$set:{"cart.$.quantity":updatedQuantity}}
                         );
+
     
                         await Products.updateOne(
                             {_id:productID},
@@ -189,10 +190,44 @@ const deleteItem = async(req,res)=>{
 }
 
 
+const updateQuantity = async(req,res)=>{
+    try{
+        const {productId,quantity,count} = req.body;
+        const id = req.session.user;
+        const userData = await Users.findById(id);
+        const productData = await Products.findById(productId);
+        let newQuantity;
+        
+        if(userData){
+            const productInCart = userData.cart.find(item=> item.id === productId);
+            
+            if(productInCart){
+               const quantityUpdate = await Users.updateOne(
+                {_id:id,"cart.id":productId},
+                {$set:{"cart.$.quantity":quantity}}
+               )
+
+               
+            }
+        }
+       
+
+        
+    
+      
+        
+
+    }
+    catch(error){
+        console.log(error,"updateQuantity page error");
+    }
+}
 
 
 
 
 
 
-module.exports = { loadCartPage, addToCart,deleteItem}
+
+
+module.exports = { loadCartPage, addToCart,deleteItem,updateQuantity}

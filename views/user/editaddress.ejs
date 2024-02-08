@@ -11,9 +11,10 @@
                                 <h5>Address Details</h5>
                             </div>
                             <div class="card-body">
-                                
-                                <form method="post" action="/createaddress">
+                                <% if(address){ %>
+                                <form method="post" action="/editaddress?id=<%= address.address[0]._id %>">
                                     <div class="row">
+
                                         <div class="form-group col-md-10">
                                             <label>Address type <span class="required">*</span></label>
                                             <select required class="form-control square" id="address_type" name="address_type" onchange="validateAddressType()">
@@ -24,58 +25,57 @@
                                             <div id="address_type_error" class="alert alert-danger" style="display: none;"></div>
                                         </div>
                                         
-                                        
-                                        
-
                                         <div class="form-group col-md-10">
                                             <label>Username <span class="required">*</span></label>
-                                            <input required="" class="form-control square" id="name" name="name" type="text" onkeyup="validateName()">
+                                            <input required="" class="form-control square" name="name" type="text" value="<%= address.address[0].name %>" onkeyup="validateName()">
                                             <div id="name_error" class="alert alert-danger" style="display: none;"></div>
                                         </div>
                                        
                                         <div class="form-group col-md-10">
                                             <label>House Name <span class="required">*</span></label>
-                                            <input required="" class="form-control square" id="housename" name="housename" type="text" onkeyup="validateHouseName()">
+                                            <input required="" class="form-control square" name="housename" type="text" value="<%= address.address[0].housename %>" onkeyup="validateHouseName()" >
                                             <div id="housename_error" class="alert alert-danger" style="display: none;"></div>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label>Landmark <span class="required">*</span></label>
-                                            <input required="" class="form-control square" id="landmark" name="landmark" type="" onkeyup="validateLandmark()">
+                                            <input required="" class="form-control square" name="landmark" type="" value="<%= address.address[0].landmark %>" onkeyup="validateLandmark()"  >
                                             <div id="landmark_error" class="alert alert-danger" style="display: none;"></div>
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label>City <span class="required">*</span></label>
-                                            <input required="" class="form-control square" id="city" name="city" type="" onkeyup="validateCity()">
+                                            <input required="" class="form-control square" name="city" type="" value="<%= address.address[0].city %>" onkeyup="validateCity()" >
                                             <div id="city_error" class="alert alert-danger" style="display: none;"></div>
+
                                         </div>
                                         <div class="form-group col-md-4">
                                             <label>State <span class="required">*</span></label>
-                                            <input required="" class="form-control square" id="state" name="state" type="" onkeyup="validateState()">
+                                            <input required="" class="form-control square" name="state" type="" value="<%= address.address[0].state  %>" onkeyup="validateState()" >
                                             <div id="state_error" class="alert alert-danger" style="display: none;"></div>
                                         </div>
                                         <div class="form-group col-md-10">
                                             <label>Pincode <span class="required">*</span></label>
-                                            <input required="" class="form-control square" id="pincode" name="pincode" type="" onkeyup="validatePincode()">
+                                            <input required="" class="form-control square" name="pincode" type="" value="<%= address.address[0].pincode %>" onkeyup="validatePincode()"  >
                                             <div id="pincode_error" class="alert alert-danger" style="display: none;"></div>
                                         </div>
-
-
-                                     <div class="form-group col-md-6">
-                                      <label>Phone <span class="required">*</span></label>
-                                        <input required="" class="form-control square" id="phone" name="phone" type="" onkeyup="validatePhone()">
-                                     <div id="phone_error" class="alert alert-danger" style="display: none;"></div>
-                                      </div>
-
+                                        <div class="form-group col-md-6">
+                                            <label>Phone <span class="required">*</span></label>
+                                            <input required="" class="form-control square" name="phone" type="" value="<%= address.address[0].phone %>" onkeyup="validatePhone()">
+                                            <div id="phone_error" class="alert alert-danger" style="display: none;"></div>
+                                        </div>
                                         <div class="form-group col-md-6">
                                             <label>Alternate Phone <span class="required">*</span></label>
-                                            <input required="" class="form-control square" id="altphone" name="altphone" type="" onkeyup="validateAltPhone()" >
+                                            <input required="" class="form-control square" name="altphone" type="" value="<%= address.address[0].altphone %>" onkeyup="validateAltPhone()" >
                                             <div id="altphone_error" class="alert alert-danger" style="display: none;"></div>
                                         </div>
                                         <div class="col-md-12">
-                                            <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit">Save</button>
+                                            <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit">Edit</button>
                                         </div>
+                                        <% }else{ %>
+                                            <h2>Address not found</h2>
+                                          
                                     </div>
                                 </form>
+                                <% } %>
                             </div>
                         </div>
                     </div>
@@ -86,7 +86,7 @@
 </main>
 
 <script>
-    const addressInput = document.getElementById("address_type");
+     const addressInput = document.getElementById("address_type");
     const adddressError = document.getElementById("address_type_error");
     const nameInput = document.getElementById("name");
     const nameError = document.getElementById("name_error");

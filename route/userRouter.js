@@ -35,7 +35,10 @@ router.get("/shop",userController.laodShopPage);
 
 
 router.get("/profile",userProfileController.getProfilePage);
-router.get("/createaddress",userProfileController.getCreateAddressPage)
+router.get("/createaddress",userProfileController.getCreateAddressPage);
+router.post("/createaddress",userProfileController.postAddressDetails);
+router.get("/editaddress",userProfileController.getEditAddressPage);
+router.post("/editaddress",userProfileController.postEditAdress)
 
 
 
@@ -47,9 +50,12 @@ router.get("/createaddress",userProfileController.getCreateAddressPage)
 router.post("/cart", cartController.addToCart);
 router.get("/cart", cartController.loadCartPage);
 router.get("/cart/deleteitem",cartController.deleteItem);
+router.post("/updatequantity",cartController.updateQuantity);
 
 
 router.get("/checkout",orderController.loadCheckoutPage);
+router.post("/placeorder",orderController.postorderDetails);
+
 
 
 

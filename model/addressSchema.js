@@ -3,13 +3,15 @@ const mongoose = require("mongoose");
 const addressSchema = mongoose.Schema({
     userID:{
         type : mongoose.Schema.Types.ObjectId,
-        ref : "User",
+        ref : "users",
         required : true
-
     },
-   
     address: [{
-      
+        addresstype:{
+            type:String,
+            required:true
+
+        },
         name: {
             type: String,
             required: true
@@ -26,7 +28,6 @@ const addressSchema = mongoose.Schema({
             type: String,
             required: true
         },
-        
         state: {
             type: String,
             required: true
@@ -44,7 +45,12 @@ const addressSchema = mongoose.Schema({
             required: true
         }
     }]
-})
+}, {
+    versionKey: false, 
+  
+});
+
+
 
 const address = mongoose.model("address",addressSchema);
 

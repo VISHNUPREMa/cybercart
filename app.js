@@ -50,9 +50,9 @@ app.use("/admin",adminAuthRoute);
 
 
 
-// app.use("*",(req,res)=>{
-//     res.render("general/error")
-// })
+app.use("*",(req,res)=>{
+    res.render("general/error")
+})
 
 
 app.use((err,req,res,next)=>{
