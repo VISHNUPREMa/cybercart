@@ -10,7 +10,7 @@ const loadProductDetails = async(req,res)=>{
         
         const products = await Products.findById(productID)
       
-        res.render("user/productdetails",{products});
+        res.render("user/productdetails",{user:true,products});
 
     }
     catch(error){

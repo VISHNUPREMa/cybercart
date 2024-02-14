@@ -1,0 +1,126 @@
+
+<%- include("../partials/header") %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
+    <div class="card">
+        <div class="card-header">
+            <h5>Account Details</h5>
+        </div>
+        <div class="card-body">
+           
+            <form method="post" name="enq">
+                <% if(user){ %>
+                <div class="row">
+                    <div class="form-group col-md-6">
+
+                        <div id="error-messages" style="display: none;"></div>
+
+                        <label>Username <span class="required">*</span></label>
+                        <input class="form-control square" id="username" name="username" type="text">
+                    </div>
+                   
+                    
+                    <div class="form-group col-md-12">
+                        <label>Email Address <span class="required">*</span></label>
+                        <input  class="form-control square" id="email" name="email" type="email">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>Current Password <span class="required">*</span></label>
+                        <input  class="form-control square" id="currentpass" name="password" type="password">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>New Password <span class="required">*</span></label>
+                        <input  class="form-control square" id="newpass" name="npassword" type="password">
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>Confirm Password <span class="required">*</span></label>
+                        <input  class="form-control square" id="confirmpass" name="cpassword" type="password">
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-fill-out submit" onclick="validateUser()" name="save" value="Submit">Save</button>
+                    </div>
+                </div>
+                <% } %>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+        function validateUser(){
+            const usernameInput = document.getElementById("username");
+            const username = usernameInput.value.trim();
+            const emailInput = document.getElementById("email");
+            const email = emailInput.value.trim();
+            const currentpasswordInput = document.getElementById("currentpass");
+            const currentpassword = currentpasswordInput.value.trim();
+            const newpasswordInput = document.getElementById("newpass");
+            const newpassword = newpasswordInput.value.trim();
+            const confirmNewpasswordInput = document.getElementById("confirmpass");
+            const confirmNewPassword = confirmNewpasswordInput.value.trim();
+            const alertContainer = document.getElementById("error-messages");
+            
+            const actualUsername = "<%= user.name %>"
+            const actualEmail = "<%= user.email %>"
+           
+
+
+             alertContainer = document.getElementById("error-messages"); 
+             
+             if (username === "") {
+              alertContainer.style.display = "block";
+              alertContainer.textContent = "please enter a avlid username "; 
+              }
+              else if(!validUsername.test(username)){
+                alertContainer.style.display = "block";
+              alertContainer.textContent = "please enter a avlid username "; 
+
+              }
+
+            
+
+
+
+            $.ajax({
+                url: `/editprofile`,
+        method: "POST",
+        data: {
+            name: username,
+            email: email,
+            currentpassword : currentpassword,
+            newpassword : newpassword,
+            confirmpassword : confirmNewPassword
+        },
+        success: function (res) {
+            if(res.status === true){
+
+            }else if(res.status === false){
+                Swal.fire({
+  icon: "error",
+  title: "Oops...",
+  text: "Something went wrong!",
+  footer: '<a href="#">Why do I have this issue?</a>'
+});
+                
+            }
+
+
+
+
+},
+error: function (error) {
+console.error("Error:", error);
+}
+
+
+            })
+
+        }
+    </script>
+
+<%- include("../partials/footer") %>

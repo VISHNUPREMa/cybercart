@@ -11,6 +11,7 @@ const addToCart = async(req,res)=>{
     try{
           const { id: productID, quantity, availability } = req.body;
           const userID = req.session.user;
+         parseInt(quantity, availability);
           
           const userDetails = await Users.findById(userID);
 
@@ -38,12 +39,15 @@ const addToCart = async(req,res)=>{
                         res.json({ status: true, message: "Product added to cart successfully" });
 
                     })
+                   
+
 
             }else{
                 const productAlreadyInCart = userDetails.cart[IndexOfProduct];
                 if(productAlreadyInCart.quantity <= availability){
                     const updatedQuantity = parseInt(productAlreadyInCart.quantity) + parseInt(quantity);
                     const updatedAvailability = parseInt(availability) - parseInt(quantity);
+        
                  
                     if(updatedAvailability > 0){
                         await Users.updateOne(
@@ -52,10 +56,7 @@ const addToCart = async(req,res)=>{
                         );
 
     
-                        await Products.updateOne(
-                            {_id:productID},
-                            {$set:{quantity:updatedAvailability}}
-                        )
+                       
                         res.json({status:true});
                     }else{
                         res.json({ status: false, message: "Out of stock" });
@@ -67,30 +68,13 @@ const addToCart = async(req,res)=>{
 
 
             }
-          }
-        // console.log('Product ID:', productID);
-        // console.log('Quantity:', quantity);
-        // console.log("Availability: ", availability);
-        // console.log("user id ",userID);
-        // console.log("user details : ",userDetails);
-        // console.log("product  details : ",productDetails);
-        // console.log("product.cart : ",userDetails.cart);
-        
-        
-
-       
-        
-
-
-        
-       
+          } 
 
     }
     catch(error){
         console.log(error,"addToCart  ");
     }
 }
-
 
 const loadCartPage = async (req, res) => {
     try {
@@ -116,6 +100,8 @@ const loadCartPage = async (req, res) => {
             
         ])
 
+
+
        
         let quantity = 0
         for (let i of userData.cart) {
@@ -125,35 +111,20 @@ const loadCartPage = async (req, res) => {
         let eachTotal = 0;
         let grandTotal =0;
         for(let i=0;i<data.length;i++){
+           
             eachTotal = data[i].matchedProductDetails[0].offerprice *data[i].quantity;
              grandTotal += eachTotal;
            
          
        
-            // console.log("each total of the data ",eachTotal);
-            // console.log("data[i]  : ",data[i]);
-            // console.log("data[i].matchedProductDetails[0]    detals :    ",data[i].matchedProductDetails[0]);
+       
         }
         req.session.cartData = data;
 
         req.session.grandTotal = grandTotal;
-
-        // console.log("user ID is : ",userObjectId);
-        // console.log("user details is : ",userData);
-        // console.log("produc id details : ",productIDs);
-        // console.log("products details : ",products);
-        // console.log("datas for cart : ",data);
-        // console.log("cart length is ",userData.cart.length);
-        // console.log("quantity of cart:",quantity);
-        // console.log("length of data : ",data.length);
-        // console.log("grand total of the cart :",grandTotal);
        
        
-        
-
-       
-
-        res.render("user/cart",{data,grandTotal})
+         res.render("user/cart",{user:true,data,grandTotal})
        
 
 
@@ -166,6 +137,14 @@ const loadCartPage = async (req, res) => {
 };
 
 
+
+
+
+
+
+
+
+
 const deleteItem = async(req,res)=>{
     try{
         const productID = req.query.id;
@@ -175,12 +154,6 @@ const deleteItem = async(req,res)=>{
         userDetails.cart.splice(cartIndex,1);
         await userDetails.save();
         res.redirect("/cart");
-       
-
-
-        // console.log("product id is : ",productID);
-        // console.log("userDetails are : ",userDetails);
-        // console.log("cart index is : ",cartIndex);
 
 
     }
@@ -192,11 +165,21 @@ const deleteItem = async(req,res)=>{
 
 const updateQuantity = async(req,res)=>{
     try{
+        let availability;
         const {productId,quantity,count} = req.body;
+        
+        req.session.productId = productId;
+        req.session.quantity = quantity;
+        
         const id = req.session.user;
         const userData = await Users.findById(id);
         const productData = await Products.findById(productId);
-        let newQuantity;
+
+  
+
+       
+        
+      
         
         if(userData){
             const productInCart = userData.cart.find(item=> item.id === productId);
@@ -206,6 +189,10 @@ const updateQuantity = async(req,res)=>{
                 {_id:id,"cart.id":productId},
                 {$set:{"cart.$.quantity":quantity}}
                )
+
+               
+
+               
 
                
             }

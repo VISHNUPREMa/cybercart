@@ -132,18 +132,18 @@
                                         </div>
                                         <div class="product-content-wrap">
                                             <div class="product-category">
-                                                <a href="shop-grid-right.html"><h2><%= products[i].brand %></h2></a>
+                                                <a href=""><h2><%= products[i].brand %></h2></a>
                                             </div>
-                                            <h6><a href="shop-product-right.html"><%= products[i].name  %></a></h6>
+                                            <h6><a href=""><%= products[i].name  %></a></h6>
                                          
-                                            <div class="rating-result" title="90%">
-                                                <span>
-                                                    <span>90%</span>
-                                                </span>
-                                            </div>
+                                         
+                                           
                                             <div class="product-price">
+                                                <span>&#8377;</span>
+
                                                 <span><%= products[i].offerprice %> </span>
                                                 <span class="old-price"><%= products[i].price %></span>
+                                                <span id="offer" ></span>
                                             </div>
                                             <div class="product-action-1 show">
                                                 <a aria-label="Add To Cart" class="action-btn hover-up" href=""><i class="fi-rs-shopping-bag-add"></i></a>
@@ -211,6 +211,34 @@
 
     
 </main>
+
+<script>
+    // Select all elements with class 'product-price'
+    let productPriceDivs = document.querySelectorAll('.product-price');
+
+    // Loop through each product price div
+    productPriceDivs.forEach(productPriceDiv => {
+        // Select the span elements within each product price div
+        let offerPriceSpan = productPriceDiv.children[1];
+        let originalPriceSpan = productPriceDiv.children[2];
+
+        // Get the text content of the spans and parse them as integers
+        let offerPrice = parseInt(offerPriceSpan.textContent);
+        let originalPrice = parseInt(originalPriceSpan.textContent);
+
+        // Calculate the offer percentage
+        let offerPercentage = (1 - offerPrice / originalPrice) * 100;
+        let validOffer = Math.floor(offerPercentage);
+
+        // Create a new span element to display the offer percentage
+        let offerSpan = document.createElement('span');
+        offerSpan.textContent = "("+validOffer + '%  off)';
+
+        // Append the new span element to the product price div
+        productPriceDiv.appendChild(offerSpan);
+    });
+</script>
+
 
 
 

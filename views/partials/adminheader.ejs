@@ -19,7 +19,12 @@
     <link href="/admin_assets/css/main.css" rel="stylesheet" type="text/css" />
 </head>
 
+
+
+
 <body>
+ 
+    
     <div class="screen-overlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
@@ -32,7 +37,7 @@
         </div>
         <nav>
             <ul class="menu-aside">
-                <li class="menu-item active">
+                <li class="menu-item ">
                     <a class="menu-link" href="/admin/Dashboard"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
@@ -40,7 +45,7 @@
 
                   
                 <li class="menu-item ">
-                    <a class="menu-link" href="/admin/userlist"> <i class="icon material-icons md-store"></i>
+                    <a class="menu-link"  data-bs-toggle="tab" href="/admin/userlist"> <i class="icon material-icons md-store"></i>
                         <span class="text">users</span>
                     </a>
                    
@@ -58,13 +63,20 @@
                     <a class="menu-link" href="/admin/addproduct"> <i class="icon material-icons md-add_box"></i>
                         <span class="text">Add product</span>
                     </a>
-                    >
+              
                 </li>
                 
                 <li class="menu-item ">
                     <a class="menu-link" href="/admin/productlist"> <i class="icon material-icons md-store"></i>
                         <span class="text">View Products</span>
                     </a>
+                </li>
+
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/orderlist"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+                   
                 </li>
                        
                     
@@ -171,4 +183,9 @@
                    
                 </ul>
             </div>
+           
+            
+            
         </header>
+        
+        

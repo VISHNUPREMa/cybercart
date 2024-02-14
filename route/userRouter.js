@@ -10,7 +10,7 @@ const userProfileController = require("../controller/user/userProfileController"
 const {isUser} = require("../middlewares/authentication")
 
 
-router.get("/productdetail/:id",isUser,productController.loadProductDetails)
+
 router.get("/",userController.getHomePage);
 router.get("/login",userController.loadlogIn);
 
@@ -27,34 +27,40 @@ router.post("/login",userController.logIn);
 router.get("/forgetpassword",userController.forgetPasswordLoad);
 router.post("/forgetpassword",userController.forgetpassword);
 router.post("/forgetpasswordverify",userController.otpVerifyPasswordReset);
-router.get("/forgetpassword/resend",userController.resndOtpForForgetpassword);
+router.post("/forgetpassword/resend",userController.resndOtpForForgetpassword);
+router.post("/passwordreset",userController.newPasswordReset)
 
-router.get("/logout",userController.logoutUser);
+router.get("/logout",isUser,userController.logoutUser);
 
-router.get("/shop",userController.laodShopPage);
-
-
-router.get("/profile",userProfileController.getProfilePage);
-router.get("/createaddress",userProfileController.getCreateAddressPage);
-router.post("/createaddress",userProfileController.postAddressDetails);
-router.get("/editaddress",userProfileController.getEditAddressPage);
-router.post("/editaddress",userProfileController.postEditAdress)
+router.get("/shop",isUser,userController.laodShopPage);
+router.get("/productdetail/:id",isUser,productController.loadProductDetails);
 
 
-
-
-
+router.get("/profile",isUser,userProfileController.getProfilePage);
+router.get("/createaddress",isUser,userProfileController.getCreateAddressPage);
+router.post("/createaddress",isUser,userProfileController.postAddressDetails);
+router.get("/editaddress",isUser,userProfileController.getEditAddressPage);
+router.post("/editaddress",isUser,userProfileController.postEditAdress);
+router.post("/editprofile",userProfileController.postEditPassword);
 
 
 
-router.post("/cart", cartController.addToCart);
-router.get("/cart", cartController.loadCartPage);
-router.get("/cart/deleteitem",cartController.deleteItem);
-router.post("/updatequantity",cartController.updateQuantity);
 
 
-router.get("/checkout",orderController.loadCheckoutPage);
-router.post("/placeorder",orderController.postorderDetails);
+
+
+
+
+router.post("/cart",isUser, cartController.addToCart);
+router.get("/cart",isUser, cartController.loadCartPage);
+router.get("/cart/deleteitem",isUser,cartController.deleteItem);
+router.post("/updatequantity",isUser,cartController.updateQuantity);
+
+
+router.get("/checkout",isUser,orderController.loadCheckoutPage);
+router.post("/placeorder",isUser,orderController.postorderDetails);
+router.get("/orderdetails",orderController.loadOrderDetailPage);
+router.post("/deleteorder",orderController.deleteOrder);
 
 
 

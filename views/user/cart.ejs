@@ -142,7 +142,7 @@
                                                     <td class="cart_total_label">Total</td>
                                                     <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">₹
                                                         <text id="total">
-                                                            <%= grandTotal.toFixed(2) %>
+                                                           <h5> <%= grandTotal.toFixed(2) %></h5>
                                                         </text>
                                                     </span></td>
                                                     
@@ -151,7 +151,8 @@
                                         </table>
                                     </div>
                                     
-                                    <a href="/checkout" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
+                                    <a id="checkoutLink" href="/checkout?total=<%= grandTotal.toFixed(2) %>  & " class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
+
                                 </div>
                             </div>
                         </div>
@@ -164,6 +165,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
+
 function changeQuantity(productId, cartQuantity, count, productPrice, i, productQuantity) {
     const quantityelementId = `quantityvalue_${productId}`;
     const quantityElement = document.getElementById(quantityelementId);
@@ -174,7 +176,7 @@ function changeQuantity(productId, cartQuantity, count, productPrice, i, product
     const subAmountValue = parseFloat(subAmountElement.textContent);
 
     const totalElement = document.getElementById("total");
-    let grandTotal = 0;
+    let grandTotal = parseFloat(totalElement.textContent); 
 
     let newQuantity;
 
@@ -206,30 +208,38 @@ function changeQuantity(productId, cartQuantity, count, productPrice, i, product
         return;
     }
 
+    
+    grandTotal = grandTotal - subAmountValue + newSubAmountValue;
+
+    
+    if (totalElement) {
+        totalElement.textContent = grandTotal.toFixed(2);
+        const checkoutLink = document.getElementById("checkoutLink");
+        if (checkoutLink) {
+            checkoutLink.href = "/checkout?total=" + grandTotal.toFixed(2);
+        }
+    }
+
     $.ajax({
         url: "/updatequantity",
         method: "POST",
         data: {
             productId: productId,
             quantity: newQuantity,
-            count: count
+            count: count,
+            total: grandTotal.toFixed(2)
+        },
+        success: function(response) {
+            console.log("Successfully updated quantity");
+        },
+        error: function(xhr, status, error) {
+            console.error("Error updating quantity:", error);
         }
     });
 
-    
+  
     quantityElement.textContent = newQuantity;
-    subAmountElement.textContent = newSubAmountValue;
-
-  
-    const totalAmountElements = document.querySelectorAll("[id^='totalAmount_']");
-    totalAmountElements.forEach(function(element) {
-        grandTotal += parseFloat(element.textContent);
-    });
-
-  
-    if (totalElement) {
-        totalElement.textContent = grandTotal.toFixed(2);
-    }
+    subAmountElement.textContent = newSubAmountValue.toFixed(2);
 }
 
 

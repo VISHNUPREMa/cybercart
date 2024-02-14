@@ -20,8 +20,6 @@ const blockUser = async(req,res)=>{
        
         res.redirect("/admin/userlist");
      
-        
-
     }
     catch(error){
         console.log(error,"enderUserList  page error");

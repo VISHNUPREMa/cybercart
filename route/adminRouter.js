@@ -5,6 +5,7 @@ const userlisting = require("../controller/admin/userlisting");
 const categoryManagement = require("../controller/admin/categoryManagement");
 const addProduct = require("../controller/admin/addproduct");
 const productList = require("../controller/admin/productlist");
+const orderController = require("../controller/admin/orderController")
 
 const {isAdmin} = require("../middlewares/authentication")
 
@@ -19,6 +20,7 @@ router.post("/",adminController.adminHomePagePost);
 router.get("/dashboard",isAdmin,adminController.loadDashboardHome);
 
 router.get("/logout",isAdmin,adminController.logoutAdmin);
+
 
 
 
@@ -45,9 +47,16 @@ router.post("/category", isAdmin,categoryManagement.categoryDetailsPost);
  router.get("/productlist", isAdmin ,productList.loadProductList);
  router.get("/productlist/edit/:id", isAdmin, productList.loadEditProductPage);
  router.post("/productlist/edit/:id", isAdmin ,upload.array("image",5),productList.postEditProduct);
-
-
  router.get("/productlist/delete/:id", isAdmin ,productList.deleteProduct);
+
+
+ router.get("/orderlist",isAdmin, orderController.getOrderList);
+ router.get("/orderdetail",isAdmin,orderController.getOrderDetails);
+ router.post("/changeorderstatus",isAdmin,orderController.changeOrderStatus);
+ router.get("/deleteorder",isAdmin,orderController.deleteOrder);
+
+
+
  
 
 

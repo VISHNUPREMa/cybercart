@@ -63,13 +63,19 @@
                     <a class="menu-link" href="/admin/addproduct"> <i class="icon material-icons md-add_box"></i>
                         <span class="text">Add product</span>
                     </a>
-                    >
+            
                 </li>
 
                 <li class="menu-item ">
                     <a class="menu-link" href="/admin/productlist"> <i class="icon material-icons md-store"></i>
                         <span class="text">View Products</span>
                     </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/orderlist"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+                   
                 </li>
                 
                 
@@ -180,6 +186,7 @@
 
                         
                         <div class="price mt-1">offerprice: <%= data[i].offerprice.toFixed(2) %></div>
+                        <div class="price mt-1">availabible stock: <%= data[i].quantity %></div>
                         <div class="dropdown float-end" >
                             <a href="/admin/productlist/edit/<%= data[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
                                 <i class="material-icons md-edit"></i> Edit

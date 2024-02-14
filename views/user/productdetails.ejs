@@ -1,82 +1,25 @@
+<%- include("../partials/header") %>
 
-<!DOCTYPE html>
-<html class="no-js" lang="en">
+<style>
+    .availability {
+        color: white;
+    padding: 5px 10px; /* Adjust padding as needed */
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 20px; /* Increase font size as needed */
+    text-align: center; /* Center the text horizontally */
+}
 
+.available {
+    background-color: violet;
+}
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-product-left.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:46 GMT -->
-<head>
-    <meta charset="utf-8">
-    <title>Evara - eCommerce HTML Template</title>
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/favicon.svg">
-    <!-- Template CSS -->
-    <link rel="stylesheet" href="/assets/css/maind134.css?v=3.4">
-    <!-- Add this line to include jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+.out-of-stock {
+    background-color: red;
+}
 
-</head>
+</style>
 
-<body>
-    <!-- Quick view -->
-    
-    
-    <div class="mobile-header-active mobile-header-wrapper-style">
-        <div class="mobile-header-wrapper-inner">
-            <div class="mobile-header-top">
-                <div class="mobile-header-logo">
-                    <a href="index.html"><img src="/assets/imgs/theme/logo.svg" alt="logo"></a>
-                </div>
-                <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
-                    <button class="close-style search-close">
-                        <i class="icon-top"></i>
-                        <i class="icon-bottom"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="mobile-header-content-area">
-                <div class="mobile-search search-style-3 mobile-header-border">
-                    <form action="#">
-                        <input type="text" placeholder="Search for items…">
-                        <button type="submit"><i class="fi-rs-search"></i></button>
-                    </form>
-                </div>
-                <div class="mobile-menu-wrap mobile-header-border">
-                 
-                    <!-- mobile menu start -->
-                    <nav>
-                        
-                    </nav>
-                    <!-- mobile menu end -->
-                </div>
-                
-                <div class="mobile-social-icon">
-                    <h5 class="mb-15 text-grey-4">Follow Us</h5>
-                    <a href="#"><img src="/assets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
-                    <a href="#"><img src="/assets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
-                    <a href="#"><img src="/assets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
-                    <a href="#"><img src="/assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
-                    <a href="#"><img src="/assets/imgs/theme/icons/icon-youtube.svg" alt=""></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <main class="main">
-        <div class="page-header breadcrumb-wrap">
-            <div class="container">
-                <div class="breadcrumb">
-                    <a href="/" rel="nofollow">Home</a>
-                 
-                </div>
-            </div>
-        </div>
         <section class="mt-50 mb-50">
             <div class="container">
                 <div class="row flex-row-reverse">
@@ -150,18 +93,18 @@
                                                 <li><i class="fi-rs-credit-card mr-5"></i> Cash on Delivery available</li>
                                             </ul>
                                         </div>
-                                        <div class="attr-detail attr-color mb-15">
-                                            <strong class="mr-10">Color</strong>
-                                            <ul class="list-filter color-filter">
-                                                <li><a href="#" data-color="Red"><span class="product-color-red"></span></a></li>
-                                                <li><a href="#" data-color="Yellow"><span class="product-color-yellow"></span></a></li>
-                                                <li class="active"><a href="#" data-color="White"><span class="product-color-white"></span></a></li>
-                                                <li><a href="#" data-color="Orange"><span class="product-color-orange"></span></a></li>
-                                                <li><a href="#" data-color="Cyan"><span class="product-color-cyan"></span></a></li>
-                                                <li><a href="#" data-color="Green"><span class="product-color-green"></span></a></li>
-                                                <li><a href="#" data-color="Purple"><span class="product-color-purple"></span></a></li>
-                                            </ul>
+                                        <div class="availability <%= products.quantity > 0 ? 'available' : 'out-of-stock' %>">
+                                            <% if (products.quantity > 0) { %>
+                                                Product available
+                                            <% } else { %>
+                                                Out of stock
+                                            <% } %>
                                         </div>
+                                        
+                                        
+                                        
+
+                                   
                                        
                                         <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                                         <div class="detail-extralink">
@@ -198,6 +141,8 @@
             </div>
         </section>
     </main>
+    <%- include("../partials/footer") %>
+
     
     <!-- Preloader Start -->
    <!-- ... Your HTML code ... -->

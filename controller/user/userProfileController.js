@@ -3,6 +3,7 @@ const Products = require("../../model/productmanage");
 const Address = require("../../model/addressSchema");
 const Orders = require("../../model/orderSchema");
 const { ObjectId } = require('mongodb');
+const bcrypt = require('bcrypt');
 
 
 const getProfilePage = async(req,res)=>{
@@ -110,11 +111,51 @@ const postEditAdress = async(req,res)=>{
     }
 }
 
+const postEditPassword = async(req,res)=>{
+    try{
+        const{currentpassword ,newpassword ,confirmPassword,name,mobile  } = req.body;
+        
+    
+       const userid = req.session.user;
+       const user = await Users.findById(userid);
+        if(newpassword !== confirmPassword){
+            return res.status(400).json({ status: false, message: "Passwords do not match" });
+
+        }else if(!await bcrypt.compare(currentpassword,user.password) ){
+
+            return res.status(400).json({ status: false, message: "your current password is wrong" });
+        }else if(!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(newpassword)){
+            return res.status(400).json({ status: false, message: "Need strong password" });
+        }else{
+            const newHashedPassword = await bcrypt.hash(newpassword, 6);
+            if(newHashedPassword){
+                const updatePassword = await Users.updateOne({_id:userid},
+                    {$set:{password:newHashedPassword,name:name,mobile:mobile}}
+                    
+                    )
+
+                    if(updatePassword){
+                        return res.status(200).json({ status: true, message: "Details changed successfully !!!" });
+                    }
+            }
+        }
+
+    }
+    catch(error){
+        console.log(error,"postEditPassword page error");
+    }
+}
+
+
+
+
 
 module.exports = {
     getProfilePage,
     getCreateAddressPage,
     postAddressDetails,
     getEditAddressPage,
-    postEditAdress
+    postEditAdress,
+    postEditPassword
+    
 }

@@ -13,7 +13,8 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-3">
-                            <form action="/admin/category" method="post">
+                           
+                            <form id="categoryForm" action="/admin/category" method="post">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Name</label>
                                     <input type="text" placeholder="Type here" class="form-control" id="category_name" name="categoryName" />
@@ -24,11 +25,22 @@
                                     <label class="form-label">Description</label>
                                     <textarea placeholder="Type here" class="form-control" name="description"></textarea>
                                 </div>
+
+                                <!-- Add this div to display the error message -->
+                                 
+
                                 <div class="d-grid">
                                     
                                         <button class="btn btn-primary">Create category</button>
+                                        <div id="errorMessage" class="text-danger">
+                                            <% if (errorMessage) { %>
+                                                <%= errorMessage %>
+                                            <% } %>
+                                        </div>
+                                        
                                     
                                 </div>
+                                <div id="message"><%= locals.message %></div>
                             </form>
                         </div>
                         <div class="col-md-9">
@@ -86,7 +98,14 @@
                     </div> <!-- .row // -->
                 </div> <!-- card body .// -->
             </div> <!-- card .// -->
-        </section> <!-- content-main end// -->
+        </section>
+        
+   
+
+<!-- content-main end// -->
+
+
+        
 
         <%- include("../partials/adminfooter") %>
      

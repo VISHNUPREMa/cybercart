@@ -22,12 +22,17 @@ const orderSchema = mongoose.Schema({
         required:true
       },
       createdon:{
-        type:Date,
+        type:String,
         required:true
       },
       status:{
         type:String,
         required:true
+      },
+      cart:{
+        type:Array,
+        required:true
+
       }
 },{versionKey:false})
 

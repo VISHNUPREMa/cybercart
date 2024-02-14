@@ -3,7 +3,7 @@ const Category = require("../../model/category");
 const loadCategoryPage = async(req,res)=>{
     try{
         const categories = await Category.find(); 
-        res.render("admin/category", { categories });
+        res.render("admin/category", { categories,errorMessage: "" });
 
 
     }
@@ -13,18 +13,37 @@ const loadCategoryPage = async(req,res)=>{
 }
 
 
+
+
 const categoryDetailsPost = async (req, res) => {
     try {
-        const { categoryName,  description } = req.body;
-        await Category.create({ name: categoryName,  description: description });
+        const { categoryName, description } = req.body;
+        const alphabet = /^[A-Za-z]+$/;
+        const categories = await Category.find();
+        const existingCategory = await Category.findOne({ name: {$regex: categoryName, $options: 'i'}});
+        
 
-       
-        res.redirect("/admin/category");
+        if(description){
+            if (!alphabet.test(categoryName)) {
+                res.render("admin/category", { categories, errorMessage: "Category name is required and must be alphabetic" });
+            } else if (!existingCategory ) {
+                await Category.create({ name: categoryName, description: description });
+                res.redirect("/admin/category");
+            } else {
+                res.render("admin/category", { categories, errorMessage: "Category already exists" });
+            }
+        }else{
+            res.render("admin/category", { categories, errorMessage: "Description required " });
+        }
 
+
+      
     } catch (error) {
         console.log(error, "categoryDetailsPost");
     }
 };
+
+
 
 
 
@@ -72,12 +91,19 @@ const loadEditCategory = async(req,res)=>{
 const postEditCategory = async(req,res)=>{
     try{
         const categoryID = req.params.id;
-      
         const {name,brand,description} = req.body;
-        await Category.findByIdAndUpdate(categoryID,{name,brand,description});
-        res.redirect("/admin/category");
-        
+        const categories = await Category.find();
 
+   
+        const existingCategory = await Category.findOne({ name: {$regex: name, $options: 'i'}});
+        if (existingCategory && String(existingCategory._id) !== String(categoryID)) {
+      
+            res.render("admin/category", {categories, errorMessage: "Category already exists" });
+        } else {
+           
+            await Category.findByIdAndUpdate(categoryID,{name,brand,description});
+            res.redirect("/admin/category");
+        }
     }
     catch(error){
         console.log(error,"postEditCategory  page edit");

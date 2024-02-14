@@ -21,9 +21,11 @@
                                         </tr>
                                     </thead>
                                     <% for (let i = 0; i < data.length; i++) { %>
+                                       
                                   
                                     <tbody>
                                         <tr>
+                                            
                                            
                                             <td class="image product-thumbnail">
                                                 <% if (data[i].matchedProductDetails[0].image && data[i].matchedProductDetails[0].image.length > 0) { %>
@@ -34,13 +36,23 @@
                                                 <% } %>
                                             </td>
                                             <td>
-                                                <h5><a href="shop-product-full.html"><%= data[i].matchedProductDetails[0].name %></a></h5> <span class="product-qty"><%= data[i].quantity %></span>
+                                                <h5><a href="shop-product-full.html"><%= data[i].matchedProductDetails[0].name %></a></h5> 
+                                                
+                                                <span class="product-qty"><%= user.cart[i].quantity %></span>
+                                               
                                             </td>
-                                            <td><%= data[i].matchedProductDetails[0].offerprice %></td>
+                                        </td>
+                                        <% 
+                                            
+                                            let subTotalPrice = data[i].matchedProductDetails[0].offerprice * user.cart[i].quantity;
+                                        %>
+                                        <td><%= subTotalPrice %></td>
                                            
                                         </tr>
                                     </tbody>
+                                    
                                     <% } %>
+
                                 </table>
                             </div>
                         </div>
@@ -52,7 +64,9 @@
                                 </tr>
                                 <tr>
                                     <th><h5>Total</h5></th>
-                                    <td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900"></span><%= grandTotal.toFixed(2) %></td>
+                                  
+                                    <td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900"></span><%= grandTotal %></td>
+                                  
                                 </tr>
                             </table>
                         </div>
