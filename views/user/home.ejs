@@ -87,7 +87,9 @@
                         <ul class="categories">
                             <% if (typeof category !== 'undefined' && category) { %>
                                 <% for (let i = 0; i < category.length; i++) { %>
-                                    <li><a href=""><%= category[i].name %></a></li>
+                                    <li><a href="/categorysort/?category=<%= category[i].name %>"><%= category[i].name %></a></li>
+                                  
+                                    
                                 <% } %>
                             <% } else { %>
                                 <li><a href="#">Default Category 1</a></li>
@@ -96,6 +98,18 @@
                             <% } %>
                         </ul>
                     </div>
+
+                    <div class="widget-category mb-30">
+                        <h5 class="section-title style-1 mb-30 wow fadeIn animated">Sort by</h5>
+                        <ul class="categories">
+                           
+                            <li><a href="/categorysort/lowtohigh">Price: Low to High</a></li>
+                            <li><a href="/categorysort/hightolow">Price: High to Low</a></li>
+                            <li><a href="/categorysort/A-Z">Aa - Zz</a></li>
+                            <li><a href="/categorysort/Z-A">Zz - Aa</a></li>
+                        </ul>
+                    </div>
+                   
                     
                     
                    
@@ -122,9 +136,9 @@
                                                 
                                             </div></a>
                                             <div class="product-action-1">
-                                                <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
-                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                                                <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                                
+                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%= products[i]._id %>')"  ><i class="fi-rs-heart"></i></a>
+                                              
                                             </div>
                                             <div class="product-badges product-badges-position product-badges-mrg">
                                                 <span class="hot">Hot</span>
@@ -171,10 +185,7 @@
             </div>
         </div>
     </section>
- 
-    
-    
-    
+        
     <section class="section-padding">
         <div class="container pb-20">
             <h3 class="section-title mb-20 wow fadeIn animated"><span>Featured</span> Brands</h3>
@@ -182,61 +193,93 @@
                 <div class="slider-arrow slider-arrow-2 carausel-6-columns-arrow" id="carausel-6-columns-3-arrows"></div>
                 <div class="carausel-6-columns text-center" id="carausel-6-columns-3">
                     <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/brand-1.png" alt="">
+                        <img class="img-grey-hover" src="assets/imgs/banner/logo1.jpeg" alt="">
                     </div>
                     <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/brand-2.png" alt="">
+                        <img class="img-grey-hover" src="assets/imgs/banner/logo2.jpg" alt="">
                     </div>
                     <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/brand-3.png" alt="">
+                        <img class="img-grey-hover" src="assets/imgs/banner/logo3.png" alt="">
                     </div>
                     <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/brand-4.png" alt="">
+                        <img class="img-grey-hover" src="assets/imgs/banner/logo4.png" alt="">
                     </div>
                     <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/brand-5.png" alt="">
+                        <img class="img-grey-hover" src="assets/imgs/banner/logo5.png" alt="">
                     </div>
                     <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/brand-6.png" alt="">
+                        <img class="img-grey-hover" src="assets/imgs/banner/logo6.png" alt="">
                     </div>
                     <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/brand-3.png" alt="">
+                        <img class="img-grey-hover" src="assets/imgs/banner/logo7.png" alt="">
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+ 
+    
+    
+
+
 
 
     
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-    // Select all elements with class 'product-price'
+   
     let productPriceDivs = document.querySelectorAll('.product-price');
 
-    // Loop through each product price div
+    
     productPriceDivs.forEach(productPriceDiv => {
-        // Select the span elements within each product price div
+     
         let offerPriceSpan = productPriceDiv.children[1];
         let originalPriceSpan = productPriceDiv.children[2];
 
-        // Get the text content of the spans and parse them as integers
+     
         let offerPrice = parseInt(offerPriceSpan.textContent);
         let originalPrice = parseInt(originalPriceSpan.textContent);
 
-        // Calculate the offer percentage
+     
         let offerPercentage = (1 - offerPrice / originalPrice) * 100;
         let validOffer = Math.floor(offerPercentage);
 
-        // Create a new span element to display the offer percentage
+  
         let offerSpan = document.createElement('span');
         offerSpan.textContent = "("+validOffer + '%  off)';
 
-        // Append the new span element to the product price div
+    
         productPriceDiv.appendChild(offerSpan);
     });
+
+    function addToWishlist(productId){
+       
+        $.ajax({
+            url:"/wishlist/add",
+            method:"POST",
+            data:{
+                product:productId
+            },
+            success:function(response){
+ if(response.status == true){
+    Swal.fire({
+
+icon: "success",
+title: "Product added to wishlist",
+showConfirmButton: false,
+timer: 1500
+});
+ }
+            }
+        })
+        
+
+    }
 </script>
 
 

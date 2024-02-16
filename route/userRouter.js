@@ -5,6 +5,8 @@ const productController = require("../controller/user/productDetails");
 const cartController = require("../controller/user/cartController");
 const orderController = require("../controller/user/orderController");
 const userProfileController = require("../controller/user/userProfileController");
+const sortController = require("../controller/user/sortController");
+const wishlistController = require("../controller/user/wishlistcontroller");
 
 
 const {isUser} = require("../middlewares/authentication")
@@ -62,7 +64,18 @@ router.post("/placeorder",isUser,orderController.postorderDetails);
 router.get("/orderdetails",orderController.loadOrderDetailPage);
 router.post("/deleteorder",orderController.deleteOrder);
 
+router.get("/categorysort",sortController.categorySort);
+router.get("/categorysort/lowtohigh",sortController.lowToHigh);
+router.get("/categorysort/hightolow",sortController.HighToLow);
+router.get("/categorysort/A-Z",sortController.AtoZ);
+router.get("/categorysort/Z-A",sortController.ZtoA);
+router.post("/searchproduct",sortController.searchedData)
 
+
+
+router.get("/wishlist",wishlistController.getWishList);
+router.post("/wishlist/add",wishlistController.addToWishlist);
+router.get("/wishlist/delete",wishlistController.deleteWishlist);
 
 
 

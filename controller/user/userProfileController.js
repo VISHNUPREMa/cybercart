@@ -28,7 +28,7 @@ const getCreateAddressPage = async(req,res)=>{
     try{
        
         
-        res.render("user/address")
+        res.render("user/address",{user:true})
 
     }
     catch(error){
@@ -37,39 +37,59 @@ const getCreateAddressPage = async(req,res)=>{
 }
 
 
-const postAddressDetails = async(req,res)=>{
-    try{
-        const {address_type,name,housename,landmark,city,state,pincode,phone,altphone} = req.body;
-       
-     const id = req.session.user;
-     const userObjectId = new ObjectId(id)
-     const addressData = await Address.create({
-        userID:userObjectId,
-        address:[{
-            addresstype:address_type,
-            name:name,
-        housename:housename,
-        landmark:landmark,
-        city:city,
-        state:state,
-        pincode:pincode,
-        phone:phone,
-        altphone:altphone
-        }]
 
+const postAddressDetails = async (req, res) => {
+    try {
+        const { address_type, name, housename, landmark, city, state, pincode, phone, altphone } = req.body;
+        const id = req.session.user;
+        const userObjectId = new ObjectId(id);
 
-     });
+      
+        let existingAddress = await Address.findOne({ userID: userObjectId });
 
-     req.session.address = addressData;
-     res.redirect("/profile");
+        if (existingAddress) {
+            
+            existingAddress.address.push({
+                addresstype: address_type,
+                name: name,
+                housename: housename,
+                landmark: landmark,
+                city: city,
+                state: state,
+                pincode: pincode,
+                phone: phone,
+                altphone: altphone
+            });
 
+            
+            await existingAddress.save();
+            req.session.address = existingAddress;
+        } else {
+            
+            const newAddress = await Address.create({
+                userID: userObjectId,
+                address: [{
+                    addresstype: address_type,
+                    name: name,
+                    housename: housename,
+                    landmark: landmark,
+                    city: city,
+                    state: state,
+                    pincode: pincode,
+                    phone: phone,
+                    altphone: altphone
+                }]
+            });
 
-   
+            req.session.address = newAddress;
         }
-    catch(error){
-        console.log(error,"postAddressDetails  page error");
+
+        res.redirect("/profile");
+    } catch (error) {
+        console.log(error, "postAddressDetails page error");
     }
 }
+
 
 
 const getEditAddressPage = async(req,res)=>{

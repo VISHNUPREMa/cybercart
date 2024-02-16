@@ -89,7 +89,7 @@
                                                         <% for(i=order.length-1;i>=0;i--){ %>
                                                         <tbody>
                                                             <tr>
-                                                                <td><%= order[i]._id %></td>
+                                                                <td><%= order[i].orderId %></td>
                                                                 <td><%= order[i].createdon %></td>
                                                                 <td><%= order[i].status %></td>
                                                                 <td><%= order[i].totalprice %></td>
@@ -121,27 +121,31 @@
                                         <div class="row">
                                             <% if(address) { %>
                                                 
-                                              
+                                            <% for(i=0;i<address.address.length;i++){ %>
+                                                  
                                             <div class="col-lg-6">
                                                 
                                                 <div class="card mb-3 mb-lg-0">
                                                     <div class="card-header">
-                                                        <h5 class="mb-0"><%= address.address[0].addresstype %></h5>
+                                                        <h5 class="mb-0"><%= address.address[i].addresstype %></h5>
                                                         
                                                     </div>
                                                     <div class="card-body">
-                                                        <address><%= address.address[0].name %><br> <%= address.address[0].housename %><br> <%= address.address[0].landmark %> <br><%= address.address[0].city %> <br><%= address.address[0].state %> <br> <%= address.address[0].pincode %> <br> <%= address.address[0].phone %> <br> <%= address.address[0].altphone %> </address>
+                                                        <address><%= address.address[i].name %><br> <%= address.address[i].housename %><br> <%= address.address[i].landmark %> <br><%= address.address[i].city %> <br><%= address.address[i].state %> <br> <%= address.address[i].pincode %> <br> <%= address.address[i].phone %> <br> <%= address.address[i].altphone %> </address>
                                                         <br><br>
-                                                        <a href="/editaddress?id=<%= address.address[0]._id %> " class="btn-small"><h5>Edit</h5></a>
+                                                        <a href="/editaddress?id=<%= address.address[i]._id %> " class="btn-small"><h5>Edit</h5></a>
                                                     </div>
                                                 </div>
                                                 <br>
-                                                <h5>create new address</h5>
-                                                <form action="/createaddress" method="get">
-                                                    <button class="submit submit-auto-width" type="submit">Create New</button>
-                                                   </form>
+                                                
+                                                
                                            
                                             </div>
+                                            <% } %>
+                                            <h5>create new address</h5>
+                                            <form action="/createaddress" method="get">
+                                                <button class="submit submit-auto-width" type="submit">Create New</button>
+                                               </form>
                                            
                                           
                                             <% }else{ %>

@@ -12,9 +12,6 @@
         width: 100%; 
         height: 250px; 
     }
-    #search{
-        margin-left: 870px;
-    }
 </style>
 
 
@@ -30,59 +27,14 @@
         </div>
     </div>
 </div>
-
-
 <main class="main">
    
     
     <section class="product-tabs pt-25 pb-20 wow fadeIn animated">
-       
         <div class="container">
             <div class="row">
-              
-                <div id="search" class="col-lg-12" >
-                    
-                    <section class="search-bar col-lg-4">
-                        <div class="container">
-                            <form action="/searchproduct" method="POST" class="d-flex justify-content-end align-items-center">
-                                <input type="text" name="query" placeholder="Search products..." class="form-control">
-                                <button type="submit" class="btn btn-primary ml-2">Search</button>
-                            </form>
-                        </div>
-                    </section>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="widget-category mb-30">
-                        <h5 class="section-title style-1 mb-30 wow fadeIn animated">Category</h5>
-                        <ul class="categories">
-                            <% if (typeof category !== 'undefined' && category) { %>
-                                <% for (let i = 0; i < category.length; i++) { %>
-                                    <li><a href="/categorysort/?category=<%= category[i].name %>"><%= category[i].name %></a></li>
-                                <% } %>
-                            <% } else { %>
-                                <li><a href="#">Default Category 1</a></li>
-                                <li><a href="#">Default Category 2</a></li>
-                                <!-- Add more default categories if needed -->
-                            <% } %>
-                        </ul>
-                    </div>
-                    <div class="widget-category mb-30">
-                        <h5 class="section-title style-1 mb-30 wow fadeIn animated">Sort by</h5>
-                        <ul class="categories">
-                           
-                            <li><a href="/categorysort/lowtohigh">Price: Low to High</a></li>
-                            <li><a href="/categorysort/hightolow">Price: High to Low</a></li>
-                            <li><a href="/categorysort/A-Z">Aa - Zz</a></li>
-                            <li><a href="/categorysort/Z-A">Zz - Aa</a></li>
-                        </ul>
-                    </div>
-                    
-                    
-                   
-                    
-                </div>
-                <div class="col-lg-9">
+                
+                <div class="col-lg-9 mx-auto">
                     <div class="tab-header">
                         
                         <a href="#" class="view-more d-none d-md-flex">View More<i class="fi-rs-angle-double-small-right"></i></a>
@@ -103,7 +55,7 @@
                                                 
                                             </div></a>
                                             <div class="product-action-1">
-                                                
+                                               
                                                 <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%= products[i]._id %>')"  ><i class="fi-rs-heart"></i></a>
                                                 
                                             </div>
@@ -140,6 +92,7 @@
                             <!--End product-grid-4-->
                         </div>
                         <% } else { %>
+                            <h1>sample</h1>
 
 
                             <% } %>
@@ -155,38 +108,8 @@
  
     
     
-
-    <section class="section-padding">
-        <div class="container pb-20">
-            <h3 class="section-title mb-20 wow fadeIn animated"><span>Featured</span> Brands</h3>
-            <div class="carausel-6-columns-cover position-relative wow fadeIn animated">
-                <div class="slider-arrow slider-arrow-2 carausel-6-columns-arrow" id="carausel-6-columns-3-arrows"></div>
-                <div class="carausel-6-columns text-center" id="carausel-6-columns-3">
-                    <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/logo1.jpeg" alt="">
-                    </div>
-                    <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/logo2.jpg" alt="">
-                    </div>
-                    <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/logo3.png" alt="">
-                    </div>
-                    <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/logo4.png" alt="">
-                    </div>
-                    <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/logo5.png" alt="">
-                    </div>
-                    <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/logo6.png" alt="">
-                    </div>
-                    <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/logo7.png" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    
+ 
 
 
     

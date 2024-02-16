@@ -26,6 +26,7 @@ const loadAddProduct = async(req,res)=>{
 const addProduct = async (req, res) => {
     try {
         const productData = req.body;
+      
         const images = req.files ? req.files.map(file => file.filename) : [];
 
       

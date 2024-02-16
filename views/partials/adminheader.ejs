@@ -22,7 +22,26 @@
 
 
 
+
+
 <body>
+    <style>
+        .active {
+            background-color: #4CAF50; /* change this to your preferred color */
+            color: white;
+        }
+    </style>
+    
+    <script>
+        var listItems = document.querySelectorAll('.menu-item');
+        listItems.forEach(function(el) {
+            el.addEventListener('click', function() {
+                listItems.forEach(elem => elem.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+    
  
     
     <div class="screen-overlay"></div>
@@ -45,7 +64,7 @@
 
                   
                 <li class="menu-item ">
-                    <a class="menu-link"  data-bs-toggle="tab" href="/admin/userlist"> <i class="icon material-icons md-store"></i>
+                    <a class="menu-link"   href="/admin/userlist"> <i class="icon material-icons md-store"></i>
                         <span class="text">users</span>
                     </a>
                    
@@ -187,5 +206,7 @@
             
             
         </header>
+       
+        
         
         

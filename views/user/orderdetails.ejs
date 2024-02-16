@@ -21,16 +21,15 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th width="40%">order Id</th>
                                             <th width="40%">Product</th>
+                                            <th width="40%">Quantity</th>
                                             <th width="20%">Unit Price</th>
-                                            <th width="20%">Quantity</th>
-                                            <th width="20%" class="text-end">Total</th>
+                                         
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <% if(order){ %>
-                                            <div class="info" id="orderid"><%= order._id %>  </div>
+                                            <div class="info" id="orderid">ORDER ID : <%= order.orderId %>  </div>
                                             <% for(i=0;i<order.products.length;i++){ %>
                                                 
                                             <tr>
@@ -38,7 +37,7 @@
                                                 <td>
                                                     <a class="itemside" href="#">
                                                         <div class="left">
-                                                            <img src="/uploads/products/<%= order.products[i].image[0] %>" width="60" height="40" class="img-xs" alt="Item">
+                                                            <img src="/uploads/products/<%= order.products[i].image[0] %>" width="80" height="80" class="img-xs" alt="Item">
                                                         </div>
 
                                                         <div class="info"><%= order.products[i].name %>  </div>

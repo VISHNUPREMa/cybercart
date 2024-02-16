@@ -83,22 +83,26 @@ const loadCartPage = async (req, res) => {
         const userObjectId = new ObjectId(userID);
         const userData = await Users.findById(userID);
         const productIDs = userData.cart.map(item=>item.id);
-        const products = await Products.find({_id:{$in:productIDs}});
+        const products = await Products.find({
+            _id: { $in: productIDs },
+            isListed: true 
+        });
+        
         let data = await Users.aggregate([
-            {$match:{_id:userObjectId}},
-            { $unwind:"$cart"},
-            {$project:
-                {proID:{"$toObjectId":"$cart.id"},
-                quantity:"$cart.quantity"
-            }},
-            {$lookup:{
-                from:"products",
-                localField:"proID",
-                foreignField:"_id",
-                as:"matchedProductDetails"
-            }}
-            
-        ])
+            { $match: { _id: userObjectId } },
+            { $unwind: "$cart" },
+            { $project: { proID: { "$toObjectId": "$cart.id" }, quantity: "$cart.quantity" } },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "proID",
+                    foreignField: "_id",
+                    as: "matchedProductDetails"
+                }
+            },
+           
+            { $match: { "matchedProductDetails.isListed": true } }
+        ]);
 
 
 

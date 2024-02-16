@@ -10,8 +10,8 @@
                     </div>
                 </div>
             </div>
-            <form action="/admin/productlist/edit/<%= editProduct.id %>" method="post" enctype="multipart/form-data">
-
+           
+            <form  id="form" action="/admin/productlist/edit/<%= editProduct.id %>" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-lg-10">
                     <div class="card mb-4">
@@ -26,18 +26,18 @@
                                 <div class="col-md-9">
                                     <div class="mb-4">
                                         <label class="form-label">Product title</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="name" name="name" onkeyup="validateName()" value="<%= editProduct.name %>">
-                                        <div id="name_error" class="alert alert-danger" style="display: none;"></div>
+                                        <input type="text" placeholder="Type here" class="form-control" id="editname" name="name"  value="<%= editProduct.name %>">
+                                        <div id="edit_name_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Specification</label>
-                                        <textarea placeholder="Type here" class="form-control" rows="4" id="specification" name="specification" onkeyup="validateSpec()"><%= editProduct.specification %></textarea>
-                                        <div id="spec_error" class="alert alert-danger" style="display: none;"></div>
+                                        <textarea placeholder="Type here" class="form-control" rows="4" id="editspecification" name="specification" ><%= editProduct.specification %></textarea>
+                                        <div id="edit_spec_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Brand name</label>
-                                        <input type="text" placeholder="Type here" class="form-control" name="brand" id="brand" onkeyup="validateBrand()"  value="<%= editProduct.brand %>">
-                                        <div id="brand_error" class="alert alert-danger" style="display: none;"></div>
+                                        <input type="text" placeholder="Type here" class="form-control" name="editbrand" id="brand"   value="<%= editProduct.brand %>">
+                                        <div id="edit_brand_error" class="alert alert-danger" style="display: none;"></div>
                                         
                                     </div>
                                 </div> 
@@ -50,13 +50,13 @@
                                 <div class="col-md-9">
                                     <div class="mb-4">
                                         <label class="form-label"> Price</label>
-                                        <input type="text" placeholder="$00.0" class="form-control" name="price" id="price" onkeyup="validatePrice()"  value="<%= editProduct.price %>">
-                                        <div id="price_error" class="alert alert-danger" style="display: none;"></div>
+                                        <input type="text" placeholder="$00.0" class="form-control" name="price" id="editprice"   value="<%= editProduct.price %>">
+                                        <div id="edit_price_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Offered Price</label>
-                                        <input type="text" placeholder="$00.0" class="form-control" name="offerprice" id="offerprice" onkeyup="validateOfferprice()"  value="<%= editProduct.offerprice %>">
-                                        <div id="offerprice_error" class="alert alert-danger" style="display: none;"></div>
+                                        <input type="text" placeholder="$00.0" class="form-control" name="offerprice" id="editofferprice"   value="<%= editProduct.offerprice %>">
+                                        <div id="edit_offerprice_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                 </div>
                                
@@ -71,8 +71,8 @@
                                 <div class="col-md-9">
                                     <div class="mb-4">
                                         <label class="form-label"> Quantity</label>
-                                        <input type="text" placeholder="$00.0" class="form-control" name="quantity" id="quantity" onkeyup="validateQuantity()" value="<%= editProduct.quantity %>">
-                                        <div id="quantity_error" class="alert alert-danger" style="display: none;"></div>
+                                        <input type="text" placeholder="$00.0" class="form-control" name="quantity" id="editquantity"  value="<%= editProduct.quantity %>">
+                                        <div id="edit_quantity_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                    
                                 </div>
@@ -87,8 +87,8 @@
                                 <div class="col-md-9">
                                     <div class="mb-4">
                                         <label class="form-label"> Category</label>
-                                        <input type="text" placeholder="$00.0" class="form-control" name="category" id="category"  value="<%= editProduct.category %>">
-                                        <div id="quantity_error" class="alert alert-danger" style="display: none;"></div>
+                                        <input type="text" placeholder="$00.0" class="form-control" name="category" id="editcategory"  value="<%= editProduct.category %>">
+                                        <div id="edit_quantity_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                    
                                 </div>
@@ -109,8 +109,8 @@
                                     
                                     <div class="mb-4">
                                         <label class="form-label">Images</label>
-                                        <input class="form-control" type="file" name="image"  id="imageInput" onchange="validateImage()" multiple   value="<%= editProduct.image[0] %>" >
-                                        <div id="image_error" class="alert alert-danger" style="display: none;">Select at least one image</div>
+                                        <input class="form-control" type="file" name="image"  id="editimageInput"  multiple   value="<%= editProduct.image[0] %>" >
+                                        <div id="edit_image_error" class="alert alert-danger" style="display: none;">Select at least one image</div>
                                     </div>
                                 
                                     
@@ -120,7 +120,7 @@
                     </div>
                 </div>
             </div>
-            <form action="/admin/productlist/edit/<%= editProduct.id %>" method="post" enctype="multipart/form-data">
+            
             <div>
               
                 <button class="btn btn-md rounded " type="submit" id="button" >Edit</button>
@@ -139,73 +139,90 @@
     <script>
 
 
-        const nameInput = document.getElementById("name");
-        const specInput = document.getElementById("specification");
+        const nameInput = document.getElementById("editname");
+        const specInput = document.getElementById("editspecification");
         const brandInput = document.getElementById("brand");
-        const priceInput = document.getElementById("price");
-        const offerpriceInput = document.getElementById("offerprice");
-        const quantityInput = document.getElementById("quantity");
-        const publishButton = document.getElementById("button");
+        const priceInput = document.getElementById("editprice");
+        const offerpriceInput = document.getElementById("editofferprice");
+        const quantityInput = document.getElementById("editquantity");
+        const editButton = document.getElementById("button");
+        const name_error = document.getElementById("edit_name_error");
+        const spec_error = document.getElementById("edit_spec_error");
+        const brand_error = document.getElementById("edit_brand_error");
+        const price_error = document.getElementById("edit_price_error");
+        const offerprice_error = document.getElementById("edit_offerprice_error");
+        const quantity_error = document.getElementById("edit_quantity_error")
+
+
         
   
 
-        const imageInput = document.getElementById("imageInput");
-        const imageError = document.getElementById("image_error");
+        const imageInput =  document.getElementById("editimageInput");
+        const imageError =  document.getElementById("edit_image_error");
 
         
         
-        function validateName(){
+        function validateEditName(){
             const name = nameInput.value.trim();
             if (name === "" ) {
         name_error.style.display = "block";
         name_error.style.color = "red";
         name_error.textContent = "Enter a valid name";
+        return false;
     } else if(name.length > 25){
         name_error.style.display = "block";
         name_error.style.color = "red";
         name_error.textContent = "Enter a smaller name";
+        return false;
 
     } else{
         name_error.style.display = "none";
+        return true;
     }
         }
 
 
-        function validateSpec(){
+        function validateEditSpec(){
             const spec = specInput.value.trim();
             if (spec === "") {
         spec_error.style.display = "block";
         spec_error.style.color = "red";
         spec_error.textContent = "Enter a valid specification";
+        return false;
     } else {
         spec_error.style.display = "none";
+        return true;
     }
         }
 
-        function validateBrand(){
+        function validateEditBrand(){
             const brand = brandInput.value.trim();
             if (brand === "") {
         brand_error.style.display = "block";
         brand_error.style.color = "red";
         brand_error.textContent = "Enter a valid brand name";
+        return false;
     } else {
         brand_error.style.display = "none";
+        return true;
     }
         }
 
 
-        function validatePrice(){
+        function validateEditPrice(){
             const price = priceInput.value.trim();
             if (price === '' || !/^\d+$/.test(price)) {
         price_error.style.display = "block";
         price_error.style.color = "red";
         price_error.textContent = "Enter a valid price";
+        return false;
     } else {
         price_error.style.display = "none";
+        return true;
     }
         }
 
-        function validateOfferprice() {
+        function validateEditOfferprice() {
     const offerprice = offerpriceInput.value.trim();
     const price = priceInput.value.trim();
 
@@ -214,33 +231,39 @@
         offerprice_error.style.display = "block";
         offerprice_error.style.color = "red";
         offerprice_error.textContent = "Enter a valid offer price";
+        return false;
     } else if (parseInt(offerprice) >= parseInt(price)) {
         
         offerprice_error.style.display = "block";
         offerprice_error.style.color = "red";
         offerprice_error.textContent = "Offer price must be less than the original price";
+        return false;
     } else {
         
         offerprice_error.style.display = "none";
+        return true;
     }
 }
 
 
 
 
-        function validateQuantity(){
+        function validateEditQuantity(){
             const quantity = quantityInput.value.trim();
             if (quantity === '' || !/^\d+$/.test(quantity)) {
         quantity_error.style.display = "block";
         quantity_error.style.color = "red";
         quantity_error.textContent = "Enter a valid quantity";
+        return false;
     } else if(quantity<= 0){
         quantity_error.style.display = "block";
         quantity_error.style.color = "red";
         quantity_error.textContent = "Enter a positive quantity number";
+        return false;
 
     }else {
         quantity_error.style.display = "none";
+        return true;
     }
         }
 
@@ -250,17 +273,39 @@
 
 
 
-function validateImage() {
+function validateEditImage() {
     const selectedFiles = imageInput.files;
 
     if (selectedFiles.length === 0) {
         imageError.style.display = "block";
         imageError.style.color = "red";
         imageError.textContent = "Select at least one image";
+        return false;
     } else {
         imageError.style.display = "none";
+        return true;
     }
 }
+
+editButton.addEventListener("click",(event)=>{
+    const isValidName = validateEditName();
+    const isValidSpec = validateEditSpec();
+    const isValidBrand = validateEditBrand();
+    const isValidPrie =  validateEditPrice();
+    const isValidOfferprice = validateEditOfferprice();
+    const isValidQuantity = validateEditQuantity();
+    const isValidImage = validateEditImage()
+
+    if(!isValidName || !isValidSpec || !isValidBrand || !isValidPrie || !isValidOfferprice || !isValidQuantity || !isValidImage){
+        console.log("abc");
+        event.preventDefault();
+    }else{
+        console.log("1234");
+
+        document.getElementById("form").submit();
+    }
+
+})
 
 
 

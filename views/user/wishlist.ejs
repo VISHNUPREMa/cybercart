@@ -1,0 +1,108 @@
+<%- include("../partials/header") %>
+   
+    <main class="main">
+      
+        <section class="mt-50 mb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table shopping-summery text-center">
+                                <thead>
+                                    <tr class="main-heading">
+                                        <th scope="col" colspan="2">Product</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Stock Status</th>
+                                        <th scope="col">Action</th>
+                                        <th scope="col">Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                   
+                                    <% if(wishlist.data && wishlist.data.length > 0){ %>
+                                        <% for(let i = 0; i < wishlist.data.length; i++){ %>
+                                            <tr>
+                                                <td class="image product-thumbnail"><img src="/uploads/products/<%= wishlist.data[i].image %>" alt="#"></td>
+                                                <td class="product-des product-name">
+                                                    <h5 class="product-name"><a href="shop-product-right.html"><%= wishlist.data[i].name %></a></h5>
+                                                    <p class="font-xs"><%= wishlist.data[i].brand %><br> <%= wishlist.data[i].category %></p>
+                                                </td>
+                                                <td class="price" data-title="Price"><span><%= wishlist.data[i].price %></span></td>
+                                                <td class="text-center" data-title="Stock">
+                                                    <% if(wishlist.data[i].units > 0){ %>
+                                                        <span class="color3 font-weight-bold">In Stock</span>
+                                                    <% } else { %>
+                                                        <span class="color-red font-weight-bold">Out of Stock</span>
+                                                    <% } %>
+                                                </td>
+                                                <td class="text-right" data-title="Cart">
+                                                    <button class="btn btn-sm" onclick="addToCart('<%= wishlist.data[i].productId %>','<%= wishlist.data[i].units %>','/uploads/products/<%= wishlist.data[i].image %>')"><i class="fi-rs-shopping-bag mr-5"></i>Add to cart</button>
+                                                </td>
+                                                <td class="action" data-title="Remove"><a href="/wishlist/delete/?id=<%= wishlist.data[i].productId %>"><i class="fi-rs-trash"></i></a></td>
+                                            </tr>
+                                        <% } %>
+                                    <% } %>
+                                    
+                                 
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+        function addToCart(productID, availability,image){
+            const quantity = 1;
+
+            $.ajax({
+        url: `/cart`,
+        method: "POST",
+        data: {
+            id: productID,
+            quantity: quantity,
+            availability: availability
+        },
+        success: function (res) {
+
+
+            if(res.status === true){
+                Swal.fire({
+                title: "Add This Product To Cart",
+                text: "continue shopping",
+                imageUrl: image,
+                imageWidth: 250,
+                imageHeight: 250,
+                imageAlt: "Custom image",
+                showCancelButton: true,
+                cancelButtonColor: "#d33",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `/cart`;
+                }
+            })
+            
+        }else if(res.status === false){
+            Swal.fire({
+                                title: 'unavailable!!',
+                                text: res.message,
+                                icon: 'error', 
+                                timer: 2000,
+                            })
+        }
+           
+        },
+        error: function (error) {
+            console.error("Error:", error);
+        }
+    });
+            
+
+
+        }
+    </script>
+    <%- include("../partials/footer") %>

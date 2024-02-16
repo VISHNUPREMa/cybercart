@@ -8,7 +8,7 @@
                     </div>
                 </div>
             </div>
-            <form action="/admin/addproduct" method="post" enctype="multipart/form-data">
+            <form id="myForm" action="/admin/addproduct" method="post" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-lg-10">
                     <div class="card mb-4">
@@ -23,17 +23,17 @@
                                 <div class="col-md-9">
                                     <div class="mb-4">
                                         <label class="form-label">Product title</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="name" name="name" onkeyup="validateName()">
+                                        <input type="text" placeholder="Type here" class="form-control" id="name" name="name" >
                                         <div id="name_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Specification</label>
-                                        <textarea placeholder="Type here" class="form-control" rows="4" id="specification" name="specification" onkeyup="validateSpec()"></textarea>
+                                        <textarea placeholder="Type here" class="form-control" rows="4" id="specification" name="specification" ></textarea>
                                         <div id="spec_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Brand name</label>
-                                        <input type="text" placeholder="Type here" class="form-control" name="brand" id="brand" onkeyup="validateBrand()">
+                                        <input type="text" placeholder="Type here" class="form-control" name="brand" id="brand" >
                                         <div id="brand_error" class="alert alert-danger" style="display: none;"></div>
                                         
                                     </div>
@@ -47,12 +47,12 @@
                                 <div class="col-md-9">
                                     <div class="mb-4">
                                         <label class="form-label"> Price</label>
-                                        <input type="text" placeholder="$00.0" class="form-control" name="price" id="price" onkeyup="validatePrice()">
+                                        <input type="text" placeholder="$00.0" class="form-control" name="price" id="price" >
                                         <div id="price_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Offered Price</label>
-                                        <input type="text" placeholder="$00.0" class="form-control" name="offerprice" id="offerprice" onkeyup="validateOfferprice()">
+                                        <input type="text" placeholder="$00.0" class="form-control" name="offerprice" id="offerprice" >
                                         <div id="offerprice_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                 </div>
@@ -68,7 +68,7 @@
                                 <div class="col-md-9">
                                     <div class="mb-4">
                                         <label class="form-label"> Quantity</label>
-                                        <input type="text" placeholder="$00.0" class="form-control" name="quantity" id="quantity" onkeyup="validateQuantity()">
+                                        <input type="text" placeholder="$00.0" class="form-control" name="quantity" id="quantity" >
                                         <div id="quantity_error" class="alert alert-danger" style="display: none;"></div>
                                     </div>
                                    
@@ -110,7 +110,7 @@
                                     <div class="mb-4">
                                         <div id="addedImagesContainer" class="thumbnails-container"></div>
                                         <label class="form-label">Images</label>
-                                        <input class="form-control" type="file" name="image"  id="imageInput" onchange="validateImage()" multiple accept=".png , .jpg , .jpeg" >
+                                        <input class="form-control" type="file" name="image"  id="imageInput"  multiple accept=".png , .jpg , .jpeg" >
                                         <div id="image_error" class="alert alert-danger" style="display: none;">Select at least one image</div>
                                     </div>
                                 
@@ -215,13 +215,16 @@ function handleFileSelect(event) {
         name_error.style.display = "block";
         name_error.style.color = "red";
         name_error.textContent = "Enter a valid name";
+        return false;
     } else if(name.length > 25){
         name_error.style.display = "block";
         name_error.style.color = "red";
         name_error.textContent = "Enter a smaller name";
+        return false;
 
     } else{
         name_error.style.display = "none";
+        return true;
     }
         }
 
@@ -232,8 +235,10 @@ function handleFileSelect(event) {
         spec_error.style.display = "block";
         spec_error.style.color = "red";
         spec_error.textContent = "Enter a valid specification";
+        return false;
     } else {
         spec_error.style.display = "none";
+        return true;
     }
         }
 
@@ -243,8 +248,10 @@ function handleFileSelect(event) {
         brand_error.style.display = "block";
         brand_error.style.color = "red";
         brand_error.textContent = "Enter a valid brand name";
+        return false;
     } else {
         brand_error.style.display = "none";
+        return true;
     }
         }
 
@@ -255,8 +262,10 @@ function handleFileSelect(event) {
         price_error.style.display = "block";
         price_error.style.color = "red";
         price_error.textContent = "Enter a valid price";
+        return false;
     } else {
         price_error.style.display = "none";
+        return true;
     }
         }
 
@@ -269,14 +278,17 @@ function handleFileSelect(event) {
         offerprice_error.style.display = "block";
         offerprice_error.style.color = "red";
         offerprice_error.textContent = "Enter a valid offer price";
+        return false;
     } else if (parseInt(offerprice) >= parseInt(price)) {
         
         offerprice_error.style.display = "block";
         offerprice_error.style.color = "red";
         offerprice_error.textContent = "Offer price must be less than the original price";
+        return false;
     } else {
         
         offerprice_error.style.display = "none";
+        return true;
     }
 }
 
@@ -289,13 +301,16 @@ function handleFileSelect(event) {
         quantity_error.style.display = "block";
         quantity_error.style.color = "red";
         quantity_error.textContent = "Enter a valid quantity";
+        return false;
     } else if(quantity<= 0){
         quantity_error.style.display = "block";
         quantity_error.style.color = "red";
         quantity_error.textContent = "Enter a positive quantity number";
+        return false;
 
     }else {
         quantity_error.style.display = "none";
+        return true;
     }
         }
 
@@ -312,8 +327,10 @@ function validateImage() {
         imageError.style.display = "block";
         imageError.style.color = "red";
         imageError.textContent = "Select at least one image";
+        return false;
     } else {
         imageError.style.display = "none";
+        return true;
     }
 }
 
@@ -327,8 +344,15 @@ function validateImage() {
     const isValidateQuantity = validateQuantity();
     const isValidateImage = validateImage();
 
-    if(isValidateName || isValidateSpec || isValidateBrand || isValidatePrice || isValidateOfferPrice || isValidateQuantity || isValidateImage){
+    if(!isValidateName || !isValidateSpec || !isValidateBrand || !isValidatePrice || !isValidateOfferPrice || !isValidateQuantity || !isValidateImage){
+        
         e.preventDefault();
+       
+
+    }else{
+        
+        document.getElementById("myForm").submit();
+
 
     }
 
@@ -339,6 +363,7 @@ function validateImage() {
 
 
     </script>
+ 
 
 <%- include("../partials/adminfooter") %>
    

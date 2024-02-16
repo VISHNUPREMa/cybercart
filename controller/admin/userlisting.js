@@ -3,9 +3,15 @@ const User = require("../../model/userModel");
 
 const loadUserList = async (req, res) => {
     try {
-        const users = await User.find({});
+
+        const page = req.query.page || 1;
+        const pageSize = 5;
+        const skip = (page - 1) * pageSize;
+        const usersCount = await User.countDocuments({});
+        totalPages = Math.ceil(usersCount/pageSize);
+        const users = await User.find({}).skip(skip).limit(pageSize);
         
-        res.render("admin/userlist",{users});
+        res.render("admin/userlist",{users,totalPages,currentPage:page});
     } catch (error) {
         console.log(error, "loadUserList error");
         res.status(500).send("Internal Server Error");

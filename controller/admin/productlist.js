@@ -3,11 +3,18 @@ const Category = require("../../model/category");
 
 const loadProductList = async(req,res)=>{
     try{
-      let data = await Products.find({});
+
+        const page = req.query.page || 1;
+        const pageSize = 3;
+        const skip = (page - 1)* pageSize;
+        const productsCount = await Products.countDocuments({});
+        const totalpage = Math.ceil(productsCount/pageSize);
+      let data = await Products.find({}).skip(skip).limit(pageSize);
+
       
         
       
-        res.render("admin/productlist",{data})
+        res.render("admin/productlist",{data,totalpage,currentPage: page})
 
     }
     catch(error){
@@ -56,7 +63,7 @@ const postEditProduct = async (req, res) => {
             const updatedProduct = await Products.findByIdAndUpdate(productID,
                 {name:req.body.name ,
                      specification:req.body.specification,
-                     brand:req.body.brand,
+                     brand:req.body.editbrand,
                      price:req.body.price,
                      offerprice:req.body.offerprice,
                       quantity:req.body.quantity,
@@ -95,11 +102,21 @@ const postEditProduct = async (req, res) => {
 const deleteProduct = async(req,res)=>{
     try{
         const productID = req.params.id;
-        console.log('Deleting product with ID:', productID);
-        const deleteProduct = await Products.findByIdAndDelete(productID);
-        console.log(deleteProduct);
-        res.redirect("/admin/productlist")
+        
+        
 
+       
+        const product = await Products.findById(productID);
+
+        product.isListed = !product.isListed;
+        
+        // Save the updated product
+        await product.save();
+
+        console.log('Product listing status updated:', product);
+        
+        // Redirect back to the product list page
+        res.redirect("/admin/productlist");
     }
     catch(error){
         console.log(error,"deleteProduct error ");

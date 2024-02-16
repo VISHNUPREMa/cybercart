@@ -5,12 +5,18 @@ const { ObjectId } = require('mongodb');
 
 const getOrderList = async(req,res)=>{
     try{
-        const orderData = await Orders.find({});
+        const page = req.query.page || 1;
+        const pageSize = 3;
+        const skip = (page - 1)*pageSize;
+        const ordersCount = await Orders.countDocuments({});
+        const totalPages = Math.ceil(ordersCount/pageSize);
+
+        const orderData = await Orders.find({}).skip(skip).limit(pageSize);
         const allUsers = await Users.find({});
         const usersOrderedProduct = allUsers.filter(user => orderData.some(order => order.userid.toString() === user._id.toString()));
         
        
-        res.render("admin/order",{order:orderData, user:usersOrderedProduct});
+        res.render("admin/order",{order:orderData, user:usersOrderedProduct,totalPages, currentPage: page});
 
         }
     catch(error){

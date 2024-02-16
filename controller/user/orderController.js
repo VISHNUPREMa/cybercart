@@ -3,7 +3,8 @@ const Address = require("../../model/addressSchema");
 const Products = require("../../model/productmanage");
 const Orders = require("../../model/orderSchema");
 const moment = require('moment-timezone');
-const {ObjectId} = require("mongodb")
+const {ObjectId} = require("mongodb");
+const {orderIdGenerate} = require("../../helper/otpGenerate")
 
 
 const loadCheckoutPage = async(req,res)=>{
@@ -46,8 +47,9 @@ const postorderDetails = async(req,res)=>{
     const cartDetails =  userDetails.cart;
   
   
-    
+    const orderId = orderIdGenerate()
     const orderDetails = await Orders.create({
+        orderId:orderId,
         products:products,
         totalprice:totalAmount,
         address:address,
