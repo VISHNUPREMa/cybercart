@@ -2,6 +2,9 @@ const Users = require("../../model/userModel");
 const Address = require("../../model/addressSchema");
 const Products = require("../../model/productmanage");
 const Orders = require("../../model/orderSchema");
+const Coupons = require("../../model/couponSchema")
+
+
 const moment = require('moment-timezone');
 const {ObjectId} = require("mongodb");
 const {orderIdGenerate} = require("../../helper/otpGenerate")
@@ -18,10 +21,11 @@ const loadCheckoutPage = async(req,res)=>{
         const userData = await Users.findById(userID);
        
         const addressData = await Address.findOne({userID:userID});
+        const discount = 0;
       
         
     
-        res.render("user/checkout",{data:cartData , grandTotal:totalAmount,address:addressData,user:userData});
+        res.render("user/checkout",{data:cartData , discount:discount , grandTotal:totalAmount,address:addressData,user:userData});
 
 
    
@@ -32,9 +36,65 @@ const loadCheckoutPage = async(req,res)=>{
     }
 }
 
+
+
+const applyCoupon = async(req,res)=>{
+    try{
+        const couponCode = req.body.couponcode;
+        const grandtotal = req.body.total
+        const coupon = await Coupons.findOne({name:couponCode});
+        const userid = req.session.user;
+
+        if(coupon && coupon.isList){
+            if(coupon.usedByUsers.includes(userid)){
+                res.status(404).json({message:"Coupon already used "})
+
+            }
+        }
+        
+        if(coupon && coupon.isList ){
+            
+            const currentDate = new Date();
+            if(currentDate >= coupon.start && currentDate <= coupon.end){
+                newTotal = Number(grandtotal) - Number(coupon.discount)
+                await Coupons.updateOne(
+                    { _id: coupon._id },
+                    { $addToSet: { usedByUsers: userid } }
+                );
+                
+                
+                res.status(200).json({ success: true, discount: coupon.discount, total : newTotal });
+                
+               
+                return;
+            }else{
+                res.status(404).json({message:"Coupon expired !!!"})
+            }
+        }else{
+            newTotal = Number(grandtotal)
+
+            res.json({ success: true, discount: coupon.discount, total : newTotal });
+
+
+
+
+            
+        }
+
+       
+        
+
+    }
+    catch(error){
+        console.log(error,"applyCoupon  page error");
+    }
+}
+
+
 const postorderDetails = async(req,res)=>{
     try{
         const addressID = req.body.addressId;
+       
         const totalAmount = req.body.total;
         const paymentMode = req.body.paymentmode;
 
@@ -44,6 +104,8 @@ const postorderDetails = async(req,res)=>{
     const productIDs = userDetails.cart.map(item=>item.id);
     const products = await Products.find({_id:{$in:productIDs }});
     const address  = await Address.findOne({"address._id":addressID});
+    const selectedAddress = address.address.find(addr => addr._id.toString() === addressID);
+    console.log("address : ",selectedAddress);
     const cartDetails =  userDetails.cart;
   
   
@@ -52,7 +114,7 @@ const postorderDetails = async(req,res)=>{
         orderId:orderId,
         products:products,
         totalprice:totalAmount,
-        address:address,
+        address:selectedAddress,
         payment:paymentMode,
         userid:userid,
         cart:cartDetails,
@@ -106,6 +168,58 @@ const loadOrderDetailPage = async(req,res)=>{
 
 
 
+const deleteSingleProduct = async(req,res)=>{
+    try{
+        const orderid = req.query.orderid;
+        
+        const productID = req.query.productid;
+        const quantity = parseInt(req.query.quantity);
+
+        
+
+        
+        let total = parseInt(req.query.total);
+
+        
+     
+        let subTotal = parseInt(req.query.subtotal);
+        
+       
+        const orderData = await Orders.findById(orderid);
+        const productData = await Products.findById(productID);
+
+     
+     
+
+        const deleteProductIndex = orderData.products.findIndex(product => product && product._id && product._id.toString() === productID.toString());
+       
+        if (deleteProductIndex !== -1) {
+            total -= subTotal;
+            orderData.products[deleteProductIndex].status = "cancelled";
+            if(orderData.products[deleteProductIndex].status === "cancelled"){
+                productData.quantity += quantity;
+                await productData.save();
+                
+            }
+        }
+        
+
+
+        orderData.totalprice = total;
+      
+        await orderData.save();
+        res.redirect("/orderdetails?id=" + orderid);
+
+    }
+    catch(error){
+        console.log(error,"deletesingleproduct page error");
+    }
+}
+
+
+
+
+
 
 
 
@@ -117,12 +231,17 @@ const deleteOrder = async(req,res)=>{
         const orderId = req.body.orderId.trim(); 
 
         const orderDetails = await Orders.findById(orderId);
+    
         for(let item of orderDetails.cart){
             try{
+
+                const products = orderDetails.products.find(prod=>prod._id.toString() === item.id);
+                if(products && products.status === 'confirmed'){
                 await Products.updateOne(
                     {_id:item.id},
                     { $inc: { quantity: item.quantity }}
                 )
+            }
 
             }
             catch(error){
@@ -146,7 +265,9 @@ const deleteOrder = async(req,res)=>{
 
 module.exports = {
     loadCheckoutPage,
+    applyCoupon,
     postorderDetails,
     loadOrderDetailPage,
-    deleteOrder
+    deleteOrder,
+    deleteSingleProduct
 }

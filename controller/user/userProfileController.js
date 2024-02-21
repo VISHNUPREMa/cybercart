@@ -2,6 +2,7 @@ const Users = require("../../model/userModel");
 const Products = require("../../model/productmanage");
 const Address = require("../../model/addressSchema");
 const Orders = require("../../model/orderSchema");
+const Coupons = require("../../model/couponSchema")
 const { ObjectId } = require('mongodb');
 const bcrypt = require('bcrypt');
 
@@ -15,7 +16,10 @@ const getProfilePage = async(req,res)=>{
         const adressData = await Address.findOne({userID:userObjectId});
         const orderDetails = await Orders.find({userid:id});
         
-        res.render("user/profile",{user:userDetails,address:adressData,order:orderDetails});
+        const  couponData = await Coupons.find({isList:true})
+        console.log("Coupons : ",couponData);
+        
+        res.render("user/profile",{user:userDetails,address:adressData,order:orderDetails,coupons:couponData});
 
     }
     catch(error){
@@ -94,9 +98,17 @@ const postAddressDetails = async (req, res) => {
 
 const getEditAddressPage = async(req,res)=>{
     try{
+        
         const id = req.query.id;
-        const addressData = await Address.findOne({"address._id":id});
-        res.render("user/editaddress",{address:addressData})
+        console.log("id : ",id);
+        const addressDetails = await Address.findOne({userID:req.session.user});
+       
+        const address = addressDetails.address.find(addr => addr._id.toString() === id);
+  
+       
+        
+        
+        res.render("user/editaddress",{address:address})
         
         
 
@@ -109,7 +121,7 @@ const getEditAddressPage = async(req,res)=>{
 
 const postEditAdress = async(req,res)=>{
     try{
-         const id = req.query.id;
+        const id = req.params.id;
          const {name,housename,landmark,city,state,pincode,phone,altphone} = req.body;
         const updatedAddress = await Address.updateOne({"address._id":id},{$set:{
             
@@ -165,6 +177,9 @@ const postEditPassword = async(req,res)=>{
         console.log(error,"postEditPassword page error");
     }
 }
+
+
+
 
 
 

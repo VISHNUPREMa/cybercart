@@ -243,7 +243,7 @@ const forgetPasswordLoad = async(req,res)=>{
 
 const forgetpassword = async(req,res)=>{
     try{
-        const {email } = req.body;
+        const email  = req.body.email;
         const existUser = await User.findOne({email:email});
         if(existUser){
             const otp = generateRandomOtp();
@@ -262,17 +262,27 @@ const forgetpassword = async(req,res)=>{
             
            
             
-            
+            res.status(200).json({redirect:"/forgetpassword/otppage"});
           
                
-            res.render("user/otpPasswordVerify");
+      
 
             
         }else{
-            res.render("user/forgetpassword",{message: "user not found"})
+            res.status(400).json({message: "user not found"})
+            
         }
 
 
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+
+const loadOtpPageForPassword = async(req,res)=>{
+    try{
+        res.render("user/otpPasswordVerify")
     }
     catch(error){
         console.log(error);
@@ -435,7 +445,8 @@ resendOtp ,
 logoutUser,
 resndOtpForForgetpassword,
 laodShopPage,
-newPasswordReset
+newPasswordReset,
+loadOtpPageForPassword
 
 
 

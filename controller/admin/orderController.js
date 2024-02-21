@@ -31,10 +31,22 @@ const getOrderDetails = async(req,res)=>{
         const orderid = req.query.order;
         const UserDetails = await Users.findById(userid);
         const orderDetails = await Orders.findById(orderid);
+      
         const addressId = orderDetails.address[0]._id;
-        const addressDetails = await Address.findById(addressId);
+       
+        const addressDetails = await Address.findOne({userID:userid})
+        const desiredAddress = addressDetails.address.find(address => address._id.toString() === addressId.toString());
 
-        res.render("admin/orderdetails",{user:UserDetails,order:orderDetails,address:addressDetails})
+
+        console.log("address : ",desiredAddress);
+
+        
+
+        
+  
+
+
+        res.render("admin/orderdetails",{user:UserDetails,order:orderDetails,address:desiredAddress})
 
     }
     catch(error){

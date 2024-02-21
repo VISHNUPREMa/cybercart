@@ -1,12 +1,56 @@
 const mongoose = require("mongoose");
 
+const productSchema = mongoose.Schema({
+
+  status: {
+      type: String,
+      default: 'confirmed'
+  },
+  name:{
+    type:String,
+    required:true
+  },
+  brand:{
+    type:String,
+    required:true
+  },
+  specification:{
+    type:String,
+    required:true
+  },
+  isListed:{
+    type:Boolean,
+    required:true
+  },
+  category:{
+    type:String,
+    required:true
+  },
+  price:{
+    type:Number,
+    required:true
+  },
+  offerprice:{
+    type:Number,
+    required:true
+  },
+  quantity:{
+    type:Number,
+    required:true
+  },
+  image:{
+    type:Array,
+    required:true
+  }
+});
+
 const orderSchema = mongoose.Schema({
     orderId:{
        type:String,
        required:true
      },
     products:{
-        type:Array,
+        type:[productSchema],
         required:true
       },
       totalprice:{

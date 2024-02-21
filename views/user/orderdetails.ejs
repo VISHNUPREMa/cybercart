@@ -3,8 +3,13 @@
 <style>
     #heading{
         text-align: center;
+  
     
 }
+
+#orderid {
+    display: none;
+  }
 </style>
  <!-- card-header end// -->
                 <div class="card-body">
@@ -16,52 +21,81 @@
                      <!-- row // -->
                     <div class="row justify-content-center">
                         <h2 id="heading">Order Details</h2>
-                        <div class="col-lg-12">
+                        <div class="col-lg-10">
                             <div class="table-responsive">
+                                
+                                
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th width="40%">Product</th>
-                                            <th width="40%">Quantity</th>
-                                            <th width="20%">Unit Price</th>
-                                         
+                                            <th width="30%">Product</th>
+                                            <th width="30%">Quantity</th>
+                                            <th width="20%">Price</th>
+                                            <th width="20%">Status</th>
+                                            <th width="10%"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <% if(order){ %>
-                                            <div class="info" id="orderid">ORDER ID : <%= order.orderId %>  </div>
-                                            <% for(i=0;i<order.products.length;i++){ %>
-                                                
-                                            <tr>
-                                                
-                                                <td>
-                                                    <a class="itemside" href="#">
-                                                        <div class="left">
-                                                            <img src="/uploads/products/<%= order.products[i].image[0] %>" width="80" height="80" class="img-xs" alt="Item">
-                                                        </div>
-
-                                                        <div class="info"><%= order.products[i].name %>  </div>
-                                                    </a>
-                                                </td>
-                                               
-                                                <td> <%= order.cart[i].quantity %></td>
-                                                <td class="text-end"> <%= order.totalprice  %> </td>
-                                            </tr>
-                                            
+                                            <div class="info">ORDER ID: <%= order.orderId %> </div>
+                                            <div class="info" id="orderid"> <%= order._id %> </div>
+                                            <% var totalSum = 0; %>
+                                            <% for(var i=0; i<order.products.length; i++){ %>
+                                                <tr>
+                                                    <td>
+                                                        <a class="itemside" href="#">
+                                                            <div class="left">
+                                                                <img src="/uploads/products/<%= order.products[i].image[0] %>" width="80" height="80" class="img-xs" alt="Item">
+                                                            </div>
+                                                            <div class="info"><%= order.products[i].name %> </div>
+                                                        </a>
+                                                    </td>
+                                                    <td> <%= order.cart[i].quantity %> </td>
+                                                    <td class="text-end"> <%= order.products[i].offerprice * order.cart[i].quantity %> </td>
+                                                    <!-- Change the color of status based on its value -->
+                                                    <% if(order.products[i].status === 'cancelled') { %>
+                                                        <td class="text-end" ><h4 style="color: red;"><%= order.products[i].status %></h4></td>
+                                                    <% } else { %>
+                                                        <td class="text-end" ><h4 style="color: green;"><%= order.products[i].status %></h4></td>
+                                                    <% } %>
+                                                    <!-- Conditional disable for delete button -->
+                                                    <td class="text-end">
+                                                        <% if(order.products[i].status === 'cancelled') { %>
+                                                            <!-- Disable the delete button if status is cancelled -->
+                                                            <span class="text-muted">
+                                                                <i class="fi-rs-trash"></i>
+                                                            </span>
+                                                        <% } else { %>
+                                                            <!-- Otherwise, render the delete button as usual -->
+                                                            <a href="deletesingleproduct/?orderid=<%= order._id %>&&productid=<%= order.products[i]._id %>&&total=<%= order.totalprice %>&&subtotal=<%= order.products[i].offerprice * order.cart[i].quantity %>&&quantity=<%= order.cart[i].quantity %>" class="text-muted">
+                                                                <i class="fi-rs-trash"></i>
+                                                            </a>
+                                                        <% } %>
+                                                    </td>
+                                                </tr>
                                             <% } %>
+                                            <!-- Display total sum outside of the loop -->
+                                            <tr>
+                                                <td colspan="2"><h4>Total:</h4></td>
+                                                <td class="text-end">  <%= order.totalprice %> </td>
+                                                <td></td> <!-- Empty td to maintain alignment -->
+                                            </tr>
                                         <% } %>
                                     </tbody>
                                 </table>
+                                
+                                
+
                             </div> <!-- table-responsive// -->
                         </div> <!-- col-lg-12// -->
                     </div> 
                     
                     <div class="col-lg-3 col-md-3 ms-auto text-md">
-                        <form action="" method="">
+                       
                             <!-- Hidden input field to store the order ID -->
                             
                             <button class="btn btn-primary" type="submit" id="cancelorder" name="cancelorder" value="Cancel Order">Cancel Order</button>
-                        </form>
+                       
                     </div><!-- row// -->
                     <!-- row// -->
                     

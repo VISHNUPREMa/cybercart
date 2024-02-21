@@ -35,7 +35,7 @@ const addToWishlist =  async(req,res)=>{
                 price:productData.offerprice,
                 brand:productData.brand,
                 units:productData.quantity,
-                quantity:1
+                
             }
         }},
         {upsert: true, new: true}

@@ -167,6 +167,8 @@
 <script>
 
 function changeQuantity(productId, cartQuantity, count, productPrice, i, productQuantity) {
+  
+    
     const quantityelementId = `quantityvalue_${productId}`;
     const quantityElement = document.getElementById(quantityelementId);
     const quantityValue = parseInt(quantityElement.textContent);
@@ -196,9 +198,7 @@ function changeQuantity(productId, cartQuantity, count, productPrice, i, product
             timer: 1500
         });
         return;
-    }
-
-    if (count === 1 && newQuantity > parseInt(productQuantity)) {
+    }else if (count === 1 && newQuantity > parseInt(productQuantity)) {
         Swal.fire({
             title: "Invalid Entry",
             text: "Product is out of stock",

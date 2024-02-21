@@ -1,0 +1,192 @@
+<%- include("../partials/adminheader") %>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Coupons </h2>
+              
+                </div>
+                
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <form action="/admin/coupons" method="post">
+                          
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Coupon Code</label>
+                                    <input type="text" placeholder="Type here" class="form-control" name="name" id="couponname" />
+                                    <div id="name_error" style="display: none;"></div>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_slug" class="form-label">Coupon Discount</label>
+                                    <input type="text" placeholder="Type here" class="form-control" name="discount" id="discount" />
+                                    <div id="discount_error" style="display: none;"></div>
+                                </div>
+                                <div class="mb-4">
+                                    <label >Minimum Purchase</label>
+                                    <input type="text" placeholder="Type here" class="form-control" name="purchase" id="minimumpurchase" />
+                                    <div id="purchase_error" style="display: none;"></div>
+                                    
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Starting Date</label>
+                                    <input type="date" placeholder="Type here" class="form-control" name="start" id="start" />
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">End Date</label>
+                                    <input type="date" placeholder="Type here" class="form-control" name="end" id="end" />
+                                </div>
+                                <div class="d-grid">
+                                    <button id="btn" class="btn btn-primary">Create category</button>
+                                </div>
+                            </form>
+                            
+                        </div>
+                        <div class="col-md-9">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" />
+                                                </div>
+                                            </th>
+                                            <th>Name</th>
+                                            <th>Discount</th>
+                                            <th>Minimum Purchase</th>
+                                            <th>Start Date </th>
+                                            <th>End Date</th>
+                                            <th class="text-end">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if(coupons){ %>
+                                            <% for(i=0;i<coupons.length;i++){ %>
+                                        <tr>
+                                            <td class="text-center">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" />
+                                                </div>
+                                            </td>
+                                            <td><%= coupons[i].name %></td>
+                                            <td><b><%= coupons[i].discount %></b></td>
+                                            <td><%= coupons[i].purchaseamount %></td>
+                                            <td><%= coupons[i].start %></td>
+                                            <td><%= coupons[i].end %></td>
+                                            <td class="text-end">
+                                                <div class="dropdown">
+                                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                                    <div class="dropdown-menu">
+                                                        <a class="dropdown-item" href="#">View detail</a>
+                                                        <a class="dropdown-item" href="#">Edit info</a>
+                                                        <a class="dropdown-item text-danger" href="#">Delete</a>
+                                                    </div>
+                                                </div> <!-- dropdown //end -->
+                                            </td>
+                                        </tr>
+                                        <% } %>
+                                        <% } %>
+                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> <!-- .col// -->
+                    </div> <!-- .row // -->
+                </div> <!-- card body .// -->
+            </div> <!-- card .// -->
+        </section> <!-- content-main end// -->
+        <script>
+ let couponnameInput = document.getElementById("couponname");
+let discountInput = document.getElementById("discount");  
+let minimumPurchaseInput = document.getElementById("minimumpurchase")     
+let startDateInput = document.getElementById('start');
+let endDateInput = document.getElementById('end');
+let button = document.getElementById("btn");
+
+// Set the minimum start date to today
+let today = new Date();
+let dd = String(today.getDate()).padStart(2, '0');
+let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+let yyyy = today.getFullYear();
+today = dd + '-' + mm + '-' + yyyy;
+startDateInput.min = today;
+
+// Add event listener to start date input
+startDateInput.addEventListener('change', function() {
+    let startDate = new Date(this.value);
+    let todayDate = new Date(today);
+    if (startDate < todayDate) {
+        alert('Start date cannot be before today.');
+        this.value = today;
+    }
+    // Set minimum end date to one day after start date
+    let minEndDate = new Date(startDate);
+    minEndDate.setDate(minEndDate.getDate() + 1);
+    endDateInput.min = minEndDate.toISOString().split('T')[0];
+});
+
+// Add event listener to end date input
+endDateInput.addEventListener('change', function() {
+    let endDate = new Date(this.value);
+    let startDate = new Date(startDateInput.value);
+    if (endDate <= startDate) {
+        alert('End date should be at least one day after the start date.');
+        this.value = '';
+    }
+});
+
+function validateCouponName() {
+    let couponname = couponnameInput.value.trim();
+    let nameErrorInput = document.getElementById("name_error");
+    if (/^[a-zA-Z]+(?: [a-zA-Z]+)*$/.test(couponname)) {
+        nameErrorInput.style.display = "none";
+        return false;
+    } else {
+        nameErrorInput.style.display = "block";
+        nameErrorInput.style.color = "red"
+        nameErrorInput.textContent = "Enter valid coupon name";
+        return true;
+    }
+}
+
+function validateDiscount() {
+    let discount = discountInput.value.trim(); 
+    let discountError = document.getElementById("discount_error")
+    if (/^[1-9][0-9]*$/.test(discount)) {
+        discountError.style.display = "none";
+        return false;
+    } else {
+        discountError.style.display = "block";
+        discountError.style.color = "red"
+        discountError.textContent = "Enter valid Discount";
+        return true;
+    }
+}
+
+function validateMinimumPurchase() {
+    let minimumPurchase = minimumPurchaseInput.value.trim();
+    let purchaseError = document.getElementById("purchase_error");
+    let discount = discountInput.value.trim(); 
+    console.log([minimumPurchase , discount]);
+if(/^[1-9][0-9]*$/.test(minimumPurchase) && Number(minimumPurchase) > Number(discount)*2){
+    purchaseError.style.display = "none";
+    return false;
+}else{
+    purchaseError.style.display = "block";
+    purchaseError.style.color = "red";
+    purchaseError.textContent = "Enter valid minimum purchase amount"
+    return true;
+}
+}
+
+button.addEventListener("click", function(event) {
+    if (validateCouponName() || validateDiscount() || validateMinimumPurchase()) {
+        event.preventDefault();
+    }
+})
+
+
+        </script>
+        <%- include("../partials/adminfooter") %>

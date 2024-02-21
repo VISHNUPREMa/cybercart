@@ -28,6 +28,7 @@ router.post("/verifyotp",userController.otpPage);
 router.post("/login",userController.logIn);
 router.get("/forgetpassword",userController.forgetPasswordLoad);
 router.post("/forgetpassword",userController.forgetpassword);
+router.get("/forgetpassword/otppage",userController.loadOtpPageForPassword)
 router.post("/forgetpasswordverify",userController.otpVerifyPasswordReset);
 router.post("/forgetpassword/resend",userController.resndOtpForForgetpassword);
 router.post("/passwordreset",userController.newPasswordReset)
@@ -43,7 +44,8 @@ router.get("/createaddress",isUser,userProfileController.getCreateAddressPage);
 router.post("/createaddress",isUser,userProfileController.postAddressDetails);
 router.get("/editaddress",isUser,userProfileController.getEditAddressPage);
 router.post("/editaddress",isUser,userProfileController.postEditAdress);
-router.post("/editprofile",userProfileController.postEditPassword);
+
+router.post("/editprofile",isUser,userProfileController.postEditPassword);
 
 
 
@@ -60,22 +62,24 @@ router.post("/updatequantity",isUser,cartController.updateQuantity);
 
 
 router.get("/checkout",isUser,orderController.loadCheckoutPage);
+router.post("/checkout",orderController.applyCoupon)
 router.post("/placeorder",isUser,orderController.postorderDetails);
-router.get("/orderdetails",orderController.loadOrderDetailPage);
-router.post("/deleteorder",orderController.deleteOrder);
+router.get("/orderdetails",isUser,orderController.loadOrderDetailPage);
+router.get("/deletesingleproduct",orderController.deleteSingleProduct)
+router.post("/deleteorder",isUser,orderController.deleteOrder);
 
-router.get("/categorysort",sortController.categorySort);
-router.get("/categorysort/lowtohigh",sortController.lowToHigh);
-router.get("/categorysort/hightolow",sortController.HighToLow);
-router.get("/categorysort/A-Z",sortController.AtoZ);
-router.get("/categorysort/Z-A",sortController.ZtoA);
-router.post("/searchproduct",sortController.searchedData)
+router.get("/categorysort",isUser,sortController.categorySort);
+router.get("/categorysort/lowtohigh",isUser,sortController.lowToHigh);
+router.get("/categorysort/hightolow",isUser,sortController.HighToLow);
+router.get("/categorysort/A-Z",isUser,sortController.AtoZ);
+router.get("/categorysort/Z-A",isUser,sortController.ZtoA);
+router.post("/searchproduct",isUser,sortController.searchedData)
 
 
 
-router.get("/wishlist",wishlistController.getWishList);
-router.post("/wishlist/add",wishlistController.addToWishlist);
-router.get("/wishlist/delete",wishlistController.deleteWishlist);
+router.get("/wishlist",isUser,wishlistController.getWishList);
+router.post("/wishlist/add",isUser,wishlistController.addToWishlist);
+router.get("/wishlist/delete",isUser,wishlistController.deleteWishlist);
 
 
 

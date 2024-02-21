@@ -36,6 +36,9 @@
                                         <li class="nav-item">
                                             <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#" onclick="showAccountDetailTab()" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>Account details</a>
                                         </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="coupon-tab" data-bs-toggle="tab" href="#" onclick="showCouponTab()" aria-controls="coupon" aria-selected="true"><i class="fi-rs-tag mr-10"></i>Coupon</a>
+                                        </li>
                                         
                                         
 
@@ -66,6 +69,49 @@
                                         </div>
                                     </div>
                                     <% } %>
+
+                                   
+                                    <% if(coupons && coupons.length > 0) { %>
+                                        <div class="tab-pane fade" id="coupon" role="tabpanel" aria-labelledby="coupon-tab">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5 class="mb-0">Coupons</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <% coupons.forEach(coupon => { %>
+                                                        <h4>Coupon Code : <%= coupon.name %></h4>
+                                                        <br>
+                                                        <h5>Minimum Purchase Amount : <%= coupon.purchaseamount %></h5>
+                                                        <br>
+                                                        <h5>Discount : <%= coupon.discount %></h5>
+                                                        <br>
+                                                        <h5>Valid From : <%= coupon.start %></h5>
+                                                        <br>
+                                                        <h5>Valid To : <%= coupon.end %></h5>
+                                                        <br>
+                                                        <button style="background:none!important; border:none; padding:0!important; color:blue; text-decoration:underline; cursor:pointer;" onclick="copyToClipboard('<%= coupon.name %>')">if you want to copy coupon code click here</button>
+
+                                                       
+                                                        
+
+
+                                                    <% }); %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% } else { %>
+                                        <div class="tab-pane fade" id="coupon" role="tabpanel" aria-labelledby="coupon-tab">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5 class="mb-0">Coupons</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p>No coupons available</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                    
 
 
                                     <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
@@ -382,6 +428,34 @@
         document.getElementById("orders").classList.remove("active", "show");
         document.getElementById("address").classList.remove("active", "show");
     }
+
+
+    function showCouponTab() {
+        document.getElementById("coupon").classList.add("active", "show");
+        document.getElementById("dashboard").classList.remove("active", "show");
+        document.getElementById("orders").classList.remove("active", "show");
+        document.getElementById("address").classList.remove("active", "show");
+        document.getElementById("account-detail").classList.remove("active", "show");
+    }
+
+    function copyToClipboard(text) {
+    var textarea = document.createElement("textarea");
+    textarea.textContent = text;
+    textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge.
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+    } catch (ex) {
+        console.warn("Copy to clipboard failed.", ex);
+        return false;
+    } finally {
+        document.body.removeChild(textarea);
+    }
+}
+
+
+   
 
 
     </script>
