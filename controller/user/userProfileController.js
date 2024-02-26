@@ -2,7 +2,8 @@ const Users = require("../../model/userModel");
 const Products = require("../../model/productmanage");
 const Address = require("../../model/addressSchema");
 const Orders = require("../../model/orderSchema");
-const Coupons = require("../../model/couponSchema")
+const Coupons = require("../../model/couponSchema");
+const Wallet = require("../../model/walletSchema")
 const { ObjectId } = require('mongodb');
 const bcrypt = require('bcrypt');
 
@@ -17,9 +18,11 @@ const getProfilePage = async(req,res)=>{
         const orderDetails = await Orders.find({userid:id});
         
         const  couponData = await Coupons.find({isList:true})
-        console.log("Coupons : ",couponData);
         
-        res.render("user/profile",{user:userDetails,address:adressData,order:orderDetails,coupons:couponData});
+
+        const walletData = await Wallet.findOne({userId : id})
+        
+        res.render("user/profile",{user:userDetails,address:adressData,order:orderDetails,coupons:couponData,wallet:walletData});
 
     }
     catch(error){

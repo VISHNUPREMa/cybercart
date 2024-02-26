@@ -89,10 +89,21 @@ const deleteOrder = async(req,res)=>{
     }
 }
 
+const getOrderTracking = async(req,res)=>{
+    try{
+        res.render("admin/ordertracking");
+
+    }
+    catch(error){
+        console.log("getOrderTracking page error ",error);
+    }
+}
+
 
 module.exports = {
     getOrderList,
     getOrderDetails,
     changeOrderStatus,
-    deleteOrder
+    deleteOrder,
+    getOrderTracking
 }

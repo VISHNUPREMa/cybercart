@@ -79,9 +79,8 @@
                                                 <div class="dropdown">
                                                     <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
                                                     <div class="dropdown-menu">
-                                                        <a class="dropdown-item" href="#">View detail</a>
-                                                        <a class="dropdown-item" href="#">Edit info</a>
-                                                        <a class="dropdown-item text-danger" href="#">Delete</a>
+                                                      
+                                                        <a class="dropdown-item text-danger" onclick="deleteCoupon('<%= coupons[i]._id %>')">Delete</a>
                                                     </div>
                                                 </div> <!-- dropdown //end -->
                                             </td>
@@ -96,7 +95,10 @@
                     </div> <!-- .row // -->
                 </div> <!-- card body .// -->
             </div> <!-- card .// -->
-        </section> <!-- content-main end// -->
+        </section>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script>
  let couponnameInput = document.getElementById("couponname");
 let discountInput = document.getElementById("discount");  
@@ -105,7 +107,7 @@ let startDateInput = document.getElementById('start');
 let endDateInput = document.getElementById('end');
 let button = document.getElementById("btn");
 
-// Set the minimum start date to today
+
 let today = new Date();
 let dd = String(today.getDate()).padStart(2, '0');
 let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -186,6 +188,35 @@ button.addEventListener("click", function(event) {
         event.preventDefault();
     }
 })
+
+
+
+function deleteCoupon(id) {
+  Swal.fire({
+    title: "Delete Coupon?",
+    text: "Do you want to delete this coupon?",
+    icon: "question"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $.ajax({
+        url: `/admin/deletecoupon?id=${id}`,
+        method: "POST",
+        success: function(response) {
+         if(response.success == true){
+            
+            window.location.href = "/admin/coupons";
+         }
+         
+        },
+        error: function(xhr, status, error) {
+          console.error("Error deleting coupon:", error);
+        }
+      });
+    }
+  });
+}
+
+
 
 
         </script>

@@ -7,6 +7,7 @@ const addProduct = require("../controller/admin/addproduct");
 const productList = require("../controller/admin/productlist");
 const orderController = require("../controller/admin/orderController");
 const couponController = require("../controller/admin/couponcontroller");
+const salesReportController = require("../controller/admin/salesReportController");
 
 const {isAdmin} = require("../middlewares/authentication")
 
@@ -58,8 +59,22 @@ router.post("/category", isAdmin,categoryManagement.categoryDetailsPost);
 
 
 
+
  router.get("/coupons",couponController.getCouponPage);
  router.post("/coupons",couponController.postCouponData);
+ router.post("/deletecoupon",couponController.deleteCoupon);
+
+
+router.get("/salesreport",salesReportController.getSalesReport);
+router.post("/salesreport",salesReportController.getFilteredSalesReport);
+
+
+
+
+
+
+
+
 
 
 

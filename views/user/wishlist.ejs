@@ -68,9 +68,11 @@
             availability: availability
         },
         success: function (res) {
+            console.log("response : ",res);
 
 
-            if(res.status === true){
+            if(res.status == true){
+                console.log("response : ",res);
                 Swal.fire({
                 title: "Add This Product To Cart",
                 text: "continue shopping",
@@ -86,7 +88,8 @@
                 }
             })
             
-        }else if(res.status === false){
+        }else if(res.status == false){
+            console.log("response : ",res);
             Swal.fire({
                                 title: 'unavailable!!',
                                 text: res.message,
@@ -98,6 +101,12 @@
         },
         error: function (error) {
             console.error("Error:", error);
+            Swal.fire({
+                                title: 'unavailable!!',
+                                text: error.responseJSON.message,
+                                icon: 'error', 
+                                timer: 2000,
+                            })
         }
     });
             

@@ -16,6 +16,7 @@ const addToCart = async(req,res)=>{
           const userDetails = await Users.findById(userID);
 
           const productDetails = await Products.findById(productID);
+          console.log("products : ",productDetails);
           
         if (!userDetails) {
             return res.json({ status: false, message: "User not found" });
@@ -57,17 +58,19 @@ const addToCart = async(req,res)=>{
 
     
                        
-                        res.json({status:true});
+                        res.status(200).json({status:true});
                     }else{
-                        res.json({ status: false, message: "Out of stock" });
+                        res.status(404).json({ status: false, message: "Out of stock" });
                     }
                 }else{
-                    res.json({ status: false, message: "Out of stock" });
+                    res.status(500).json({ status: false, message: "Out of stock" });
 
                 }
 
 
             }
+          }else{
+            res.status(404).json({ status: false, message: "Out of stock" });
           } 
 
     }

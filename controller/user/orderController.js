@@ -2,18 +2,32 @@ const Users = require("../../model/userModel");
 const Address = require("../../model/addressSchema");
 const Products = require("../../model/productmanage");
 const Orders = require("../../model/orderSchema");
-const Coupons = require("../../model/couponSchema")
-
+const Coupons = require("../../model/couponSchema");
 
 const moment = require('moment-timezone');
+const razorPay = require("razorpay");
+const {RAZORPAY_KEY_ID,RAZORPAY_KEY_SECRET} = process.env;
 const {ObjectId} = require("mongodb");
-const {orderIdGenerate} = require("../../helper/otpGenerate")
+const {orderIdGenerate} = require("../../helper/otpGenerate");
+const crypto = require("crypto");
+
+
+const razorpayInstance = new razorPay({
+    key_id:RAZORPAY_KEY_ID,
+    key_secret:RAZORPAY_KEY_SECRET
+})
 
 
 const loadCheckoutPage = async(req,res)=>{
     try{
         const cartData =  req.session.cartData;
+       
         const totalAmount =  req.query.total;
+        if (!cartData || cartData.length === 0 || totalAmount <= 0) {
+           
+            res.redirect("/shop");
+        }
+        
         
 
         
@@ -94,63 +108,109 @@ const applyCoupon = async(req,res)=>{
 const postorderDetails = async(req,res)=>{
     try{
         const addressID = req.body.addressId;
-       
         const totalAmount = req.body.total;
         const paymentMode = req.body.paymentmode;
 
         const userid = req.session.user;
         const userDetails = await Users.findById(userid);
 
-    const productIDs = userDetails.cart.map(item=>item.id);
-    const products = await Products.find({_id:{$in:productIDs }});
-    const address  = await Address.findOne({"address._id":addressID});
-    const selectedAddress = address.address.find(addr => addr._id.toString() === addressID);
-    console.log("address : ",selectedAddress);
-    const cartDetails =  userDetails.cart;
-  
-  
-    const orderId = orderIdGenerate()
-    const orderDetails = await Orders.create({
-        orderId:orderId,
-        products:products,
-        totalprice:totalAmount,
-        address:selectedAddress,
-        payment:paymentMode,
-        userid:userid,
-        cart:cartDetails,
+        const productIDs = userDetails.cart.map(item=>item.id);
+        const products = await Products.find({_id:{$in:productIDs}});
+        const address = await Address.findOne({"address._id":addressID});
+        const selectedAddress = address.address.find(addr => addr._id.toString() === addressID);
 
+        const cartDetails = userDetails.cart;
+        const orderId = orderIdGenerate();
+        const orderDetails = await Orders.create({
+            orderId: orderId,
+            products: products,
+            totalprice: totalAmount,
+            address: selectedAddress,
+            payment: paymentMode,
+            userid: userid,
+            cart: cartDetails,
+            createdon: moment().tz('Asia/Kolkata').format('DD/MM/YYYY hh:mm:ss A'),
+            status: "Confirmed",
+        });
 
-
-        createdon: moment().tz('Asia/Kolkata').format('DD/MM/YYYY hh:mm:ss A'),
-        status:"Confirmed",
-        })
-
-       
-        for (const cartItem of orderDetails.cart) {
-            const eachProductID = cartItem.id;
-            const quantityToSubtract = parseInt(cartItem.quantity);
-
-            await Users.findOneAndUpdate(
-                { _id: userid }, 
-                { $unset: { cart: "" } } 
-              );
-            
-           
-            await Products.findByIdAndUpdate(
-                eachProductID,
-                { $inc: { quantity: -quantityToSubtract } },
-                { new: true }
-            );
-
-            res.json({ res:true,message:"orderplaced" });
-        }
+      
         
 
-    }
-    catch(error){
-        console.log(error,"postorderDetails page error");
+        if(paymentMode === "Cash On Delivery"){
+            for (const cartItem of orderDetails.cart) {
+                const eachProductID = cartItem.id;
+                const quantityToSubtract = parseInt(cartItem.quantity);
+    
+                await Users.findOneAndUpdate(
+                    { _id: userid }, 
+                    { $unset: { cart: "" } } 
+                );
+    
+                await Products.findByIdAndUpdate(
+                    eachProductID,
+                    { $inc: { quantity: -quantityToSubtract } },
+                    { new: true }
+                );
+            }
+           await orderDetails.save();
+
+            res.json({ res: true,method:"Cash On Delivery", message: "orderplaced" });
+        } else if(paymentMode === "UPI"){
+            
+           
+
+          
+            const options = {
+                amount: totalAmount * 100, 
+                currency: 'INR',
+                receipt: orderId, 
+               
+            };
+
+            razorpayInstance.orders.create(options, async function (err, order) {
+                if (err) {
+                    console.error(err);
+                    res.status(500).json({ error: "Failed to create Razorpay order" });
+                    return;
+                }else{
+                    for (const cartItem of orderDetails.cart) {
+                        const eachProductID = cartItem.id;
+                        const quantityToSubtract = parseInt(cartItem.quantity);
+            
+                        await Users.findOneAndUpdate(
+                            { _id: userid }, 
+                            { $unset: { cart: "" } } 
+                        );
+            
+                        await Products.findByIdAndUpdate(
+                            eachProductID,
+                            { $inc: { quantity: -quantityToSubtract } },
+                            { new: true }
+                        );
+                    }
+                    await orderDetails.save();
+                   
+                    
+
+               
+                res.json({ payment:false,method:"UPI",razorpayOrder:order,order:orderDetails});
+                }
+            });
+        
+
+          
+          
+
+            
+          
+        }
+    } catch(error){
+        console.log(error, "postorderDetails page error");
+        res.status(500).json({ error: "Internal server error" });
     }
 }
+
+
 
 
 const loadOrderDetailPage = async(req,res)=>{
@@ -226,6 +286,8 @@ const deleteSingleProduct = async(req,res)=>{
 
 
 
+
+
 const deleteOrder = async(req,res)=>{
     try{
         const orderId = req.body.orderId.trim(); 
@@ -262,6 +324,34 @@ const deleteOrder = async(req,res)=>{
 }
 
 
+const verifyRazorpay = async(req,res)=>{
+    try{
+        const {order,payment} = req.body;
+        console.log("order : ",order);
+        console.log("payment : ",payment);
+        let hmac = crypto.createHmac("sha256", RAZORPAY_KEY_SECRET);
+        hmac.update(
+            `${payment.razorpay_order_id}|${payment.razorpay_payment_id}`
+        );
+        hmac = hmac.digest("hex");
+        if(hmac === payment.razorpay_signature){
+            res.json({status:true,message:"hello everyone"})
+        }else{
+            res.json({status:false})
+        }
+  
+
+
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+
+
+
+
+
 
 module.exports = {
     loadCheckoutPage,
@@ -269,5 +359,7 @@ module.exports = {
     postorderDetails,
     loadOrderDetailPage,
     deleteOrder,
-    deleteSingleProduct
+    deleteSingleProduct,
+    verifyRazorpay,
+ 
 }

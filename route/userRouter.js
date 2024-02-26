@@ -7,6 +7,7 @@ const orderController = require("../controller/user/orderController");
 const userProfileController = require("../controller/user/userProfileController");
 const sortController = require("../controller/user/sortController");
 const wishlistController = require("../controller/user/wishlistcontroller");
+const walletController = require("../controller/user/walletController")
 
 
 const {isUser} = require("../middlewares/authentication")
@@ -64,6 +65,7 @@ router.post("/updatequantity",isUser,cartController.updateQuantity);
 router.get("/checkout",isUser,orderController.loadCheckoutPage);
 router.post("/checkout",orderController.applyCoupon)
 router.post("/placeorder",isUser,orderController.postorderDetails);
+router.post("/verifypayment",orderController.verifyRazorpay)
 router.get("/orderdetails",isUser,orderController.loadOrderDetailPage);
 router.get("/deletesingleproduct",orderController.deleteSingleProduct)
 router.post("/deleteorder",isUser,orderController.deleteOrder);
@@ -80,6 +82,9 @@ router.post("/searchproduct",isUser,sortController.searchedData)
 router.get("/wishlist",isUser,wishlistController.getWishList);
 router.post("/wishlist/add",isUser,wishlistController.addToWishlist);
 router.get("/wishlist/delete",isUser,wishlistController.deleteWishlist);
+
+
+router.post("/addToWallet",walletController.addMoneyToWallet)
 
 
 
