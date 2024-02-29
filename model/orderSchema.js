@@ -77,6 +77,9 @@ const orderSchema = mongoose.Schema({
         type:String,
         required:true
       },
+      reason:{
+        type:String
+      },
       cart:{
         type:Array,
         required:true

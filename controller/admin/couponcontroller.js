@@ -6,7 +6,7 @@ const getCouponPage = async (req, res) => {
 
         const coupons = await Coupons.find({});
 
-        res.render("admin/coupon", { coupons: coupons })
+        res.render("admin/coupon", { coupons: coupons , couponActive:true })
 
 
     }

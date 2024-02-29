@@ -1,124 +1,168 @@
- 
 <%- include("../partials/header") %>
-<style>
-    #heading{
-        text-align: center;
-  
-    
-}
+    <style>
+        #heading {
+            text-align: center;
 
-#orderid {
-    display: none;
-  }
-</style>
- <!-- card-header end// -->
-                <div class="card-body">
-                    
-                   <!-- col// -->
-                      <!-- col// -->
-                     
-                     <!-- col// -->
-                     <!-- row // -->
-                    <div class="row justify-content-center">
-                        <h2 id="heading">Order Details</h2>
-                        <div class="col-lg-10">
-                            <div class="table-responsive">
-                                
-                                
-                                <table class="table">
-                                    <thead>
+
+        }
+
+        #orderid {
+            display: none;
+        }
+    </style>
+    <!-- card-header end// -->
+    <div class="card-body">
+
+        <!-- col// -->
+        <!-- col// -->
+
+        <!-- col// -->
+        <!-- row // -->
+        <div class="row justify-content-center">
+            <h2 id="heading">Order Details</h2>
+            <div class="col-lg-10">
+                <div class="table-responsive">
+
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="30%">Product</th>
+                                <th width="30%">Quantity</th>
+                                <th width="20%">Price</th>
+                                <th width="20%">Status</th>
+                                <th width="10%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if(order){ %>
+                                <div class="info">ORDER ID: <%= order.orderId %>
+                                </div>
+                                <div class="info" id="orderid">
+                                    <%= order._id %>
+                                </div>
+                                <% var totalSum=0; %>
+                                    <% for(var i=0; i<order.products.length; i++){ %>
                                         <tr>
-                                            <th width="30%">Product</th>
-                                            <th width="30%">Quantity</th>
-                                            <th width="20%">Price</th>
-                                            <th width="20%">Status</th>
-                                            <th width="10%"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% if(order){ %>
-                                            <div class="info">ORDER ID: <%= order.orderId %> </div>
-                                            <div class="info" id="orderid"> <%= order._id %> </div>
-                                            <% var totalSum = 0; %>
-                                            <% for(var i=0; i<order.products.length; i++){ %>
-                                                <tr>
-                                                    <td>
-                                                        <a class="itemside" href="#">
-                                                            <div class="left">
-                                                                <img src="/uploads/products/<%= order.products[i].image[0] %>" width="80" height="80" class="img-xs" alt="Item">
-                                                            </div>
-                                                            <div class="info"><%= order.products[i].name %> </div>
-                                                        </a>
-                                                    </td>
-                                                    <td> <%= order.cart[i].quantity %> </td>
-                                                    <td class="text-end"> <%= order.products[i].offerprice * order.cart[i].quantity %> </td>
-                                                    <!-- Change the color of status based on its value -->
-                                                    <% if(order.products[i].status === 'cancelled') { %>
-                                                        <td class="text-end" ><h4 style="color: red;"><%= order.products[i].status %></h4></td>
-                                                    <% } else { %>
-                                                        <td class="text-end" ><h4 style="color: green;"><%= order.products[i].status %></h4></td>
-                                                    <% } %>
-                                                    <!-- Conditional disable for delete button -->
+                                            <td>
+                                                <a class="itemside" href="#">
+                                                    <div class="left">
+                                                        <img src="/uploads/products/<%= order.products[i].image[0] %>"
+                                                            width="80" height="80" class="img-xs" alt="Item">
+                                                    </div>
+                                                    <div class="info">
+                                                        <%= order.products[i].name %>
+                                                    </div>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <%= order.cart[i].quantity %>
+                                            </td>
+                                            <td class="text-end">
+                                                <%= order.products[i].offerprice * order.cart[i].quantity %>
+                                            </td>
+                                            <!-- Change the color of status based on its value -->
+                                            <% if(order.products[i].status==='cancelled' ) { %>
+                                                <td class="text-end">
+                                                    <h4 style="color: red;">
+                                                        <%= order.products[i].status %>
+                                                    </h4>
+                                                </td>
+                                                <% } else { %>
                                                     <td class="text-end">
-                                                        <% if(order.products[i].status === 'cancelled') { %>
-                                                            <!-- Disable the delete button if status is cancelled -->
-                                                            <span class="text-muted">
-                                                                <i class="fi-rs-trash"></i>
-                                                            </span>
-                                                        <% } else { %>
-                                                            <!-- Otherwise, render the delete button as usual -->
-                                                            <a href="deletesingleproduct/?orderid=<%= order._id %>&&productid=<%= order.products[i]._id %>&&total=<%= order.totalprice %>&&subtotal=<%= order.products[i].offerprice * order.cart[i].quantity %>&&quantity=<%= order.cart[i].quantity %>" class="text-muted">
-                                                                <i class="fi-rs-trash"></i>
-                                                            </a>
-                                                        <% } %>
+                                                        <h4 style="color: green;">
+                                                            <%= order.products[i].status %>
+                                                        </h4>
                                                     </td>
-                                                </tr>
-                                            <% } %>
+                                                    <% } %>
+                                                        <!-- Conditional disable for delete button -->
+                                                        <td class="text-end">
+                                                            <% if(order.products[i].status==='cancelled' ) { %>
+                                                                <!-- Disable the delete button if status is cancelled -->
+                                                                <span class="text-muted">
+                                                                    <i class="fi-rs-trash"></i>
+                                                                </span>
+                                                                <% } else { %>
+                                                                    <!-- Otherwise, render the delete button as usual -->
+                                                                    <a href="deletesingleproduct/?orderid=<%= order._id %>&&productid=<%= order.products[i]._id %>&&total=<%= order.totalprice %>&&subtotal=<%= order.products[i].offerprice * order.cart[i].quantity %>&&quantity=<%= order.cart[i].quantity %>"
+                                                                        class="text-muted">
+                                                                        <i class="fi-rs-trash"></i>
+                                                                    </a>
+                                                                    <% } %>
+                                                        </td>
+                                        </tr>
+                                        <% } %>
                                             <!-- Display total sum outside of the loop -->
                                             <tr>
-                                                <td colspan="2"><h4>Total:</h4></td>
-                                                <td class="text-end">  <%= order.totalprice %> </td>
+                                                <td colspan="2">
+                                                    <h4>Total:</h4>
+                                                </td>
+                                                <td class="text-end">
+                                                    <%= order.totalprice %>
+                                                </td>
                                                 <td></td> <!-- Empty td to maintain alignment -->
                                             </tr>
-                                        <% } %>
-                                    </tbody>
-                                </table>
-                                
-                                
 
-                            </div> <!-- table-responsive// -->
-                        </div> <!-- col-lg-12// -->
-                    </div> 
-                    
-                    <div class="col-lg-3 col-md-3 ms-auto text-md">
-                       
-                            <!-- Hidden input field to store the order ID -->
-                            
-                            <button class="btn btn-primary" type="submit" id="cancelorder" name="cancelorder" value="Cancel Order">Cancel Order</button>
-                       
-                    </div><!-- row// -->
-                    <!-- row// -->
-                    
-                </div> <!-- card-body end// -->
-            </div> <!-- card end// -->
-        </section> <!-- content-main end// -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                        </tbody>
+                    </table>
 
 
-       
 
+                </div> <!-- table-responsive// -->
+            </div> <!-- col-lg-12// -->
+        </div>
 
-        <script>   
-            $(document).ready(function(){
-                let cancelButton = $("#cancelorder");
-                cancelButton.click(function(){
-                    event.preventDefault();
-                    const orderId = $("#orderid").text();
-                 
+        <div class="col-lg-3 col-md-3 ms-auto text-md">
+
+            <!-- Hidden input field to store the order ID -->
+            <% if(order.status==="Delivered" ){ %>
+                <button class="btn btn-primary" type="submit" id="returnorder" name="returnorder"
+                    value="Cancel Order">Return Order</button>
+
+                <% }else if(order.status==="Returned" ){ %>
+                    <a href="/shop">already returned go back to shop</a>
                   
 
-                    Swal.fire({
+                    <% }else{ %>
+                    <button class="btn btn-primary" type="submit" id="cancelorder" name="cancelorder"
+                        value="Cancel Order">Cancel Order</button>
+                    <% } %>
+
+
+
+        </div><!-- row// -->
+        <!-- row// -->
+       
+    </div>
+    <% if(order.status==="Delivered" ){ %>
+        <div style="margin-left: 100px; margin-top: -63px; box-shadow: 0 50px 50px rgba(0,0,0,0.1);">
+            <a class="btn btn-primary" href="/invoice?id=<%= order._id %>">View Invoice</a>
+        </div>
+        
+        
+        <% } %>
+    </div> 
+    <% } %><!-- card end// -->
+    </section> <!-- content-main end// -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            let cancelButton = $("#cancelorder");
+            let returnButton = $('#returnorder');
+            cancelButton.click(function () {
+                event.preventDefault();
+                const orderId = $("#orderid").text();
+                alert(orderId)
+
+
+
+                Swal.fire({
                     title: 'Are you sure?',
                     text: 'Do you want to cancel this order?',
                     icon: 'warning',
@@ -126,42 +170,84 @@
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, cancel it!'
-                   }).then((result)=>{
-                    if(result.isConfirmed){
-                      
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
                         $.ajax({
-                            url:"/deleteorder",
-                            method:"POST",
-                            data:{
-                                orderId:orderId
+                            url: "/deleteorder",
+                            method: "POST",
+                            data: {
+                                orderId: orderId
                             },
-                            success:function(response){
+                            success: function (response) {
                                 Swal.fire({
-                          position: "top-end",
-                    icon: "success",
-                      title: "Your order has been deleted",
-                         showConfirmButton: false,
-                         timer: 1500
-                          }).then(()=>{
-                            window.location.href = "/profile";
-                          })
+
+                                    icon: "success",
+                                    title: "Your order has been deleted",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    window.location.href = "/profile";
+                                })
                             },
-                            error:function(xhr, status, error){
+                            error: function (xhr, status, error) {
                                 console.error(error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Something went wrong!'
-                        });
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Something went wrong!'
+                                });
                             }
                         })
                     }
-                   })
-                    
                 })
+
             })
 
-        </script>
 
-        <%- include("../partials/footer") %>
-     
+            returnButton.click(function () {
+                event.preventDefault();
+                const orderId = $("#orderid").text();
+                alert(orderId)
+                Swal.fire({
+                    title: "Return Product !!!",
+                    text: "Write reason for returning product",
+                    input: 'text',
+                    showCancelButton: true
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            url: "/returnorder",
+                            method: "POST",
+                            data: {
+                                orderId: orderId,
+                                reason: result.value.trim()
+                            },
+                            success: function (response) {
+                             
+                                
+                               if(response){
+                                Swal.fire({
+    icon: "success",
+    title: response.message,
+    showConfirmButton: false,
+    timer: 2000
+}).then((result)=>{
+    window.location.href = "/profile"
+});
+
+                               }
+                            }
+                        })
+                    }
+                });
+
+            })
+
+
+
+        })
+
+    </script>
+
+    <%- include("../partials/footer") %>

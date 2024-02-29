@@ -14,7 +14,7 @@ const loadProductList = async(req,res)=>{
       
         
       
-        res.render("admin/productlist",{data,totalpage,currentPage: page})
+        res.render("admin/productlist",{data,totalpage,currentPage: page,productActive:true})
 
     }
     catch(error){
@@ -27,10 +27,12 @@ const loadProductList = async(req,res)=>{
 const loadEditProductPage = async(req,res)=>{
     try{
         const productID = req.params.id;
+
+        const categories = await Category.find({isList:true})
         
         const editProduct = await Products.findById(productID);
       
-        res.render("admin/editproduct",{editProduct});
+        res.render("admin/editproduct",{editProduct,categories});
         
          
         

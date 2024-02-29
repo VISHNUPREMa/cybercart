@@ -59,7 +59,7 @@
                                     <td><%= order[i].totalprice %></td>
                                        
                                     <td>
-                                        <% if (order[i].status == 'Awaiting payment') { %>
+                                        <% if (order[i].status == 'Cancelled') { %>
                                           <span class="badge rounded-pill" style="background-color: rgb(21, 21, 120);"><%= order[i].status %></span>
                                         <% } else if (order[i].status == 'Confirmed') { %>
                                           <span class="badge rounded-pill" style="background-color: rgb(8, 92, 8);"><%= order[i].status %></span>
@@ -67,7 +67,9 @@
                                           <span class="badge rounded-pill" style="background-color: rgb(52, 95, 91);"><%= order[i].status %></span>
                                         <% } else if (order[i].status == 'Delivered') { %>
                                           <span class="badge rounded-pill" style="background-color: rgb(255, 0, 166);"><%= order[i].status %></span>
-                                        <% } %>
+                                        <% }else if (order[i].status == 'Returned') {%>
+                                            <span class="badge rounded-pill" style="background-color: rgb(132, 60, 60);"><%= order[i].status %></span>
+                                            <% } %>
                                       </td>
                                       
 

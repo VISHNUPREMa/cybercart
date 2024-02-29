@@ -11,7 +11,7 @@ const loadUserList = async (req, res) => {
         totalPages = Math.ceil(usersCount/pageSize);
         const users = await User.find({}).skip(skip).limit(pageSize);
         
-        res.render("admin/userlist",{users,totalPages,currentPage:page});
+        res.render("admin/userlist",{users,totalPages,currentPage:page,userActive:true});
     } catch (error) {
         console.log(error, "loadUserList error");
         res.status(500).send("Internal Server Error");

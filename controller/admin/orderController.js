@@ -1,6 +1,7 @@
 const Orders = require("../../model/orderSchema");
 const Users = require("../../model/userModel");
-const Address = require("../../model/addressSchema")
+const Address = require("../../model/addressSchema");
+const Products = require("../../model/productmanage")
 const { ObjectId } = require('mongodb');
 
 const getOrderList = async(req,res)=>{
@@ -16,7 +17,7 @@ const getOrderList = async(req,res)=>{
         const usersOrderedProduct = allUsers.filter(user => orderData.some(order => order.userid.toString() === user._id.toString()));
         
        
-        res.render("admin/order",{order:orderData, user:usersOrderedProduct,totalPages, currentPage: page});
+        res.render("admin/order",{order:orderData, user:usersOrderedProduct,totalPages, currentPage: page,orderActive:true});
 
         }
     catch(error){
@@ -58,14 +59,37 @@ const getOrderDetails = async(req,res)=>{
 const changeOrderStatus = async(req,res)=>{
     try{
         const orderstatus = req.body.selectstatus;
+        const products = await Products.find({});
+
+      
         const orderid = req.query.id;
-        const validStatuses = ["Awaiting payment", "Confirmed", "Shipped", "Delivered"];
+        const validStatuses = ["Cancelled", "Confirmed", "Shipped", "Delivered","Returned"];
         
         
         if(validStatuses.includes(orderstatus)){
 
            const updatedOrder = await Orders.findByIdAndUpdate(orderid,{$set:{status:orderstatus}});
-           res.redirect("/admin/orderlist")
+         
+           if(updatedOrder.status === "Cancelled"){
+            for(let item of updatedOrder.cart){
+                try{
+                    const orderedProducts = products.find(prod=>prod._id.toString() === item.id);
+                    if(orderedProducts){
+                        const updatedQuantity = parseInt(orderedProducts.quantity) + parseInt(item.quantity)
+                        await Products.updateOne({_id:item.id},{$set:{quantity:updatedQuantity}});
+                        res.redirect("/admin/orderlist");
+                    }
+
+                }
+                catch(error){
+                    console.log("updatedOrder.cart destructure error",error);
+                }
+            }
+            
+
+           }else{
+           res.redirect("/admin/orderlist");
+           }
 
         }
 

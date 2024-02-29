@@ -20,8 +20,10 @@ const productSchema = new mongoose.Schema({
         default: true,
     },
     category: {
-        type: String,
-        required: true
+        type:  mongoose.Schema.Types.ObjectId,
+        ref :"category",
+        required:true
+        
     },
     price: {
         type: Number,
@@ -40,7 +42,11 @@ const productSchema = new mongoose.Schema({
         type:String,
         required:true
     }
-    ]
+    ],
+    discountApplied: {
+        type: Boolean,
+        default: false 
+    }
    
 }, { versionKey: false });
 

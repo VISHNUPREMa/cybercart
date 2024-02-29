@@ -85,11 +85,14 @@
                                     <h6>4. Category</h6>
                                 </div>
                                 <div class="col-md-9">
-                                    <div class="mb-4">
-                                        <label class="form-label"> Category</label>
-                                        <input type="text" placeholder="$00.0" class="form-control" name="category" id="editcategory"  value="<%= editProduct.category %>">
-                                        <div id="edit_quantity_error" class="alert alert-danger" style="display: none;"></div>
-                                    </div>
+                                    <select class="form-select border" id="category" name="category" style="width: 150px;"
+                                    name="category">
+                                    <% for (let i=0; i < categories.length; i++) { %>
+                                        <option value="<%= categories[i]._id %>">
+                                            <%= categories[i].name %>
+                                        </option>
+                                        <% } %>
+                                </select>
                                    
                                 </div>
                                 
@@ -296,11 +299,11 @@ function handleFileSelect(event) {
         offerprice_error.style.color = "red";
         offerprice_error.textContent = "Enter a valid offer price";
         return false;
-    } else if (parseInt(offerprice) >= parseInt(price)) {
+    } else if (parseInt(offerprice) > parseInt(price)) {
         
         offerprice_error.style.display = "block";
         offerprice_error.style.color = "red";
-        offerprice_error.textContent = "Offer price must be less than the original price";
+        offerprice_error.textContent = "Offer price must be less or equal to  the original price";
         return false;
     } else {
         

@@ -8,6 +8,7 @@ const productList = require("../controller/admin/productlist");
 const orderController = require("../controller/admin/orderController");
 const couponController = require("../controller/admin/couponcontroller");
 const salesReportController = require("../controller/admin/salesReportController");
+const offerController = require("../controller/admin/offerController");
 
 const {isAdmin} = require("../middlewares/authentication")
 
@@ -67,18 +68,17 @@ router.post("/category", isAdmin,categoryManagement.categoryDetailsPost);
 
 router.get("/salesreport",salesReportController.getSalesReport);
 router.post("/salesreport",salesReportController.getFilteredSalesReport);
+router.post("/salesreport/excel",salesReportController.excelData)
+
+
+router.get("/offers",offerController.getAdminOfferPage);
+router.post("/offers",offerController.postOfferDetails);
+router.get("/offers/delete",offerController.deleteOffer);
 
 
 
 
 
-
-
-
-
-
-
- 
 
 
 

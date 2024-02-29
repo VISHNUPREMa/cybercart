@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Cybercart</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+}
+#heading{
+    display: flex;
+    justify-content: center; /* Horizontally center the content */
+    align-items: center;
+    margin-top: -100px;/* Vertically center the content */
+}
+
+
+.invoice-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #088178;
+    box-shadow: 0 0 10px #088178;
+    background-color: #fff;
+}
+
+.logo img {
+    max-width: 200px;
+   
+}
+#img-logo{
+    display: flex;
+    justify-content: end; 
+
+}
+.invoice-details h2 {
+    font-size: 24px;
+    color: #088178;
+}
+
+.items-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.items-table th, .items-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.items-table th {
+    background-color: #f2f2f2;
+}
+
+.items-table tfoot td {
+    font-weight: bold;
+}
+
+.items-table tfoot td:first-child {
+    text-align: right;
+}
+
+.items-table tfoot td:last-child {
+    background-color: #f2f2f2;
+}
+
+
+</style>
+<body>
+    <div class="invoice-container" id="fulldiv">
+        <div id="for-save">
+        <% if(order && invoice){ %>
+        <div class="logo">
+            <div id="img-logo">
+                <img src="/assets/imgs/theme/logo.jpeg" alt="Cybercart Logo" style="width: 150px;">
+            </div>
+            <div id="heading">
+                <h1 >Invoice</h1>
+            </div>
+        </div>
+        <div class="invoice-details">
+            <h2>Client Information</h2>
+            <p><%= order.address[0].name %></p>
+            <p> <%= order.address[0].housename %>, <%= order.address[0].landmark %>,<br> <%= order.address[0].city %> , <%= order.address[0].state %> <br><%= order.address[0].pincode %> <br> <%= order.address[0].phone %></p>
+           <div id="invoice-data">
+            <p id="date"></p> 
+            <p> Invoice Number: <%= invoice %></p>
+           </div>
+           <div >
+            <p ></p> 
+            <p> </p>
+           </div>
+        </div>
+        <div class="items-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                     
+                        <th>Quantity</th>
+                        <th>Payment</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   <% for(i=0 ; i< order.products.length ; i++){ %>
+                    <tr>
+                        <td><%= order.products[i].name %></td>
+                       
+                        <td><%= order.cart[i].quantity %></td>
+                        <td><%= order.payment %></td>
+                        <td><%= order.cart[i].quantity  * order.products[i].offerprice %></td>
+                    </tr>
+
+                    
+                  
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">Subtotal</td>
+                        <td><%= order.cart[i].quantity  * order.products[i].offerprice %></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">Discount</td>
+                        <td><%= order.cart[i].quantity  * order.products[i].offerprice - order.totalprice  %></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">Total</td>
+                        <td><%= order.totalprice %></td>
+                    </tr>
+                </tfoot>
+                <% } %>
+            </table>
+            <br><br>
+        </div>
+        <% } %>
+    </div>
+
+        <div class="col-lg-6 col-md-6 ms-auto text-md-end">                                   
+            <button type="button" id="downloadPDFButton" class="btn btn-primary">Download PDF</button>
+            <button type="button" id="printButton" class="btn btn-primary">print</button>
+        </div>
+    </div>
+   
+  
+    
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+<script>
+    const dateInput = document.getElementById("date");
+    var currentDate = new Date();
+
+// Set the options for the date format
+var options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+
+// Format the date according to the options
+var formattedDate = currentDate.toLocaleDateString('en-GB', options);
+
+// Set the text content of the element to the formatted date
+dateInput.textContent = formattedDate;
+
+document.getElementById('downloadPDFButton').addEventListener('click', function() {
+        const element = document.getElementById('fulldiv');
+        html2pdf().from(element).save();
+    });
+
+    document.getElementById('printButton').addEventListener('click', function() {
+        window.print()
+    });
+        
+</script>
+</html>

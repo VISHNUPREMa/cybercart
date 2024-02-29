@@ -12,7 +12,7 @@ const loadAddProduct = async(req,res)=>{
     try{
 
         const categories = await Category.find();
-        res.render("admin/addproduct", { cat:categories });
+        res.render("admin/addproduct", { cat:categories ,addproductActive:true });
 
 
     }

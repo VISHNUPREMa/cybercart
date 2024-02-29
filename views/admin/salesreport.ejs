@@ -1,4 +1,12 @@
 <%- include("../partials/adminheader") %>
+<style>
+    .btn-space {
+        margin-right: 10px;
+    }
+    .btn-space:last-child {
+        margin-right: 0;
+    }
+</style>
 
 <div class="card mb-4">
     <header class="card-header">
@@ -47,7 +55,7 @@
     <div class="card-body">
         <div class="table-responsive">
             <div class="table-responsive">
-                <table class="table align-middle table-nowrap mb-0">
+                <table class="table align-middle table-nowrap mb-0" id="sales-table">
                     <thead class="table-light">
                         <tr>
                             <th scope="col" class="text-center">
@@ -66,7 +74,7 @@
                             
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody >
 
                         
                         <% if(orders){ %>
@@ -96,31 +104,112 @@
                                
                             </tr>
                             <% } %>
-                            <% } %>
+                           
                        
                     </tbody>
                 </table>
             </div>
         </div> 
+        <br><br>
+      
+        
+        <div class="col-lg-6 col-md-6 ms-auto text-md-end">                                   
+            <button id="downloadPDFButton" class="btn btn-primary btn-space">Download PDF</button>
+            <button id="downloadExcelButton" class="btn btn-primary btn-space">Download Excel</button>
+            <button type="button" id="printButton" class="btn btn-primary">Print</button>
+        </div>
+        <% } %>
+        
+        <br><br>
+        
+     
+        
+        
+       
     </div>
+    
 </div>
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
 <script>
-
-
-var selectElement = document.querySelector('.select-nice');
-    
-    
-    selectElement.addEventListener('change', function() {
-     
-        var selectedValue = selectElement.value;
-        
-       
-        console.log(selectedValue);
+       document.getElementById('downloadPDFButton').addEventListener('click', function() {
+        const element = document.querySelector('.card-body');
+        html2pdf().from(element).save();
     });
+
+    function printCardBody() {
+        const element = document.querySelector('.card-body');
+        let originalContents = document.body.innerHTML; 
+        document.body.innerHTML = element.innerHTML; 
+        window.print(); // Print
+        document.body.innerHTML = originalContents; 
+    }
+
+    document.getElementById('printButton').addEventListener('click', function() {
+        printCardBody();
+    });
+
+   
+
+    document.getElementById('downloadExcelButton').addEventListener('click', async () => {
+    const salesTable = document.getElementById("sales-table");
+    const tableData = salesTable.querySelector("tbody");
+    let salesData = [];
+
+    for (let row of tableData.rows) {
+        orderId = row.cells[1].textContent.trim();
+        name = row.cells[2].textContent.trim();
+        date = row.cells[3].textContent.trim();
+        total = row.cells[4].textContent.trim();
+        paymentStatus = row.cells[5].textContent.trim();
+        paymentMethod = row.cells[6].textContent.trim();
+        let data = {
+            orderID: orderId,
+            customerName: name,
+            orderedDate: date,
+            total: total,
+            paymentStatus: paymentStatus,
+            paymentMethod: paymentMethod
+        };
+        salesData.push(data);
+    }
+
+    try {
+        const response = await fetch('/admin/salesreport/excel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ salesData })
+        });
+
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'report.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        } else {
+            console.error('Failed to download Excel file');
+        }
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+});
+
+
+
+
+  
+  
 
     
 

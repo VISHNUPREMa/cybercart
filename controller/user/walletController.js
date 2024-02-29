@@ -17,7 +17,7 @@ const addMoneyToWallet = async(req,res)=>{
         const amount = req.body.amount;
         console.log("amount : ",amount);
         const userid = req.session.user;
-        data={
+         data={
             amount :Number(amount),
             createdOn :moment().tz('Asia/Kolkata').format('DD/MM/YYYY hh:mm:ss A'),
             source:"online"

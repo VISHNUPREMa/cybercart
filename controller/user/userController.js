@@ -1,6 +1,8 @@
 const User = require("../../model/userModel");
 const Category = require("../../model/category");
 const Products = require("../../model/productmanage");
+const Offers = require("../../model/offerSchema")
+
 const { generateRandomOtp } = require("../../helper/otpGenerate");
 const bcrypt = require("bcrypt");
 const nodemailer = require('nodemailer');
@@ -23,6 +25,11 @@ const getHomePage = async(req,res)=>{
         const productData = await Products.find({isListed:true})
         const cartData = req.session.cartData;
         const cartTotal = req.session.grandTotal;
+
+        const offerData = await Offers.find({});
+    
+
+        
         
         
         if(user){

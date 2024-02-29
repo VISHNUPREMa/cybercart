@@ -59,7 +59,7 @@ const loadDashboardHome = async(req,res)=>{
         const categoryData = await Category.find({isList:true});
         const userData = await User.find({isBlocked:false}); 
 
-        res.render("admin/admindashboard",{orders:OrderData,products:productData,categories:categoryData,users:userData});
+        res.render("admin/admindashboard",{orders:OrderData,products:productData,categories:categoryData,users:userData,dashboardActive:true});
 
     }
     catch(error){

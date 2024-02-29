@@ -27,7 +27,7 @@
 <body>
     <style>
         .active {
-    background-color: #4CAF50; /* change this to your preferred color */
+    background-color: #03ada2; /* change this to your preferred color */
     color: white;
 }
 
@@ -49,14 +49,14 @@
         </div>
         <nav>
             <ul class="menu-aside">
-                <li class="menu-item ">
+                <li class="menu-item  <%= locals.dashboardActive ? 'active' : '' %>  ">
                     <a class="menu-link" href="/admin/Dashboard"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
 
                   
-                <li class="menu-item ">
+                <li class="menu-item <%= locals.userActive? 'active' : '' %> ">
                     <a class="menu-link"   href="/admin/userlist"> <i class="icon material-icons md-store"></i>
                         <span class="text">users</span>
                     </a>
@@ -64,43 +64,50 @@
                 </li>
 
 
-                <li class="menu-item ">
+                <li class="menu-item <%= locals.categoryActive? 'active' : '' %> ">
                     <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-store"></i>
                         <span class="text">category</span>
                     </a>
                 </li>
 
 
-                <li class="menu-item ">
+                <li class="menu-item <%= locals.addproductActive? 'active' : '' %> ">
                     <a class="menu-link" href="/admin/addproduct"> <i class="icon material-icons md-add_box"></i>
                         <span class="text">Add product</span>
                     </a>
               
                 </li>
                 
-                <li class="menu-item ">
+                <li class="menu-item <%= locals.productActive? 'active' : '' %>  ">
                     <a class="menu-link" href="/admin/productlist"> <i class="icon material-icons md-store"></i>
                         <span class="text">View Products</span>
                     </a>
                 </li>
 
-                <li class="menu-item ">
+                <li class="menu-item <%= locals.orderActive? 'active' : '' %> ">
                     <a class="menu-link" href="/admin/orderlist"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
                     </a>
                    
                 </li>
                 
-                <li class="menu-item ">
+                <li class="menu-item <%= locals.couponActive? 'active' : '' %>">
                     <a class="menu-link" href="/admin/coupons"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Coupons</span>
                     </a>
                    
                 </li>
 
-                <li class="menu-item ">
+                <li class="menu-item <%= locals.salesActive ? 'active' : '' %> ">
                     <a class="menu-link" href="/admin/salesreport"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Sales Report</span>
+                    </a>
+                   
+                </li>
+
+                <li class="menu-item <%= locals.offerActive ? 'active' : '' %> ">
+                    <a class="menu-link" href="/admin/offers"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Offers</span>
                     </a>
                    
                 </li>

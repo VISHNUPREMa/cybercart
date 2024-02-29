@@ -1,14 +1,16 @@
 
 const Orders = require("../../model/orderSchema");
-const Categories = require("../../model/category")
+const Categories = require("../../model/category");
+
 const moment = require("moment");
+const ExcelJS = require("exceljs")
 
 const getSalesReport = async (req, res) => {
     try {
         const orderData = await Orders.find({});
         
 
-        res.render("admin/salesreport", { orders: orderData });
+        res.render("admin/salesreport", { orders: orderData,salesActive:true });
 
     } catch (error) {
         console.log("getSalesReport page error", error);
@@ -25,7 +27,7 @@ const getFilteredSalesReport = async (req, res) => {
         const dateString = req.body.date;
 
         if (filterOptions !== undefined) {
-            // Code execution based on filterOptions
+          
             if (filterOptions === "Daily") {
                 const today = moment().startOf('day').utc();
                 const formattedDate = today.format('DD/MM/YYYY hh:mm:ss A').toString();
@@ -64,13 +66,54 @@ const getFilteredSalesReport = async (req, res) => {
     }
 }
 
+const excelData = async(req,res)=>{
+    try{
+     
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Sales Report');
+
+        worksheet.columns = [ 
+            { header: "ORDER ID", key: "orderid", width: 25 }, 
+            { header: "Customer Name", key: "name", width: 40 }, 
+            { header: "Ordered Date", key: "date", width: 40 }, 
+            { header: "Total Price", key: "total", width: 40 }, 
+            { header: "Payment Status", key: "status", width: 40 }, 
+            { header: "Payment Method", key: "method", width: 40 }, 
+            ];
+            const datas = req.body.salesData;
+              
+
+            datas.forEach(data => { worksheet.addRow({
+                orderid : data.orderID,
+                name : data.customerName,
+                date : data.orderedDate,
+                total : data.total,
+                status : data.paymentStatus,
+                method : data.paymentMethod
+
+
+            });
+         });
+
+         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', `attachment; filename=salesReport.xlsx`);
+
+        await workbook.xlsx.write(res);
+        res.end();
+    }
+    catch(error){
+        console.log("excelData page error : ",error);
+    }
+}
+
 
 
 
 
 module.exports = {
     getSalesReport,
-    getFilteredSalesReport
+    getFilteredSalesReport,
+    excelData
 
 }
 
