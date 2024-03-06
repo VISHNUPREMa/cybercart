@@ -70,6 +70,9 @@
 .items-table tfoot td:last-child {
     background-color: #f2f2f2;
 }
+.btn{
+    background-color:#088178
+}
 
 
 </style>
@@ -110,7 +113,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                   <% for(i=0 ; i< order.products.length ; i++){ %>
+                   <% for(i=0 ; i< order.cart.length ; i++){ %>
                     <tr>
                         <td><%= order.products[i].name %></td>
                        
@@ -122,22 +125,17 @@
                     
                   
                 </tbody>
+               
+                <% } %>
                 <tfoot>
-                    <tr>
-                        <td colspan="4">Subtotal</td>
-                        <td><%= order.cart[i].quantity  * order.products[i].offerprice %></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">Discount</td>
-                        <td><%= order.cart[i].quantity  * order.products[i].offerprice - order.totalprice  %></td>
-                    </tr>
+                  
                     <tr>
                         <td colspan="4">Total</td>
                         <td><%= order.totalprice %></td>
                     </tr>
                 </tfoot>
-                <% } %>
             </table>
+           
             <br><br>
         </div>
         <% } %>

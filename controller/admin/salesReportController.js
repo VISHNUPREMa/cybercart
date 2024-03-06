@@ -23,27 +23,60 @@ const getSalesReport = async (req, res) => {
 
 const getFilteredSalesReport = async (req, res) => {
     try {
+        
+
         const filterOptions = req.body.selectstatus;
         const dateString = req.body.date;
 
         if (filterOptions !== undefined) {
           
             if (filterOptions === "Daily") {
-                const today = moment().startOf('day').utc();
+                const today = moment().startOf('day');
                 const formattedDate = today.format('DD/MM/YYYY hh:mm:ss A').toString();
-                const orderData = await Orders.find({ createdon: { $gte: formattedDate } });
+                const orders = await Orders.find({ });
+                let orderData =[]
+                console.log("today : ",today);
+                
+                for (let order of orders) {
+                    const orderDate = moment(order.createdon); 
+                    if (orderDate.isSameOrAfter(formattedDate, 'day')) {
+                        
+                        orderData.push(order);
+                    }
+                }
             
 
                 return res.render("admin/salesreport", { orders: orderData });
             } else if (filterOptions === "weekly") {
+                let orderData = [];
                 const startOfWeek = moment().startOf('week');
                 const formattedDate = startOfWeek.format('DD/MM/YYYY hh:mm:ss A').toString();
-                const orderData = await Orders.find({ createdon: { $gte: formattedDate } });
+                const orders = await Orders.find({ });
+                for(let order of orders){
+                    const orderDate = moment(order.createdon);
+                    if (orderDate.isSameOrAfter(formattedDate, 'day')) {
+                        
+                        orderData.push(order);
+                    }
+
+
+                }
                 return res.render("admin/salesreport", { orders: orderData });
             } else if (filterOptions === "monthly") {
+                let orderData = [];
                 const startOfMonth = moment().startOf('month');
                 const formattedDate = startOfMonth.format('DD/MM/YYYY hh:mm:ss A').toString();
-                const orderData = await Orders.find({ createdon: { $gte: formattedDate } });
+                const orders = await Orders.find({ });
+                for(let order of orders){
+                    const orderDate = moment(order.createdon);
+                    if (orderDate.isSameOrAfter(formattedDate, 'day')) {
+                        
+                        orderData.push(order);
+                    }
+
+
+                }
+
          
 
                 return res.render("admin/salesreport", { orders: orderData });

@@ -115,19 +115,39 @@ let yyyy = today.getFullYear();
 today = dd + '-' + mm + '-' + yyyy;
 startDateInput.min = today;
 
+
+
 // Add event listener to start date input
 startDateInput.addEventListener('change', function() {
     let startDate = new Date(this.value);
-    let todayDate = new Date(today);
-    if (startDate < todayDate) {
+    let todayDate = new Date();
+    let yesterdayDate = new Date(todayDate);
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1); // Get yesterday's date
+
+    if (startDate < yesterdayDate) {
         alert('Start date cannot be before today.');
-        this.value = today;
+        let yyyy = String(yesterdayDate.getFullYear());
+        let mm = String(yesterdayDate.getMonth() + 1).padStart(2, '0');
+        let dd = String(yesterdayDate.getDate()).padStart(2, '0');
+        this.value = yyyy + '-' + mm + '-' + dd; // Set yesterday's date in yyyy-mm-dd format
     }
+
     // Set minimum end date to one day after start date
     let minEndDate = new Date(startDate);
     minEndDate.setDate(minEndDate.getDate() + 1);
     endDateInput.min = minEndDate.toISOString().split('T')[0];
+
+    // Set minimum start date to yesterday's date
+    let yyyy = String(yesterdayDate.getFullYear());
+    let mm = String(yesterdayDate.getMonth() + 1).padStart(2, '0');
+    let dd = String(yesterdayDate.getDate()).padStart(2, '0');
+    startDateInput.min = yyyy + '-' + mm + '-' + dd; // Set yesterday's date in yyyy-mm-dd format
 });
+
+
+
+
+
 
 // Add event listener to end date input
 endDateInput.addEventListener('change', function() {

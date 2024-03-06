@@ -7,7 +7,7 @@ const { ObjectId } = require('mongodb');
 const getOrderList = async(req,res)=>{
     try{
         const page = req.query.page || 1;
-        const pageSize = 3;
+        const pageSize = 5;
         const skip = (page - 1)*pageSize;
         const ordersCount = await Orders.countDocuments({});
         const totalPages = Math.ceil(ordersCount/pageSize);

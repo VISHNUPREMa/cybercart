@@ -65,11 +65,18 @@ router.post("/updatequantity",isUser,cartController.updateQuantity);
 router.get("/checkout",isUser,orderController.loadCheckoutPage);
 router.post("/checkout",orderController.applyCoupon)
 router.post("/placeorder",isUser,orderController.postorderDetails);
-router.post("/verifypayment",orderController.verifyRazorpay)
+router.post("/onlinepaymentfailed",orderController.onlinePaymentFailed)
+router.post("/verifypayment",orderController.verifyRazorpay);
 router.get("/orderdetails",isUser,orderController.loadOrderDetailPage);
 router.get("/deletesingleproduct",orderController.deleteSingleProduct)
 router.post("/deleteorder",isUser,orderController.deleteOrder);
 router.post("/returnorder",orderController.returnOrder);
+router.get("/continuepayment",orderController.continuePaymentForPaymentFail);
+router.post("/repayment",orderController.postRepaymentData);
+router.post("/cancelpendingorder",orderController.cancelPendingOrder);
+
+
+
 
 router.get("/categorysort",isUser,sortController.categorySort);
 router.get("/categorysort/lowtohigh",isUser,sortController.lowToHigh);
@@ -88,7 +95,11 @@ router.get("/wishlist/delete",isUser,wishlistController.deleteWishlist);
 router.post("/addToWallet",walletController.addMoneyToWallet);
 
 
+
 router.get("/invoice",orderController.getInvoice);
+
+
+
 
 
 

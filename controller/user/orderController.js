@@ -21,7 +21,7 @@ const razorpayInstance = new razorPay({
 
 const loadCheckoutPage = async (req, res) => {
     try {
-        const cartData = req.session.cartData;
+        const cartData = req.session.cartData ;
 
         const totalAmount = req.query.total;
         if (!cartData || cartData.length === 0 || totalAmount <= 0) {
@@ -37,6 +37,10 @@ const loadCheckoutPage = async (req, res) => {
 
         const addressData = await Address.findOne({ userID: userID });
         const discount = 0;
+        const deliverycharge = await Orders.find({deliverycharge:500})
+
+
+        console.log("delivery charge items : ",deliverycharge);
 
 
 
@@ -56,54 +60,45 @@ const loadCheckoutPage = async (req, res) => {
 const applyCoupon = async (req, res) => {
     try {
         const couponCode = req.body.couponcode;
-        const grandtotal = req.body.total
+        const grandtotal = req.body.total;
         const coupon = await Coupons.findOne({ name: couponCode });
         const userid = req.session.user;
 
+        let newTotal;
+
         if (coupon && coupon.isList) {
             if (coupon.usedByUsers.includes(userid)) {
-                res.status(404).json({ message: "Coupon already used " })
-
+                return res.status(404).json({ message: "Coupon already used" });
             }
-        }
-
-        if (coupon && coupon.isList) {
 
             const currentDate = new Date();
             if (currentDate >= coupon.start && currentDate <= coupon.end) {
-                newTotal = Number(grandtotal) - Number(coupon.discount)
+                if(coupon.purchaseamount <= grandtotal){
+                    newTotal = Number(grandtotal) - Number(coupon.discount);
                 await Coupons.updateOne(
                     { _id: coupon._id },
                     { $addToSet: { usedByUsers: userid } }
                 );
+                req.session.discountApplied = coupon.discount;
 
+                return res.status(200).json({ success: true, discount: coupon.discount, total: newTotal });
+                }else{
+                    return res.status(404).json({ message: `coupon is valid for minimum ${coupon.purchaseamount} rs products` });
 
-                res.status(200).json({ success: true, discount: coupon.discount, total: newTotal });
-
-
-                return;
+                }
             } else {
-                res.status(404).json({ message: "Coupon expired !!!" })
+                return res.status(404).json({ message: "Coupon expired" });
             }
         } else {
-            newTotal = Number(grandtotal)
-
-            res.json({ success: true, discount: coupon.discount, total: newTotal });
-
-
-
-
-
+            newTotal = Number(grandtotal);
+            return res.status(200).json({ success: true, discount: 0, total: newTotal });
         }
-
-
-
-
+    } catch (error) {
+        console.error(error, "Error on applyCoupon page");
+        return res.status(500).json({ message: "Internal Server Error" });
     }
-    catch (error) {
-        console.log(error, "applyCoupon  page error");
-    }
-}
+};
+
 
 
 const postorderDetails = async (req, res) => {
@@ -122,6 +117,8 @@ const postorderDetails = async (req, res) => {
 
         const cartDetails = userDetails.cart;
         const orderId = orderIdGenerate();
+        const couponApplied = req.session.discountApplied ? req.session.discountApplied : 0;
+
         const orderDetails = await Orders.create({
             orderId: orderId,
             products: products,
@@ -132,7 +129,16 @@ const postorderDetails = async (req, res) => {
             cart: cartDetails,
             createdon: moment().tz('Asia/Kolkata').format('DD/MM/YYYY hh:mm:ss A'),
             status: "Confirmed",
+            deliverycharge: Number(500),
+            couponapplied: Number(couponApplied)
         });
+        delete req.session.discountApplied;
+        
+
+        req.session.orderDetails = orderDetails;
+        
+        
+        
 
 
 
@@ -174,27 +180,10 @@ const postorderDetails = async (req, res) => {
                     res.status(500).json({ error: "Failed to create Razorpay order" });
                     return;
                 } else {
-                    for (const cartItem of orderDetails.cart) {
-                        const eachProductID = cartItem.id;
-                        const quantityToSubtract = parseInt(cartItem.quantity);
 
-                        await Users.findOneAndUpdate(
-                            { _id: userid },
-                            { $unset: { cart: "" } }
-                        );
+                    
 
-                        await Products.findByIdAndUpdate(
-                            eachProductID,
-                            { $inc: { quantity: -quantityToSubtract } },
-                            { new: true }
-                        );
-                    }
-                    await orderDetails.save();
-
-
-
-
-                    res.json({ payment: false, method: "UPI", razorpayOrder: order, order: orderDetails });
+                     res.json({ payment: false, method: "UPI", razorpayOrder: order,order:orderDetails});
                 }
             });
 
@@ -211,6 +200,33 @@ const postorderDetails = async (req, res) => {
     }
 }
 
+
+const onlinePaymentFailed = async(req,res)=>{
+    try{
+        const paymentStatus = req.body.paymentFailed;
+     
+        const orderData = req.body.order;
+        
+        if(paymentStatus){
+     
+            
+            const orderid = orderData[0]._id;
+            const orderDetails = await Orders.findById(orderid);
+            orderDetails.status = "payment Pending";
+            await orderDetails.save();
+            console.log("order details : ",orderDetails);
+
+        }
+
+        res.status(200).json({message :"Payment failed"})
+
+        
+
+    }
+    catch(error){
+        console.log("onlinePaymentFailed page error : ",error);
+    }
+}
 
 
 
@@ -328,16 +344,39 @@ const deleteOrder = async (req, res) => {
 const verifyRazorpay = async (req, res) => {
     try {
         const { order, payment } = req.body;
-        console.log("order : ", order);
-        console.log("payment : ", payment);
+       
         let hmac = crypto.createHmac("sha256", RAZORPAY_KEY_SECRET);
         hmac.update(
             `${payment.razorpay_order_id}|${payment.razorpay_payment_id}`
         );
         hmac = hmac.digest("hex");
         if (hmac === payment.razorpay_signature) {
-            res.json({ status: true, message: "hello everyone" })
+            const orderid = req.session.orderDetails._id;
+            const orderDetails = await Orders.findById(orderid);
+            
+            const userid = req.session.user;
+            for (const cartItem of orderDetails.cart) {
+                const eachProductID = cartItem.id;
+                const quantityToSubtract = parseInt(cartItem.quantity);
+
+                await Users.findOneAndUpdate(
+                    { _id: userid },
+                    { $unset: { cart: "" } }
+                );
+
+                await Products.findByIdAndUpdate(
+                    eachProductID,
+                    { $inc: { quantity: -quantityToSubtract } },
+                    { new: true }
+                );
+            }
+            await orderDetails.save();
+            res.json({ status: true,  })
+
         } else {
+            const orderid = req.session.orderDetails._id;
+            const orderDetails = await Orders.findById(orderid);
+            console.log("order failed : ",orderDetails);
             res.json({ status: false })
         }
 
@@ -360,7 +399,7 @@ const returnOrder = async (req, res) => {
         data={
             amount :Number(orderDetails.totalprice),
             createdOn :moment().tz('Asia/Kolkata').format('DD/MM/YYYY hh:mm:ss A'),
-            source:"online"
+            source:"Cancelled order"
         }
         
         const walletData = await Wallet.findOne({userId:userid});
@@ -399,18 +438,81 @@ const returnOrder = async (req, res) => {
 }
 
 
-const getInvoice = async(req,res)=>{
+const getInvoice = async (req, res) => {
+    try {
+        const orderId = req.query.id;
+        const orderData = await Orders.findById(orderId) 
+        const invoiceNumber = orderIdGenerate();
+        console.log("orderDate : ",orderData);
+        res.render("user/invoice", { order: orderData, invoice: invoiceNumber });
+    } catch (error) {
+        console.log("Error retrieving invoice:", error);
+        res.status(500).send("Internal Server Error");
+    }
+}
+
+
+const continuePaymentForPaymentFail = async(req,res)=>{
     try{
         const orderid = req.query.id;
         const orderData = await Orders.findById(orderid);
-        const invoiceNumber = orderIdGenerate();
-        res.render("user/invoice",{order:orderData,invoice:invoiceNumber})
+        
+        res.render("user/repayment",{order:orderData});
+        
 
     }
     catch(error){
-        console.log("getInvoice page error");
+        console.log("continuePaymentForPaymentFail page error : ",continuePaymentForPaymentFail);
     }
 }
+
+
+const postRepaymentData = async(req,res)=>{
+    try{
+        const orderid = req.body.orderId;
+        const orderData = await Orders.findById(orderid);
+        orderData.status = "Confirmed";
+        const userid = req.session.user;
+        for (const cartItem of orderData.cart) {
+            const eachProductID = cartItem.id;
+            const quantityToSubtract = parseInt(cartItem.quantity);
+
+            await Users.findOneAndUpdate(
+                { _id: userid },
+                { $unset: { cart: "" } }
+            );
+
+            await Products.findByIdAndUpdate(
+                eachProductID,
+                { $inc: { quantity: -quantityToSubtract } },
+                { new: true }
+            );
+        }
+        
+        await orderData.save();
+        res.status(200).json({message:"order placed successfully"})
+        console.log("order data : ",orderData.cart);
+
+    }
+    catch(error){
+        console.log("postRepaymentData page error : ",error);
+    }
+}
+
+
+const cancelPendingOrder = async(req,res)=>{
+    try{
+        const orderid = req.body.id;
+        const orderData = await Orders.findById(orderid);
+        orderData.status = "Cancelled";
+        await orderData.save();
+        res.status(200).json({message:"Order cancelled successfully"})
+
+    }catch(error){
+       console.log("cancelPendingOrder page error : ",error); 
+    }
+}
+
 
 
 
@@ -426,6 +528,9 @@ module.exports = {
     deleteSingleProduct,
     verifyRazorpay,
     returnOrder,
-    getInvoice
-
+    getInvoice,
+    onlinePaymentFailed,
+    continuePaymentForPaymentFail,
+    postRepaymentData,
+    cancelPendingOrder
 }

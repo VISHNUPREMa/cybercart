@@ -12,6 +12,37 @@
         width: 100%; /* Set the width to 100% to fill the container */
         height: 250px; 
     }
+
+    /* Add this CSS to your stylesheet */
+.card-1 {
+    width: 200px; /* Adjust the width as needed */
+    height: 150px; /* Adjust the height as needed */
+    margin: 0 10px; /* Adjust the margins as needed */
+    display: inline-block; /* Ensure they appear in a row */
+}
+
+
+
+.card-1 img {
+    display: flex;
+  justify-content: center; /* Maintain aspect ratio */
+}
+#category-filter{
+    margin-top: 45px;
+    height: 350px;
+    border-radius: 20px;
+    border: solid 1px;
+}
+
+#sort-filter{
+    margin-top: 45px;
+    height: 350px;
+    border-radius: 20px;
+    border: solid 1px;
+
+}
+
+
 </style>
 
 
@@ -27,10 +58,20 @@
         </div>
     </div>
 </div>
+
 <main class="main">
+
+
+
+
+        
+
+
+    <% if(locals.offer && offer.length >0){ %>
+
     <section class="home-slider position-relative mb-30">
         <div class="container">
-            <div class="home-slide-cover bg-grey-10 mt-30">
+            <div class="home-slide-cover bg-grey-10 mt-30" style="background-color:rgba(193, 193, 193, 0);">
                 <div class="hero-slider-1 style-4 dot-style-1 dot-style-1-position-1">
                     <div class="single-hero-slider single-animation-wrap">
                         <div class="container">
@@ -39,34 +80,37 @@
                                     <div class="hero-slider-content-2">
                                         <h4 class="animated">Trade-In Offer</h4>
                                         <h3 class="animated fw-900">Supper Value Deals</h3>
-                                        <h2 class="animated fw-900 text-brand">On All Products</h2>
-                                        <p class="animated">Save more with coupons & up to 70% off</p>
-                                        <a class="animated btn btn-brush btn-brush-3" href="shop-product-right.html" tabindex="0"> Shop Now </a>
+                                        <h2 class="animated fw-900 text-brand">On <%= offer[0].brand %> <%= offer[0].category %>  Products</h2>
+                                        <p class="animated">Save more with coupons</p>
+                                        <a class="animated btn btn-brush btn-brush-3" href="/shop" tabindex="0"> Shop Now </a>
                                     </div>
                                 </div>
                                 <div class="col-lg-7 col-md-6">
                                     <div class="single-slider-img single-slider-img-1">
-                                        <img class="animated" src="assets/imgs/slider/bannerone.png" alt="">
+                                       
+                                        <img class="animated" src="\uploads\products\Blue and Purple Gradient Laptop Sale Banner (1).png"  alt="">
+                                        
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="single-hero-slider single-animation-wrap">
+                    <div class=" bg single-hero-slider single-animation-wrap" >
                         <div class="container">
                             <div class="row align-items-center slider-animated-1">
                                 <div class="col-lg-5 col-md-6">
                                     <div class="hero-slider-content-2">
-                                        <h4 class="animated">Hot promotions</h4>
-                                        <h3 class="animated fw-900">Fashion Trending</h3>
-                                        <h2 class="animated fw-900 text-brand">Great Collection</h2>
-                                        <p class="animated">Save more with coupons & up to 20% off</p>
-                                        <a class="animated btn btn-brush btn-brush-1" href="shop-product-right.html" tabindex="0"> Get It Now </a>
+                                        <h4 class="animated">Hot Offers </h4>
+                                        <h3 class="animated fw-900">from <%= offer[0].start %></h3>
+                                        <h2 class="animated fw-900 text-brand"> to <%= offer[0].end %></h2>
+                                        <p class="animated">Save more with coupons </p>
+                                        <a class="animated btn btn-brush btn-brush-1" href="/shop" tabindex="0"> Get It Now </a>
                                     </div>
                                 </div>
                                 <div class="col-lg-7 col-md-6">
                                     <div class="single-slider-img single-slider-img-1">
-                                        <img class="animated" src="assets/imgs/slider/slider-7.png" alt="">
+                                        <img class="animated" src="\uploads\products\Modern Minimalist Simple Technology Banner.png" alt="">
                                     </div>
                                 </div>
                             </div>
@@ -77,12 +121,14 @@
             </div>
         </div>
     </section>
+
+    <% } %>
     
     <section class="product-tabs pt-25 pb-20 wow fadeIn animated">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
-                    <div class="widget-category mb-30">
+                <div class="col-lg-2">
+                    <div class="widget-category mb-30"  id="category-filter">
                         <h5 class="section-title style-1 mb-30 wow fadeIn animated">Category</h5>
                         <ul class="categories">
                             <% if (typeof category !== 'undefined' && category) { %>
@@ -98,8 +144,9 @@
                             <% } %>
                         </ul>
                     </div>
+                    
 
-                    <div class="widget-category mb-30">
+                    <div class="widget-category mb-30" id="sort-filter">
                         <h5 class="section-title style-1 mb-30 wow fadeIn animated">Sort by</h5>
                         <ul class="categories">
                            
@@ -109,13 +156,15 @@
                             <li><a href="/categorysort/Z-A">Zz - Aa</a></li>
                         </ul>
                     </div>
+
+                   
                    
                     
                     
                    
                     
                 </div>
-                <div class="col-lg-9">
+                <div class="col-lg-10">
                     <div class="tab-header">
                         
                         <a href="#" class="view-more d-none d-md-flex">View More<i class="fi-rs-angle-double-small-right"></i></a>
@@ -181,42 +230,220 @@
                         <!--En tab three (New added)-->
                     </div>
                     <!--End tab-content-->
+                     <% if(locals.totalPages){ %>
+                    <div class="pagination-area mt-30 mb-50">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-start">
+                                <% for (let i = 1; i <= totalPages; i++) { %>
+                                    <li class="page-item <%= currentPage == i ? 'active' : '' %>">
+                                        <a class="page-link" href="/?page=<%= i %>"><%= i %></a>
+                                    </li>
+                                <% } %>
+                            </ul>
+                        </nav>
+                    </div>
+                    <% } %>
+
                 </div>
             </div>
         </div>
     </section>
         
-    <section class="section-padding">
-        <div class="container pb-20">
-            <h3 class="section-title mb-20 wow fadeIn animated"><span>Featured</span> Brands</h3>
-            <div class="carausel-6-columns-cover position-relative wow fadeIn animated">
-                <div class="slider-arrow slider-arrow-2 carausel-6-columns-arrow" id="carausel-6-columns-3-arrows"></div>
-                <div class="carausel-6-columns text-center" id="carausel-6-columns-3">
-                    <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/logo1.jpeg" alt="">
+  
+  
+
+    <section class="product-tabs section-padding wow fadeIn animated">
+        <div class="container">
+            <div class="tab-header">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="nav-tab-one" data-bs-toggle="tab" data-bs-target="#tab-one"  type="button" role="tab" aria-controls="tab-one" aria-selected="true">  Best Selling Product</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="nav-tab-two" data-bs-toggle="tab" data-bs-target="#tab-two" type="button"  role="tab" aria-controls="tab-two" aria-selected="false">Best Selling Brands</button>
+                    </li>
+                
+                </ul>
+                <a href="#" class="view-more d-none d-md-flex">View More<i class="fi-rs-angle-double-small-right"></i></a>
+            </div>
+            <!--End nav-tabs-->
+            <div class="tab-content wow fadeIn animated" id="myTabContent">
+                <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
+                    <div class="row product-grid-4">
+                        <% if(locals.bestproduct){ %>
+                            <% for(i=0 ; i< bestproduct.length ; i++){ %>
+                        
+                        <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                            <div class="product-cart-wrap mb-30">
+                                <div class="product-img-action-wrap">
+                                    <div class="product-img product-img-zoom">
+                                        <a href ="/productdetail/<%= bestproduct[i]._id %>">
+                                            <img class="default-img" src="/uploads/products/<%= bestproduct[i].image[0] %>" alt="">
+                                            <!-- <img class="hover-img" src="assets/imgs/shop/product-2-2.jpg" alt=""> -->
+                                        </a>
+                                    </div>
+                                    <div class="product-action-1">
+                                       
+                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%= bestproduct[i]._id %>')"><i class="fi-rs-heart"></i></a>
+                                       
+                                    </div>
+                                    <div class="product-badges product-badges-position product-badges-mrg">
+                                        <span class="new">top selling</span>
+                                    </div>
+                                </div>
+                                <div class="product-content-wrap">
+                                    <div class="product-category">
+                                        <a href="shop-grid-right.html"><%= bestproduct[i].brand  %></a>
+                                    </div>
+                                    <h2><a href="shop-product-right.html"><%= bestproduct[i].name  %></a></h2>
+                                    <!-- <div class="rating-result" title="90%">
+                                        <span>
+                                            <span>50%</span>
+                                        </span>
+                                    </div> -->
+                                    <div class="product-price">
+                                        <span><%= bestproduct[i].offerprice  %> </span>
+                                        <span class="old-price"><%= bestproduct[i].price  %></span>
+                                    </div>
+                                    <div class="product-action-1 show">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                        <% } %>
+
+                        
+                       
                     </div>
-                    <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/logo2.jpg" alt="">
+                    <!--End product-grid-4-->
+                </div>
+                <!--En tab one (Featured)-->
+
+
+
+                <div class="tab-pane fade" id="tab-two" role="tabpanel" aria-labelledby="tab-two">
+                    <div class="row product-grid-4">
+
+                        <% if(locals.bestbrands){ %>
+                            <% for(i=0 ; i< bestbrands.length ; i ++){ %>
+                        <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                            <div class="product-cart-wrap mb-30">
+                                <div class="product-img-action-wrap">
+                                    <div class="product-img product-img-zoom">
+                                        <a href="/productdetail/<%= bestbrands[i]._id %>">
+                                            <img class="default-img" src="/uploads/products/<%= bestbrands[i].image[0] %>" alt="">
+                                            
+                                        </a>
+                                    </div>
+                                    <div class="product-action-1">
+                                   
+                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%= bestbrands[i]._id %>')"><i class="fi-rs-heart"></i></a>
+                                      
+                                    </div>
+                                    <div class="product-badges product-badges-position product-badges-mrg">
+                                        <span class="hot">Top Brands</span>
+                                    </div>
+                                </div>
+                                <div class="product-content-wrap">
+                                    <div class="product-category">
+                                        <a href="shop-grid-right.html"><%= bestbrands[i].brand  %> </a>
+                                    </div>
+                                    <h2><a href="shop-product-right.html"><%= bestbrands[i].name  %></a></h2>
+                                    <div class="rating-result" title="90%">
+                                        <span>
+                                            <span>90%</span>
+                                        </span>
+                                    </div>
+                                    <div class="product-price">
+                                        <span><%= bestbrands[i].offerprice  %> </span>
+                                        <span class="old-price"><%= bestbrands[i].price  %></span>
+                                    </div>
+                                    <div class="product-action-1 show">
+                                        <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% } %>
+                        <% } %>
+
+
+
+
+
+                       
                     </div>
-                    <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/logo3.png" alt="">
+                    <!--End product-grid-4-->
+                </div>
+                <!--En tab two (Popular)-->
+                
+                <!--En tab three (New added)-->
+            </div>
+            <!--End tab-content-->
+        </div>
+    </section>
+
+  
+    <section class="popular-categories section-padding mt-15">
+        <div class="container wow fadeIn animated">
+            <h3 class="section-title mb-20"><span>Popular</span> Brands</h3>
+            <div class="carausel-6-columns-cover position-relative">
+                <div class="slider-arrow slider-arrow-2 carausel-6-columns-arrow" id="carausel-6-columns-arrows"></div>
+                <div class="carausel-6-columns" id="carausel-6-columns">
+                    <div class="card-1">
+                        <figure class=" img-hover-scale overflow-hidden">
+                            <a href="shop-grid-right.html"><img src="assets/imgs/banner/logo1.jpeg" alt=""></a>
+                        </figure>
+                        
                     </div>
-                    <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/logo4.png" alt="">
+                    <div class="card-1">
+                        <figure class=" img-hover-scale overflow-hidden">
+                            <a href="shop-grid-right.html"> <img src="assets/imgs/banner/logo2.jpg" alt=""></a>
+                        </figure>
+                       
                     </div>
-                    <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/logo5.png" alt="">
+                    <div class="card-1">
+                        <figure class=" img-hover-scale overflow-hidden">
+                            <a href="shop-grid-right.html"><img src="assets/imgs/banner/logo3.png" alt=""></a>
+                        </figure>
+                        
                     </div>
-                    <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/logo6.png" alt="">
+                    <div class="card-1">
+                        <figure class=" img-hover-scale overflow-hidden">
+                            <a href="shop-grid-right.html"><img src="assets/imgs/banner/logo4.png" alt=""></a>
+                        </figure>
+                        
                     </div>
-                    <div class="brand-logo">
-                        <img class="img-grey-hover" src="assets/imgs/banner/logo7.png" alt="">
+                    <div class="card-1">
+                        <figure class=" img-hover-scale overflow-hidden">
+                            <a href="shop-grid-right.html"><img src="assets/imgs/banner/logo5.png" alt=""></a>
+                        </figure>
+                       
                     </div>
+                    <div class="card-1">
+                        <figure class=" img-hover-scale overflow-hidden">
+                            <a href="shop-grid-right.html"><img src="assets/imgs/banner/logo6.png" alt=""></a>
+                        </figure>
+                        
+                    </div>
+                    <div class="card-1">
+                        <figure class=" img-hover-scale overflow-hidden">
+                            <a href="shop-grid-right.html"><img src="assets/imgs/banner/logo7.png" alt=""></a>
+                        </figure>
+                        
+                    </div>
+                  
                 </div>
             </div>
         </div>
     </section>
+
+
+       
+
+ 
 
  
     
@@ -233,56 +460,59 @@
 
 <script>
    
+   
     let productPriceDivs = document.querySelectorAll('.product-price');
 
-    
     productPriceDivs.forEach(productPriceDiv => {
-     
         let offerPriceSpan = productPriceDiv.children[1];
         let originalPriceSpan = productPriceDiv.children[2];
 
-     
         let offerPrice = parseInt(offerPriceSpan.textContent);
         let originalPrice = parseInt(originalPriceSpan.textContent);
 
-     
         let offerPercentage = (1 - offerPrice / originalPrice) * 100;
         let validOffer = Math.floor(offerPercentage);
 
-  
         let offerSpan = document.createElement('span');
-        offerSpan.textContent = "("+validOffer + '%  off)';
+        offerSpan.textContent = "(" + validOffer + '%  off)';
 
-    
         productPriceDiv.appendChild(offerSpan);
     });
 
-    function addToWishlist(productId){
+    function addToWishlist(productId) {
        
         $.ajax({
-            url:"/wishlist/add",
-            method:"POST",
-            data:{
-                product:productId
+            url: "/wishlist/add",
+            method: "POST",
+            data: {
+                product: productId
             },
-            success:function(response){
- if(response.status == true){
-    Swal.fire({
-
-icon: "success",
-title: "Product added to wishlist",
-showConfirmButton: false,
-timer: 1500
-});
- }
+            success: function(response) {
+                if (response.status == true) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Product added to wishlist",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
             }
-        })
-        
-
+        });
     }
+
+
+
+
+
+
+
+    // Get the end date of the offer
+ 
+
+    
 </script>
 
-
+ 
 
 
 

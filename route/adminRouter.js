@@ -9,6 +9,7 @@ const orderController = require("../controller/admin/orderController");
 const couponController = require("../controller/admin/couponcontroller");
 const salesReportController = require("../controller/admin/salesReportController");
 const offerController = require("../controller/admin/offerController");
+const chartController = require("../controller/admin/chartcontroller")
 
 const {isAdmin} = require("../middlewares/authentication")
 
@@ -20,7 +21,7 @@ const upload = require("../helper/multerConfig")
 
 router.get("/",adminController.getAdminHomePage);
 router.post("/",adminController.adminHomePagePost);
-router.get("/dashboard",isAdmin,adminController.loadDashboardHome);
+router.get("/dashboard",adminController.loadDashboardHome);
 
 router.get("/logout",isAdmin,adminController.logoutAdmin);
 
@@ -74,6 +75,10 @@ router.post("/salesreport/excel",salesReportController.excelData)
 router.get("/offers",offerController.getAdminOfferPage);
 router.post("/offers",offerController.postOfferDetails);
 router.get("/offers/delete",offerController.deleteOffer);
+
+
+router.post("/chart",chartController.getChartData);
+router.post("/barchart",chartController.getBarChartData)
 
 
 

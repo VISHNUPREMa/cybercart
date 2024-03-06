@@ -1,12 +1,14 @@
 const User = require("../../model/userModel");
 const Category = require("../../model/category");
 const Products = require("../../model/productmanage");
-const Offers = require("../../model/offerSchema")
+const Offers = require("../../model/offerSchema");
+const Orders = require("../../model/orderSchema");
 
 const { generateRandomOtp } = require("../../helper/otpGenerate");
 const bcrypt = require("bcrypt");
 const nodemailer = require('nodemailer');
 const {sendOtpEmail} = require("../../helper/emailService");
+// const { default: orders } = require("razorpay/dist/types/orders");
 
 
 
@@ -14,7 +16,12 @@ const {sendOtpEmail} = require("../../helper/emailService");
 
 const getHomePage = async(req,res)=>{
     try{
+        const page = req.query.page || 1;
+        const pageSize = 6;
+        const skip = (page - 1)*pageSize;
         const user = req.session.user;
+        const allProductsCount = await Products.countDocuments({});
+        const totalPages = Math.ceil(allProductsCount/pageSize);
        
            
         
@@ -22,18 +29,97 @@ const getHomePage = async(req,res)=>{
         const userData = await User.find({isBlocked:false});
         const categoryData = await Category.find({isList:true});
         
-        const productData = await Products.find({isListed:true})
+        const productData = await Products.find({isListed:true}).skip(skip).limit(pageSize);
+        const newproductData = await Products.find({isListed:true})
         const cartData = req.session.cartData;
         const cartTotal = req.session.grandTotal;
 
         const offerData = await Offers.find({});
+        const orders = await Orders.find({ status: { $ne: "Cancelled" } });
+        
+      
+
+
+let productsCount = {};
+
+
+orders.forEach(order => {
+    order.products.forEach(product => {
+   
+        if (!productsCount[product.name]) {
+           
+            productsCount[product.name] = 1;
+        } else {
+           
+            productsCount[product.name]++;
+        }
+    });
+});
+
+
+
+        
+
+
+const productsSorted = Object.entries(productsCount)
+    .sort(([, countA], [, countB]) => countB - countA) 
+    .map(([productName]) => productName); 
+
+
+
+const sortedProductsData = newproductData.filter(product => productsSorted.includes(product.name));
+
+
+sortedProductsData.sort((a, b) => {
+    const countA = productsCount[a.name];
+    const countB = productsCount[b.name];
+    
+
+    if (countA === countB) {
+        return b.quantity - a.quantity;
+    }
+
+ 
+    return countB - countA;
+});
+
+
+
+const bestSellingBrands = [...new Set(sortedProductsData.map(product => product.brand))];
+
+const sortedByBrands = (a,b)=>{
+    const indexA = bestSellingBrands.indexOf(a.brand);
+  const indexB = bestSellingBrands.indexOf(b.brand);
+  if (indexA !== -1 && indexB !== -1) {
+    return indexA - indexB;
+  }
+  
+  
+  if (indexA !== -1) {
+    return -1;
+  }
+  if (indexB !== -1) {
+    return 1;
+  }
+  
+
+  return 0;
+}
+
+const sortedProductsByBrands = newproductData.sort(sortedByBrands).slice(0, 8);
+console.log("offer data : ",offerData);
+
+
+
+
+
     
 
         
         
         
         if(user){
-            res.render("user/home",{user:user,category:categoryData,products:productData});
+            res.render("user/home",{user:user,category:categoryData,products:productData,bestproduct:sortedProductsData,bestbrands:sortedProductsByBrands,totalPages:totalPages,currentPage: page,offer:offerData});
 
         }else{
             res.render("user/home");
@@ -43,7 +129,7 @@ const getHomePage = async(req,res)=>{
 
     }
     catch(error){
-        console.log(error);
+        console.log("getHomePage page error : ",error);
     }
 }
 
@@ -52,13 +138,17 @@ const getHomePage = async(req,res)=>{
 const loadlogIn = async(req,res)=>{
     try{
         if(!req.session.user){
-            res.render("user/login");
+            const successMessage = req.session.successMessage;
+            // Clear success message from session
+            req.session.successMessage = null;
+
+            res.render("user/login",{successMessage});
         }else{
             res.redirect("/");
         }
          }
     catch(error){
-        console.log(error);
+        console.log("login page error : ",error);
     }
 }
 
@@ -70,7 +160,7 @@ const loadSignIn = async(req,res)=>{
         res.render("user/signup");
     }
     catch(error){
-        console.log(error);
+        console.log("loadSignIn page error : ",error);
     }
 }
 
@@ -129,7 +219,8 @@ const signInUser = async (req, res) => {
 
     }
     catch(error){
-        console.log(error);
+        console.log( "loadOtpPage page error : ",error);
+        
     }
   }
 
@@ -156,7 +247,7 @@ const signInUser = async (req, res) => {
 
        
     } catch (error) {
-        console.error('Error:', error);
+        console.error('loadOtpPage Error:', error);
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 };
@@ -178,14 +269,15 @@ const signInUser = async (req, res) => {
             password: req.session.tempUser.password,
         }
         const newUser = await User.create(userData);
+        req.session.successMessage = "Signup successful. Please login with your credentials.";
         
         res.redirect("/login");
       } else {
         
         res.render("user/otp", { message: "Invalid OTP" });
       }
-    } catch (error) {
-      console.log(error);
+    } catch ( error) {
+      console.log("loadOtpPage page erro",error);
     }
   };
 

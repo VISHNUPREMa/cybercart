@@ -6,45 +6,79 @@ const Offers = require("../../model/offerSchema");
 const getAdminOfferPage = async (req, res) => {
     try {
         const products = await Products.find({ isListed: true }).populate("category");
+      
        
         const categories = await Category.find({ isList: true });
 
         const brands = [...new Set(products.map(product => product.brand))];
         const offers = await Offers.find({});
-        const offeredBrands = offers.map(offer => offer.brand);
+
+
+
+        
+        const offeredBrands = offers.map(offer => offer.brand).filter(brand=>brand !== undefined);
+       
+        
+
+
+
+
+
         const productsWithOfferedBrand = products.filter(product => offeredBrands.includes(product.brand));
-        const offerCategories = offers.map(offer =>offer.category);
-        const productsWithOfferCategories = products.filter(product => offerCategories.includes(product.category.name));
-        
+
         const today = new Date(); 
-        const formattedToday = today.toLocaleString();
-        
-      
-        
+
         for (let product of productsWithOfferedBrand) {
             const correspondingOffer = offers.find(offer => offer.brand === product.brand);
-           
+        
             if (correspondingOffer) {
-                if(formattedToday >= correspondingOffer.start && formattedToday <= correspondingOffer.end){
-                    
-                
                
-               if(product.discountApplied === false){
-                product.offerprice -= correspondingOffer.discount;
-                product.discountApplied = true;
-                await product.save();
-                console.log("product (brand) : ",product);
-               }
-            }
-
+                // Parse start and end dates using ISO format
+              if(correspondingOffer.purchaseamount <= product.price){
+                const startDate = new Date(correspondingOffer.start.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
+                const endDate = new Date(correspondingOffer.end.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
+        
+                // Check if today's date falls within the offer period
+                if (today >= startDate && today <= endDate) {
+                    if (!product.discountApplied) {
+                        product.offerprice -= correspondingOffer.discount;
+                        product.discountApplied = true;
+                        await product.save();
+                        console.log("Product (brand) updated: ", product);
+                    }
+                }
+              }
             }
         }
+  
+        
 
+   
+       
+        const offerCategories = offers.map(offer => offer.category).filter(category => category !== undefined);
+
+
+        
+        
+        const productsWithOfferCategories = products.filter(product => offerCategories.includes(product.category.name));
+         
+      
+        
+
+   
         for(let product of productsWithOfferCategories){
             const correspondingOffer = offers.find(offer=> offer.category === product.category.name );
-            console.log("corresponding offer : ",correspondingOffer);
+            
+          
             if(correspondingOffer){
-                if(formattedToday >= correspondingOffer.start && formattedToday <= correspondingOffer.end){
+
+                if(correspondingOffer.purchaseamount <= product.price){
+
+
+                const startDate = new Date(correspondingOffer.start.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
+        const endDate = new Date(correspondingOffer.end.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
+                if(today >= startDate && today <= endDate){
+                    console.log("corresponding offers 2 : ",correspondingOffer);
                 if(product.discountApplied === false){
                     product.offerprice -= correspondingOffer.discount;
                 product.discountApplied = true;
@@ -53,6 +87,8 @@ const getAdminOfferPage = async (req, res) => {
 
                 }
             }
+
+        }
             }
         }
 

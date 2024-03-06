@@ -2,6 +2,7 @@
 const multer = require('multer');
 const Products = require("../../model/productmanage");
 const Category = require("../../model/category");
+const moment = require('moment-timezone');
 
 
 
@@ -40,6 +41,9 @@ const addProduct = async (req, res) => {
             offerprice: productData.offerprice,
             quantity: productData.quantity,
             image: images,
+            createdon:moment().tz('Asia/Kolkata').format('DD/MM/YYYY hh:mm:ss A'),
+           
+
         });
 
         const newData = await newProduct.save();

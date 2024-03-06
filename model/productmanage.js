@@ -46,7 +46,10 @@ const productSchema = new mongoose.Schema({
     discountApplied: {
         type: Boolean,
         default: false 
-    }
+    },
+    createdon:{
+        type:String
+      }
    
 }, { versionKey: false });
 

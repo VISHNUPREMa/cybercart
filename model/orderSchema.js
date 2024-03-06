@@ -80,6 +80,13 @@ const orderSchema = mongoose.Schema({
       reason:{
         type:String
       },
+      deliverycharge:{
+        type:Number
+
+      },
+      couponapplied:{
+        type:Number
+      },
       cart:{
         type:Array,
         required:true

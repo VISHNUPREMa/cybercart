@@ -21,6 +21,7 @@ const getProfilePage = async(req,res)=>{
         
 
         const walletData = await Wallet.findOne({userId : id})
+        console.log("wallet data : ",walletData);
         
         res.render("user/profile",{user:userDetails,address:adressData,order:orderDetails,coupons:couponData,wallet:walletData});
 

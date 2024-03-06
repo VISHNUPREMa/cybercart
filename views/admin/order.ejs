@@ -49,14 +49,18 @@
                             </thead>
                             <% if(order && user){ %>
                                 <% for(i=order.length-1;i>=0 ; i--){%>
-                                    <% for(j=0;j< user.length ; j++){%>
+                                    <% for(j=user.length -1;j >= 0 ; j--){%>
                             <tbody>
                               
                                 <tr>
                                     <td><%= order[i].orderId %></td>
                                     <td><b><%= user[j].name %></b></td>
                                     <td><%= user[j].email %></td>
-                                    <td><%= order[i].totalprice %></td>
+                                    <td>                                                                           <% if (order[i].deliverycharge !== undefined) { %>
+                                        <%= order[i].totalprice + order[i].deliverycharge %>
+                                    <% } else { %>
+                                        <%= order[i].totalprice %>
+                                    <% } %></td>
                                        
                                     <td>
                                         <% if (order[i].status == 'Cancelled') { %>
@@ -69,7 +73,9 @@
                                           <span class="badge rounded-pill" style="background-color: rgb(255, 0, 166);"><%= order[i].status %></span>
                                         <% }else if (order[i].status == 'Returned') {%>
                                             <span class="badge rounded-pill" style="background-color: rgb(132, 60, 60);"><%= order[i].status %></span>
-                                            <% } %>
+                                            <% } else if (order[i].status == 'payment Pending') {%>
+                                                <span class="badge rounded-pill" style="background-color: rgb(99, 6, 115);"><%= order[i].status %></span>
+                                                <% } %>
                                       </td>
                                       
 

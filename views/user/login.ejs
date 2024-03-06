@@ -9,7 +9,11 @@
             <form method="post" action="/login">
                 <% if(locals.message) { %>
                     <div class="alert alert-danger"> <%= locals.message %></div>
-                      <% } %>
+                      <% } else if  (successMessage) { %>
+                        <div class="alert alert-success">
+                            <%= successMessage %>
+                        </div>
+                    <% } %> %>
                 <div class="form-group">
                     <input type="text" required="" name="email" placeholder="Your Email">
                 </div>

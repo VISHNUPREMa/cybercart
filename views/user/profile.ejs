@@ -20,6 +20,15 @@
         justify-content: center; /* Center horizontally */
         align-items: center; /* Center vertically */
     }
+
+    #wallet-transaction{
+        margin-left: 450px;
+        margin-top: -25px;
+    }
+
+    #wallet-transactions{
+        margin-top: -585px;
+    }
     </style>
 
     <main class="main">
@@ -106,44 +115,31 @@
                                         <% } %>
 
 
-                                            <% if(coupons && coupons.length> 0) { %>
-                                                <div class="tab-pane fade" id="coupon" role="tabpanel"
-                                                    aria-labelledby="coupon-tab">
+                                        <% if (coupons && coupons.length > 0) { %>
+                                            <div class="tab-pane fade" id="coupon" role="tabpanel" aria-labelledby="coupon-tab">
+                                                <% coupons.forEach(coupon => { %>
                                                     <div class="card">
                                                         <div class="card-header">
                                                             <h5 class="mb-0">Coupons</h5>
                                                         </div>
                                                         <div class="card-body">
-                                                            <% coupons.forEach(coupon=> { %>
-                                                                <h4>Coupon Code : <%= coupon.name %>
-                                                                </h4>
-                                                                <br>
-                                                                <h5>Minimum Purchase Amount : <%= coupon.purchaseamount
-                                                                        %>
-                                                                </h5>
-                                                                <br>
-                                                                <h5>Discount : <%= coupon.discount %>
-                                                                </h5>
-                                                                <br>
-                                                                <h5>Valid From : <%= coupon.start %>
-                                                                </h5>
-                                                                <br>
-                                                                <h5>Valid To : <%= coupon.end %>
-                                                                </h5>
-                                                                <br>
-                                                                <button
-                                                                    style="background:none!important; border:none; padding:0!important; color:blue; text-decoration:underline; cursor:pointer;"
-                                                                    onclick="copyToClipboard('<%= coupon.name %>')">if
-                                                                    you want to copy coupon code click here</button>
-
-
-
-
-
-                                                                <% }); %>
+                                                            <h4>Coupon Code: <%= coupon.name %></h4>
+                                                            <br>
+                                                            <h5>Minimum Purchase Amount: <%= coupon.purchaseamount %></h5>
+                                                            <br>
+                                                            <h5>Discount: <%= coupon.discount %></h5>
+                                                            <br>
+                                                            <h5>Valid From: <%= coupon.start %></h5>
+                                                            <br>
+                                                            <h5>Valid To: <%= coupon.end %></h5>
+                                                            <br>
+                                                            <button style="background:none!important; border:none; padding:0!important; color:blue; text-decoration:underline; cursor:pointer;" onclick="copyToClipboard('<%= coupon.name %>')">if you want to copy coupon code click here</button>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                <% }); %>
+                                            </div>
+                                        
+                                        
                                                 <% } else { %>
                                                     <div class="tab-pane fade" id="coupon" role="tabpanel"
                                                         aria-labelledby="coupon-tab">
@@ -193,6 +189,10 @@
                                                                                     type="submit">Click Here</button>
 
 
+                                                                                    <h5 id="wallet-transaction"><a href="#" onclick="showWalletTransactions()">Show Wallet Transactions</a></h5>
+
+
+
 
 
                                                                     </div>
@@ -235,8 +235,11 @@
                                                                                                 <%= order[i].status %>
                                                                                             </td>
                                                                                             <td>
-                                                                                                <%= order[i].totalprice
-                                                                                                    %>
+                                                                                                <% if (order[i].deliverycharge !== undefined) { %>
+                    <%= order[i].totalprice + order[i].deliverycharge %>
+                <% } else { %>
+                    <%= order[i].totalprice %>
+                <% } %>
                                                                                             </td>
                                                                                             <td><a href="/orderdetails?id=<%= order[i]._id %>"
                                                                                                     class="btn-small d-block">View</a>
@@ -426,6 +429,57 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+
+
+                                                        
+                                                        <div class="tab-pane fade" id="wallet-transactions" role="tabpanel" aria-labelledby="wallet-tab">
+                                        <div class="card">
+                                            <% if(wallet){ %>
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Wallet Transactions</h5>
+                                            </div>
+                                           
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                 
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>SL</th>
+                                                                <th>Amount</th>
+                                                                <th>Created On</th>
+                                                                <th>Source</th>
+                                                              
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                           <% for ( i = 0; i < wallet.data.length; i++) { %>
+                                                           
+                                                            <tr>
+                                                                <td><%= i+1 %></td>
+                                                                <td><%= wallet.data[i].amount %></td>
+                                                                <td><%= wallet.data[i].createdOn %></td>
+                                                                <td><%= wallet.data[i].source %></td>
+                                                                
+                                                            </tr>
+
+                                                            <% } %> 
+                                                          
+                                                            
+                                                        </tbody>
+                                                    </table>
+                                                   
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                    </div>
+                                 
+
+
+
+
                                 </div>
                             </div>
                         </div>
@@ -563,10 +617,24 @@
         }
 
 
+        function showWalletTransactions(){
+            document.getElementById("wallet-transactions").classList.add("active", "show");
+            document.getElementById("address").classList.remove("active", "show");
+
+document.getElementById("coupon").classList.remove("active", "show");
+document.getElementById("dashboard").classList.remove("active", "show");
+document.getElementById("orders").classList.remove("active", "show");
+document.getElementById("account-detail").classList.remove("active", "show");
+document.getElementById("wallet").classList.remove("active", "show");
+
+        }
+
+
 
         function showAddressTab() {
 
             document.getElementById("address").classList.add("active", "show");
+            document.getElementById("wallet-transactions").classList.remove("active", "show");
 
             document.getElementById("coupon").classList.remove("active", "show");
             document.getElementById("dashboard").classList.remove("active", "show");
@@ -579,6 +647,7 @@
         function showAccountDetailTab() {
 
             document.getElementById("account-detail").classList.add("active", "show");
+            document.getElementById("wallet-transactions").classList.remove("active", "show");
 
             document.getElementById("coupon").classList.remove("active", "show");
             document.getElementById("dashboard").classList.remove("active", "show");
@@ -590,6 +659,7 @@
 
         function showCouponTab() {
             document.getElementById("coupon").classList.add("active", "show");
+            document.getElementById("wallet-transactions").classList.remove("active", "show");
             document.getElementById("dashboard").classList.remove("active", "show");
             document.getElementById("orders").classList.remove("active", "show");
             document.getElementById("address").classList.remove("active", "show");

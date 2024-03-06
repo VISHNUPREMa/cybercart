@@ -21,10 +21,13 @@
                                    
                                     <% if(wishlist.data && wishlist.data.length > 0){ %>
                                         <% for(let i = 0; i < wishlist.data.length; i++){ %>
+                                            
                                             <tr>
+                                                
                                                 <td class="image product-thumbnail"><img src="/uploads/products/<%= wishlist.data[i].image %>" alt="#"></td>
+                                           
                                                 <td class="product-des product-name">
-                                                    <h5 class="product-name"><a href="shop-product-right.html"><%= wishlist.data[i].name %></a></h5>
+                                                    <h5 class="product-name"><a href="/productdetail/<%= wishlist.data[i].productId %>"><%= wishlist.data[i].name %></a></h5>
                                                     <p class="font-xs"><%= wishlist.data[i].brand %><br> <%= wishlist.data[i].category %></p>
                                                 </td>
                                                 <td class="price" data-title="Price"><span><%= wishlist.data[i].price %></span></td>

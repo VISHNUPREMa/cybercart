@@ -116,8 +116,24 @@
                                  
                                     <% } %>
                                     <tr>
-                                        <td colspan="2" class="text-end">Total:</td>
-                                        <td class="text-end"> ₹ <%= order.totalprice %> </td>
+                                        <td colspan="2">
+                                            <h6>Delivery Charge :</h6>
+                                        </td>
+                                        <td class="text-end">
+                                            <% if (order.deliverycharge !== undefined) { %>
+                                                <%=  order.deliverycharge %>
+                                            <% } else { %>
+                                                0
+                                            <% } %>
+                                        </td>
+                                        </tr>
+                                        <tr>
+                                        <th colspan="2"><h6>Total:</h6></th>
+                                        <td class="text-end"> ₹                                                                         <% if (order.deliverycharge !== undefined) { %>
+                                            <%= order.totalprice + order.deliverycharge %>
+                                        <% } else { %>
+                                            <%= order.totalprice %>
+                                        <% } %> </td>
                                     </tr>
                                 </tbody>
                                 </table>

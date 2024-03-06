@@ -93,17 +93,48 @@
                                         </tr>
                                         <% } %>
                                             <!-- Display total sum outside of the loop -->
-                                            <tr>
-                                                <td colspan="2">
-                                                    <h4>Total:</h4>
-                                                </td>
-                                                <td class="text-end">
-                                                    <%= order.totalprice %>
-                                                </td>
-                                                <td></td> <!-- Empty td to maintain alignment -->
-                                            </tr>
+                                          
 
                         </tbody>
+                        <tfoot>
+
+                            <tr>
+                                <td colspan="2">
+                                    <h4>Discount :</h4>
+                                </td>
+                                <td class="text-end">
+                                    <%= order.couponapplied %>
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td colspan="2">
+                                    <h4>Delivery Charge :</h4>
+                                </td>
+                                <td class="text-end">
+                                    <% if (order.deliverycharge !== undefined) { %>
+                                        <%=  order.deliverycharge %>
+                                    <% } else { %>
+                                        0
+                                    <% } %>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <h4>Total:</h4>
+                                </td>
+                                <td class="text-end">
+                                    <% if (order.deliverycharge !== undefined) { %>
+                                        <%= order.totalprice + order.deliverycharge %>
+                                    <% } else { %>
+                                        <%= order.totalprice %>
+                                    <% } %>
+                                </td>
+                                 <!-- Empty td to maintain alignment -->
+                            </tr>
+                        </tfoot>
                     </table>
 
 
@@ -121,12 +152,15 @@
 
                 <% }else if(order.status==="Returned" ){ %>
                     <a href="/shop">already returned go back to shop</a>
-                  
+                    
 
+                    <% }else if(order.status==="payment Pending" ){ %>
+                    <button class="btn btn-primary" type="submit" id="pending-order" name="pending-order"
+                        value="Cancel Order">Order Cancel</button>
                     <% }else{ %>
-                    <button class="btn btn-primary" type="submit" id="cancelorder" name="cancelorder"
+                        <button class="btn btn-primary" type="submit" id="cancelorder" name="cancelorder"
                         value="Cancel Order">Cancel Order</button>
-                    <% } %>
+                        <% } %>
 
 
 
@@ -140,7 +174,12 @@
         </div>
         
         
-        <% } %>
+        <% }else if (order.status==="payment Pending"){%>
+            <div style="margin-left: 100px; margin-top: -63px; box-shadow: 0 50px 50px rgba(0,0,0,0.1);">
+                <a class="btn btn-primary" href="/continuepayment?id=<%= order._id %>">continue order</a>
+            </div>
+            <% } %>
+
     </div> 
     <% } %><!-- card end// -->
     </section> <!-- content-main end// -->
@@ -155,10 +194,11 @@
         $(document).ready(function () {
             let cancelButton = $("#cancelorder");
             let returnButton = $('#returnorder');
+            let rePaymentCancelButton = $("#pending-order");
             cancelButton.click(function () {
                 event.preventDefault();
                 const orderId = $("#orderid").text();
-                alert(orderId)
+              
 
 
 
@@ -208,7 +248,7 @@
             returnButton.click(function () {
                 event.preventDefault();
                 const orderId = $("#orderid").text();
-                alert(orderId)
+                
                 Swal.fire({
                     title: "Return Product !!!",
                     text: "Write reason for returning product",
@@ -245,8 +285,57 @@
             })
 
 
+            rePaymentCancelButton.click(function(){
+                event.preventDefault();
+                const orderId = $("#orderid").text().trim();
+                
+                Swal.fire({
+  title: "Are you sure?",
+  text: "You won't be able to revert this!",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "Yes, delete it!"
+}).then((result) => {
+  if (result.isConfirmed) {
+  $.ajax({
+    url:"/cancelpendingorder",
+    method:"POST",
+    data:{
+        id:orderId
+    },
+    success : function(response){
+        console.log("response : ",response);
+        if(response){
+
+            Swal.fire({
+    icon: "success",
+    title: response.message,
+    showConfirmButton: false,
+    timer: 2000
+}).then((result)=>{
+    window.location.href = "/profile"
+});
+        }
+
+    },
+    error:function(xhr){
+        console.log("error : ",xhr);
+    }
+  })
+  }
+});
+
+
+            })
+
+
 
         })
+
+
+
 
     </script>
 

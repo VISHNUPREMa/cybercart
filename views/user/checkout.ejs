@@ -218,6 +218,8 @@
                                                     <h5>0</h5>
                                                 </td>
                                             </tr>
+                                            
+                                            
                                             <tr>
                                                 <th>
                                                     <h5>Total</h5>
@@ -393,7 +395,8 @@
 
 
             document.getElementById('placeOrderBtn').addEventListener('click', function () {
-                console.log('clicked');
+                let order = [];
+                
                 let selectedAddress = handleAddress();
                 if (selectedAddress && paymentOptionCheck()) {
 
@@ -419,6 +422,7 @@
                                     window.location.href = "/shop"
                                 })
                             } else if (response.method === "UPI") {
+                                order.push(response.order)
                                 var options = {
                                     "key": "rzp_test_ViTIwChEKlbPsQ",
                                     "amount": response.razorpayOrder.amount,
@@ -447,7 +451,35 @@
                                 var rzp1 = new Razorpay(options);
                                 rzp1.on('payment.failed', function (response) {
 
-                                    console.log("error : ", respnse);
+                                    $.ajax({
+                    url: "/onlinepaymentfailed",
+                    method: "POST",
+                    data: {
+                        
+                        paymentFailed: true ,
+                        order:order
+                        
+                    },
+                    success: function (response) {
+                        if(response){
+                           
+
+
+Swal.fire({
+  icon: "error",
+  title: "Oops...",
+  text: response.message,
+  timer: 1500
+  
+}).then(result=>{
+    window.location.href = "/profile"
+})
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error : ",failure);
+                    }
+                });
 
                                 });
 
@@ -498,7 +530,7 @@
                     },
                     success: function (response) {
                         console.log("response 1 : ", response);
-                        if (response.status) {
+                        if (response.status == true) {
                             Swal.fire({
                                 title: "Order success",
                                 text: "Order placed successfully",
@@ -513,6 +545,9 @@
                             });
 
 
+                        }else if(response.status == false){
+                            Swal.fire("Payment Failed !!!");
+                            
                         }
                     }
 

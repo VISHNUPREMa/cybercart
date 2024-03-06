@@ -15,6 +15,20 @@
     #search{
         margin-left: 870px;
     }
+    #category-sort{
+        margin-top: 45px;
+    height: 380px;
+    border-radius: 20px;
+    border: solid 1px;
+    }
+
+    #filter-sort{
+        margin-top: 35px;
+        height: 380px;
+    border-radius: 20px;
+    border: solid 1px;
+
+    }
 </style>
 
 
@@ -52,8 +66,8 @@
                     </section>
                 </div>
 
-                <div class="col-lg-3">
-                    <div class="widget-category mb-30">
+                <div class="col-lg-2">
+                    <div class="widget-category mb-30" id="category-sort">
                         <h5 class="section-title style-1 mb-30 wow fadeIn animated">Category</h5>
                         <ul class="categories">
                             <% if (typeof category !== 'undefined' && category) { %>
@@ -67,7 +81,7 @@
                             <% } %>
                         </ul>
                     </div>
-                    <div class="widget-category mb-30">
+                    <div class="widget-category mb-30" id="filter-sort">
                         <h5 class="section-title style-1 mb-30 wow fadeIn animated">Sort by</h5>
                         <ul class="categories">
                            
@@ -82,9 +96,8 @@
                    
                     
                 </div>
-                <div class="col-lg-9">
+                <div class="col-lg-10">
                     <div class="tab-header">
-                        
                         <a href="#" class="view-more d-none d-md-flex">View More<i class="fi-rs-angle-double-small-right"></i></a>
                     </div>
                     <!--End nav-tabs-->
@@ -127,7 +140,7 @@
                                                 <span class="old-price"><%= products[i].price %></span>
                                             </div>
                                             <div class="product-action-1 show">
-                                                <a aria-label="Add To Cart" class="action-btn hover-up" href=""><i class="fi-rs-shopping-bag-add"></i></a>
+                                              
                                             </div>
                                         </div>
                                     </div>
@@ -217,6 +230,24 @@ timer: 1500
        
 
    }
+
+
+   var link = document.querySelector('.view-more');
+
+      // Add click event listener
+      link.addEventListener('click', function(event) {
+        // Prevent the default behavior of the link
+        event.preventDefault();
+
+        // Calculate the destination to scroll to
+        var destination = document.body.scrollHeight ;
+
+        // Smoothly scroll to the destination
+        window.scrollTo({
+          top: destination,
+          behavior: 'smooth'
+        });
+      });
 </script>
 
 

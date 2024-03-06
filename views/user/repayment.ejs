@@ -1,0 +1,124 @@
+<%- include("../partials/header") %>
+
+    <style>
+        #total {
+            align-items: end;
+        }
+    </style>
+
+    <main class="main">
+        <section class="mt-50 mb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="order_review">
+                            <div class="mb-20">
+                                <h4>Your Orders</h4>
+                            </div>
+                            <div class="table-responsive order_table text-center">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">Product</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <% for(i=0 ; i < order.cart.length ; i++){ %>
+                                        <tbody>
+                                            <tr>
+                                                <td class="image product-thumbnail"><img
+                                                        src="/uploads/products/<%= order.products[i].image[0] %>"
+                                                        alt="#"></td>
+                                                <td>
+                                                    <h5><a href="shop-product-full.html">
+                                                            <%= order.products[i].name %>
+                                                        </a></h5> <span class="product-qty">x <%= order.cart[i].quantity
+                                                            %></span>
+                                                </td>
+                                                <td>$180.00</td>
+                                            </tr>
+                                        </tbody>
+                                        <% } %>
+                                </table>
+                                <h4 id="total">Total : <span>280</span></h4>
+                            </div>
+                            <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                            <div class="payment_method">
+                                <div class="mb-25">
+                                    <h5>Payment</h5>
+                                </div>
+                                <div class="payment_option">
+                                    <div class="custome-radio">
+                                        <input class="form-check-input" required="" type="radio" name="payment_option"
+                                            id="cashOnDelivery" value="Cash on Delivery"
+                                            data-order-id="<%= order._id %>">
+                                        <label class="form-check-label" for="cashOnDelivery" data-bs-toggle="collapse"
+                                            data-target="#bankTranfer" aria-controls="bankTranfer">Cash on
+                                            Delivery</label>
+                                    </div>
+                                    <div class="custome-radio">
+                                        <input class="form-check-input" required="" type="radio" name="payment_option"
+                                            id="upiPayment" value="UPI" data-order-id="<%= order._id %>">
+                                        <label class="form-check-label" for="upiPayment" data-bs-toggle="collapse"
+                                            data-target="#checkPayment" aria-controls="checkPayment">UPI</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#" id="orderbtn" class="btn btn-fill-out btn-block mt-30">Place Order</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const button = document.getElementById("orderbtn");
+            if (button) {
+                button.addEventListener("click", function (event) {
+                    event.preventDefault(); // Prevent default form submission
+
+                    // Find out which payment option is selected
+                    const selectedPaymentOption = document.querySelector('input[name="payment_option"]:checked');
+                    if (selectedPaymentOption) {
+                        const orderId = selectedPaymentOption.getAttribute('data-order-id');
+                        const paymentMethod = selectedPaymentOption.value;
+
+                        // Perform AJAX request
+                        $.ajax({
+                            url: '/repayment',
+                            method: "POST",
+                            data: { orderId: orderId, paymentMethod: paymentMethod },
+                            success: function (response) {
+                                console.log("response");
+
+                                if (response) {
+                                    Swal.fire({
+        text: "Your order has been placed successfully!",
+        icon: "success"
+    }).then(result => {
+        
+        window.location.href = "/shop";
+    });
+                                }
+                            },
+                            error: function (xhr) {
+                                // Handle error response
+                                console.error("AJAX request failed");
+                            }
+                        });
+                    } else {
+                        console.error("No payment option selected");
+                    }
+                });
+            }
+        });
+    </script>
+
+
+    <%- include("../partials/footer") %>

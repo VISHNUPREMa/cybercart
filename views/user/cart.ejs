@@ -26,16 +26,18 @@
                                     <% for (let i = 0; i < data.length; i++) { %>
                                     <tr>
                                         <td class="image product-thumbnail">
+                                            <a href="/productdetail/<%= data[i].matchedProductDetails[0]._id %>">
                                             <% if (data[i].matchedProductDetails[0].image && data[i].matchedProductDetails[0].image.length > 0) { %>
                                                 <img src="/uploads/products/<%= data[i].matchedProductDetails[0].image[0] %>" alt="<%= data[i].matchedProductDetails[0].name %>">
                                             <% } else { %>
                                                 <!-- Provide a default image or handle this case as needed -->
                                                 <img src="default-image.jpg" alt="Default Item">
                                             <% } %>
+                                        </a>
                                         </td>
                                         
                                         <td class="product-des product-name">
-                                            <h5 class="product-name"><a href="shop-product-right.html"><%= data[i].matchedProductDetails[0].name %></a></h5>
+                                            <h5 class="product-name"><a href="/productdetail/<%= data[i].matchedProductDetails[0]._id %>"><%= data[i].matchedProductDetails[0].name %></a></h5>
                                             <p class="font-xs"><%= data[i].matchedProductDetails[0].specification %>
                                             </p>
                                             <p class="font-xs" id="available"><%= data[i].matchedProductDetails[0].quantity %>  more available  
