@@ -3,11 +3,15 @@ const Category = require("../../model/category");
 const Products = require("../../model/productmanage");
 const Offers = require("../../model/offerSchema");
 const Orders = require("../../model/orderSchema");
+const Referal = require("../../model/referalSchema");
+const Wallet = require("../../model/walletSchema");
 
 const { generateRandomOtp } = require("../../helper/otpGenerate");
 const bcrypt = require("bcrypt");
 const nodemailer = require('nodemailer');
 const {sendOtpEmail} = require("../../helper/emailService");
+let referralCodeGenerator = require('referral-code-generator');
+const moment = require("moment-timezone")
 // const { default: orders } = require("razorpay/dist/types/orders");
 
 
@@ -167,13 +171,38 @@ const loadSignIn = async(req,res)=>{
 const signInUser = async (req, res) => {
     try {
         
-      const{username,email,mobile,password} = req.body;
-      console.log([username,email,mobile,password]);
+        const { formData } = req.body;
+        const { username, email, mobile, password, referal } = formData;
+        console.log([username, email, mobile, password]);
+          
+
+      if(referal){
+        const referalData = await Referal.findOne({code:referal});
+       const referedUserWallet = await Wallet.findOne({userId:referalData.owner});
+       console.log("referedUserWallet",referedUserWallet);  
+        
+
+    if (referedUserWallet) {
+        const newTransaction = {
+            amount: Number(500),
+            createdOn: moment().tz('Asia/Kolkata').format('DD/MM/YYYY hh:mm:ss A'),
+            source: "Referal Income"
+        };
+    
+        await Wallet.updateOne(
+            { _id: referedUserWallet._id }, // Assuming _id is the identifier for the wallet
+            { $push: { data: newTransaction } }
+        );
+    
+        console.log("New transaction added to referedUserWallet.");
+    }
+    
+
+      }
       
-     
-  
       
-      
+       
+          
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         res.status(200).json({ success: true, message: "user already exist" });
@@ -201,7 +230,7 @@ const signInUser = async (req, res) => {
         
         
         res.status(200).json({ redirectUrl: "/verifyotp" });
-        console.log("testing");
+       
 
       }
     } catch (error) {
@@ -239,7 +268,9 @@ const signInUser = async (req, res) => {
         await sendOtpEmail(emailForResend, newOtp);
 
         req.session.tempUser.otp = newOtp;
-        res.redirect("/verifyotp");
+        console.log(req.session.tempUser.otp);
+        res.status(200).json({message:"success"})
+        
        
         
 
@@ -269,12 +300,26 @@ const signInUser = async (req, res) => {
             password: req.session.tempUser.password,
         }
         const newUser = await User.create(userData);
+        let myReferalCode = referralCodeGenerator.custom('lowercase', 6, 6, 'cybercart');
+        console.log("my referal code : ",myReferalCode);
+        const referalData = await Referal.create({
+            owner:newUser._id,
+            code:myReferalCode,
+
+        })
+
+        console.log("referal data :",referalData);
+       
+
         req.session.successMessage = "Signup successful. Please login with your credentials.";
+        res.status(200).json({message:"success"})
         
-        res.redirect("/login");
+        // res.redirect("/login");
       } else {
+
+        res.status(200).json({message:"Invalid otp"})
         
-        res.render("user/otp", { message: "Invalid OTP" });
+        // res.render("user/otp", { message: "Invalid OTP" });
       }
     } catch ( error) {
       console.log("loadOtpPage page erro",error);
@@ -312,10 +357,10 @@ const logIn = async (req, res) => {
 
             
             req.session.user = existingUser.id;
-          
             
-            
+         
 
+        
             return res.redirect("/");
         } else {
             return res.render("user/login", { message: "Invalid password" });
@@ -392,16 +437,17 @@ const otpVerifyPasswordReset = async(req,res)=>{
    
     try{
         const userEnteredOtp = req.body.otp;
+        
         const storedOtp = req.session.tempUser.otp || req.session.newOtp ;
        
        
         if(userEnteredOtp === storedOtp){
           
-                res.render("user/passwordreset")
+                res.status(200).json({message:"Otp Validate Successfully !!!"})
 
                 
         }else{
-            res.render("user/otpPasswordVerify",{message:"OTP mismatch try again"})
+            res.status(200).json({message:"Ivalid otp"})
         }
         
 
@@ -412,6 +458,21 @@ const otpVerifyPasswordReset = async(req,res)=>{
 
     }
 }
+
+
+const newPasswordVerify = async(req,res)=>{
+    try{
+        res.render("user/passwordreset")
+
+    }catch(error){
+        console.log("newPasswordVerify page error",error);
+
+    }
+}
+
+
+
+
 
 
 const resndOtpForForgetpassword = async(req,res)=>{
@@ -429,8 +490,10 @@ const resndOtpForForgetpassword = async(req,res)=>{
         req.session.newOtp = newOtp;
         console.log(req.session.newOtp );
 
+     
+
         
-       res.render("user/otpPasswordVerify");
+       res.status(200).json({message:"success"})
       
     
         
@@ -439,6 +502,7 @@ const resndOtpForForgetpassword = async(req,res)=>{
 
     }
     catch(error){
+        res.status(500).json({message:"error on otp resend"})
         console.log(error,"resndOtpForForgetpassword page error");
     }
 }
@@ -545,7 +609,9 @@ logoutUser,
 resndOtpForForgetpassword,
 laodShopPage,
 newPasswordReset,
-loadOtpPageForPassword
+loadOtpPageForPassword,
+newPasswordVerify
+
 
 
 

@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema({
     cart:{
         type:Array
     }
+   
 
 },{versionKey:false})
 

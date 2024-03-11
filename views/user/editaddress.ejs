@@ -110,6 +110,7 @@
     const altphoneError = document.getElementById("altphone_error");
     const alphabet =   /^[A-Za-z\s]+$/;
     const digits = /^[0-9]+$/;
+    let phone;
 
 
 
@@ -248,7 +249,7 @@
 
     
     function validatePhone() {
-    const phone = phoneInput.value.trim();
+     phone = phoneInput.value.trim();
     if(phone === ""){
         phoneError.style.display = "block";
         phoneError.style.color = "red";
@@ -286,6 +287,11 @@ function validateAltPhone() {
         altphoneError.style.display = "block";
         altphoneError.style.color = "red";
         altphoneError.textContent = "phone number must be digits";
+    }else if(altphone === phone){
+        altphoneError.style.display = "block";
+        altphoneError.style.color = "red";
+        altphoneError.textContent = "Alternative phone number must be different than your first phone number";
+
     }
     else{
         altphoneError.style.display = "none";

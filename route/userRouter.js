@@ -7,11 +7,11 @@ const orderController = require("../controller/user/orderController");
 const userProfileController = require("../controller/user/userProfileController");
 const sortController = require("../controller/user/sortController");
 const wishlistController = require("../controller/user/wishlistcontroller");
-const walletController = require("../controller/user/walletController")
+const walletController = require("../controller/user/walletController");
+const reviewController = require("../controller/user/reviewController")
 
 
 const {isUser} = require("../middlewares/authentication")
-
 
 
 router.get("/",userController.getHomePage);
@@ -31,7 +31,10 @@ router.get("/forgetpassword",userController.forgetPasswordLoad);
 router.post("/forgetpassword",userController.forgetpassword);
 router.get("/forgetpassword/otppage",userController.loadOtpPageForPassword)
 router.post("/forgetpasswordverify",userController.otpVerifyPasswordReset);
+router.get("/passwordresetpage",userController.newPasswordVerify)
+
 router.post("/forgetpassword/resend",userController.resndOtpForForgetpassword);
+
 router.post("/passwordreset",userController.newPasswordReset)
 
 router.get("/logout",isUser,userController.logoutUser);
@@ -60,7 +63,7 @@ router.post("/cart",isUser, cartController.addToCart);
 router.get("/cart",isUser, cartController.loadCartPage);
 router.get("/cart/deleteitem",isUser,cartController.deleteItem);
 router.post("/updatequantity",isUser,cartController.updateQuantity);
-
+      
 
 router.get("/checkout",isUser,orderController.loadCheckoutPage);
 router.post("/checkout",orderController.applyCoupon)
@@ -99,13 +102,7 @@ router.post("/addToWallet",walletController.addMoneyToWallet);
 router.get("/invoice",orderController.getInvoice);
 
 
-
-
-
-
-
-
-
+router.post("/reviewproduct",reviewController.postReviewDetails)
 
 
 

@@ -1,5 +1,7 @@
 <%- include("../partials/header") %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <style>
         #error-messages {
             background-color: #f7d3d3;
@@ -19,6 +21,20 @@
         display: flex; /* Use flexbox */
         justify-content: center; /* Center horizontally */
         align-items: center; /* Center vertically */
+    }
+    .total-amount-container2{
+        border: 2px solid black; /* Black border */
+        border-radius: 3px; /* Rounded corners */
+        width: 350px;
+        height: 80px; /* Adjusts width to fit content */
+        padding: 10px; /* Add padding for spacing */
+        margin: 0 auto; /* Center horizontally */
+        display: flex; /* Use flexbox */
+        justify-content: center; /* Center horizontally */
+        align-items: center; 
+    }
+    #copyButton{
+        height: 80px;
     }
 
     #wallet-transaction{
@@ -66,15 +82,23 @@
                                                 aria-selected="true"><i class="fi-rs-user mr-10"></i>Account details</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" id="coupon-tab" data-bs-toggle="tab" href="#"
-                                                onclick="showCouponTab()" aria-controls="coupon" aria-selected="true"><i
-                                                    class="fi-rs-tag mr-10"></i>Coupon</a>
+                                            <a class="nav-link" id="coupon-tab" data-bs-toggle="tab" href="#" onclick="showCouponTab()" aria-controls="coupon" aria-selected="true">
+                                                <i class="fas fa-tags mr-10"></i>
+                                                Coupon
+                                            </a>
                                         </li>
+                                        
 
                                         <li class="nav-item">
                                             <a class="nav-link" id="wallet-tab" data-bs-toggle="tab" href="#"
-                                                onclick="showWalletTab()" aria-controls="wallet" aria-selected="true"><i
-                                                    class="fi-rs-tag mr-10"></i>Wallet</a>
+                                                onclick="showWalletTab()" aria-controls="wallet" aria-selected="true"> <i class="fas fa-wallet mr-10"></i>Wallet</a>
+                                        </li>
+
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="referal-tab" data-bs-toggle="tab" href="#"
+                                                onclick="showReferalTab()" aria-controls="referal" aria-selected="true"> 
+                                                <i class="fas fa-users mr-10"></i>Referal</a>
                                         </li>
 
 
@@ -159,46 +183,74 @@
 
 
 
-                                                        <div class="tab-pane fade" id="wallet" role="tabpanel"
-                                                            aria-labelledby="coupon-tab">
-                                                            <div class="card">
-                                                                <div class="card-header"
-                                                                    style="background-color:  #088178;">
-                                                                    <h4 style="text-align: center;" class="mb-0">Wallet
-                                                                    </h4>
-                                                                </div>
-                                                                <% if(wallet){ %>
-                                                                    <div class="card-body">
-
-                                                                        <%
-                                                                        let totalAmount = 0; // Initialize total amount variable
-                                                                        for (let i = 0; i < wallet.data.length; i++) {
-                                                                            totalAmount += wallet.data[i].amount; // Accumulate amount
-                                                                    %>
-                                                                   
-                                                                    <% } %>
-                                                                    <h3>Wallet Balance</h3>
-                                                                    <div class="total-amount-container">
-                                                                       
-                                                                        <h2 style="align-items: center;"><%= totalAmount %></h2> 
-                                                                    </div>
-                                                                    
-                                                                                <h6>Enter money to wallet</h6>
-                                                                                <button onclick="openInput()"
-                                                                                    class="submit submit-auto-width"
-                                                                                    type="submit">Click Here</button>
-
-
-                                                                                    <h5 id="wallet-transaction"><a href="#" onclick="showWalletTransactions()">Show Wallet Transactions</a></h5>
-
-
-
-
-
-                                                                    </div>
-                                                                    <% } %>
+                                                    <div class="tab-pane fade" id="wallet" role="tabpanel" aria-labelledby="coupon-tab">
+                                                        <div class="card">
+                                                            <div class="card-header" style="background-color: #088178;">
+                                                                <h4 style="text-align: center;" class="mb-0">Wallet</h4>
                                                             </div>
+                                                            <% if(locals.wallet && wallet.data.length > 0){ %> <!-- Check if wallet exists and has data -->
+                                                            <div class="card-body">
+                                                                <% let totalAmount = 0; %>
+                                                                <% for (let i = 0; i < wallet.data.length; i++) { %>
+                                                                    <% totalAmount += wallet.data[i].amount; %>
+                                                                <% } %>
+                                                                <h3>Wallet Balance</h3>
+                                                                <div class="total-amount-container">
+                                                                    <h2 style="align-items: center;"><%= totalAmount %></h2>
+                                                                </div>
+                                                                <h6>Enter money to wallet</h6>
+                                                                <button onclick="openInput()" class="submit submit-auto-width" type="submit">Click Here</button>
+                                                                <h5 id="wallet-transaction"><a href="#" onclick="showWalletTransactions()">Show Wallet Transactions</a></h5>
+                                                            </div>
+                                                            <% } else { %>
+                                                            <div class="card-body">
+                                                                <p>No wallet amount available.</p>
+                                                                <br><br>
+                                                                <h6>Enter money to wallet</h6>
+                                                                <button onclick="openInput()" class="submit submit-auto-width" type="submit">Click Here</button>
+                                                            </div>
+                                                            <% } %>
                                                         </div>
+                                                    </div>
+
+
+
+
+
+                                                    <div class="tab-pane fade" id="referal" role="tabpanel" aria-labelledby="referal-tab">
+                                                        <div class="card">
+                                                            <div class="card-header" style="background-color: #088178;">
+                                                                <h4 style="text-align: center;" class="mb-0">Referal</h4>
+                                                            </div>
+                                                            <% if(locals.referal){ %>
+                                                            <!-- Check if wallet exists and has data -->
+                                                            <div class="card-body">
+                                                            
+                                                               
+                                                                <h4>Your Referal code</h4>
+                                                                <div class="total-amount-container2">
+                                                                    <h2 style="align-items: center;"><%= referal.code %></h2>
+                                                                    <button id="copyButton" onclick="copyReferalCode()" style="margin-left: 60px;">
+                                                                        <i class="fas fa-copy"></i> Copy
+                                                                    </button>
+                                                                </div>
+                                                                
+                                                          
+                                                            </div>
+                                                           <% }else{ %>
+                                                            <div class="card-body">
+                                                                <p>No Referal code available.</p>
+                                                                <br><br>
+                                                                
+                                                            </div>
+                                                            <% } %>
+                                                          
+                                                        </div>
+                                                    </div>
+                                                           
+
+
+                                                    
 
 
 
@@ -626,8 +678,24 @@ document.getElementById("dashboard").classList.remove("active", "show");
 document.getElementById("orders").classList.remove("active", "show");
 document.getElementById("account-detail").classList.remove("active", "show");
 document.getElementById("wallet").classList.remove("active", "show");
+document.getElementById("referal").classList.remove("active", "show");
 
         }
+
+
+
+        function showReferalTab() {
+    document.getElementById("referal").classList.add("active", "show");
+    document.getElementById("wallet-transactions").classList.remove("active", "show");
+    document.getElementById("address").classList.remove("active", "show");
+    document.getElementById("coupon").classList.remove("active", "show");
+    document.getElementById("dashboard").classList.remove("active", "show");
+    document.getElementById("orders").classList.remove("active", "show");
+    document.getElementById("account-detail").classList.remove("active", "show");
+    document.getElementById("wallet").classList.remove("active", "show");
+}
+
+
 
 
 
@@ -641,6 +709,7 @@ document.getElementById("wallet").classList.remove("active", "show");
             document.getElementById("orders").classList.remove("active", "show");
             document.getElementById("account-detail").classList.remove("active", "show");
             document.getElementById("wallet").classList.remove("active", "show");
+            document.getElementById("referal").classList.remove("active", "show");
         }
 
 
@@ -654,6 +723,7 @@ document.getElementById("wallet").classList.remove("active", "show");
             document.getElementById("orders").classList.remove("active", "show");
             document.getElementById("address").classList.remove("active", "show");
             document.getElementById("wallet").classList.remove("active", "show");
+            document.getElementById("referal").classList.remove("active", "show");
         }
 
 
@@ -665,6 +735,7 @@ document.getElementById("wallet").classList.remove("active", "show");
             document.getElementById("address").classList.remove("active", "show");
             document.getElementById("account-detail").classList.remove("active", "show");
             document.getElementById("wallet").classList.remove("active", "show");
+            document.getElementById("referal").classList.remove("active", "show");
         }
 
         function copyToClipboard(text) {
@@ -692,6 +763,7 @@ document.getElementById("wallet").classList.remove("active", "show");
             document.getElementById("orders").classList.remove("active", "show");
             document.getElementById("address").classList.remove("active", "show");
             document.getElementById("account-detail").classList.remove("active", "show");
+            document.getElementById("referal").classList.remove("active", "show");
         }
 
 
@@ -764,6 +836,41 @@ document.getElementById("wallet").classList.remove("active", "show");
                 window.location.href = "/profile"
             }
         }
+
+
+
+        function copyReferalCode() {
+    // Select the referal code text
+    const referalCode = document.querySelector("h2").innerText;
+
+    // Create a temporary textarea element
+    const textarea = document.createElement("textarea");
+    textarea.value = referalCode;
+
+    // Append the textarea to the body
+    document.body.appendChild(textarea);
+
+    // Select the text inside the textarea
+    textarea.select();
+    textarea.setSelectionRange(0, 99999); // For mobile devices
+
+    // Copy the text to the clipboard
+    document.execCommand("copy");
+
+    // Remove the textarea
+    document.body.removeChild(textarea);
+
+    // Alert the user that the text has been copied
+    Swal.fire({
+  position: "bottom",
+  
+  title: "Referal code copied to clipboard: ",
+  showConfirmButton: false,
+  timer: 1500
+});
+    
+}
+
 
 
 

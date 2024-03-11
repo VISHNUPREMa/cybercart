@@ -18,7 +18,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                   
+                                   <% if(locals.wishlist){ %>
                                     <% if(wishlist.data && wishlist.data.length > 0){ %>
                                         <% for(let i = 0; i < wishlist.data.length; i++){ %>
                                             
@@ -44,7 +44,12 @@
                                                 <td class="action" data-title="Remove"><a href="/wishlist/delete/?id=<%= wishlist.data[i].productId %>"><i class="fi-rs-trash"></i></a></td>
                                             </tr>
                                         <% } %>
-                                    <% } %>
+                                    <% }else{ %>
+                                       
+                                        <h3>No items in wishlist</h3>
+                                        <% } %>
+                                        <% } %>
+                                        
                                     
                                  
                                 </tbody>

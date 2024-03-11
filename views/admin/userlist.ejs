@@ -61,8 +61,11 @@
                                         
                                         
                                             <td class="text-end">
-                                                <button class="btn block-btn" id="<%= user._id %>" style="background-color: #D2E3C8;" onclick="confirmBlock('<%= user._id %>')">Block</button>
+                                                <% if(user.isBlocked === false){ %>
+                                                    <button class="btn block-btn" id="<%= user._id %>" style="background-color: #D2E3C8;" onclick="confirmBlock('<%= user._id %>')">Block</button>
+                                                    <% }else{ %>
                                                 <button class="btn unblock-btn" id="<%= user._id %>" style="background-color: #088178;" onclick="confirmUnblock('<%= user._id %>')">Unblock</button>
+                                                <% } %>
                                             </td>
                                             
                                             

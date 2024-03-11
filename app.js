@@ -29,7 +29,7 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 app.set("view engine","ejs");
 
-const connect = mongoose.connect("mongodb://localhost:27017/CyberCart");
+const connect = mongoose.connect("mongodb+srv://vishnuprem5152:aV0yaITDMjrpiIXu@cluster0.ztasazg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
 
 connect.then(()=>{
     console.log("Database connected");
@@ -37,7 +37,7 @@ connect.then(()=>{
 .catch((error)=>{
     console.log(error);
 })
-
+     
 
 
 

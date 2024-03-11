@@ -41,6 +41,15 @@
                                                 <div id="confirmPassword_error" class="alert alert-danger" style="display: none;"></div>
 
                                             </div>
+                                            
+                                            <p>(optional)</p>
+                                            <div class="form-group">
+                                                <input  type="text" name="referal" id="referal" placeholder="Enter your referal code" >
+                                               
+
+                                            </div>
+
+
                                             <div class="login_footer form-group">
                                                 <div class="chek-form">
                                                     
@@ -178,15 +187,28 @@ function validateSubmit(event) {
         return;
     }
 
+    const referalCodeInput =  document.getElementById("referal");
+const referal = referalCodeInput.value.trim();
+
+const formData = {
+    username: username.value.trim(),
+            email: email.value.trim(),
+            mobile: mobile.value.trim(),
+            password: password.value.trim()
+    };
+
+    // Add referral code to formData if it's provided
+    if (referal) {
+        formData.referal = referal;
+    }
+
+
    
     $.ajax({
         url: "/signin",
         method: "POST",
         data: {
-            username: username.value.trim(),
-            email: email.value.trim(),
-            mobile: mobile.value.trim(),
-            password: password.value.trim()
+            formData
         },
         success: function(res) {
             if (res.redirectUrl) {
@@ -199,6 +221,7 @@ function validateSubmit(event) {
                     text: res.message || "Unknown error occurred",
                 });
             }
+          
 
         },
         error: function(xhr) {

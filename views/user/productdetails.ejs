@@ -1,254 +1,478 @@
 <%- include("../partials/header") %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-<style>
-    .availability {
-        color: white;
-    padding: 5px 10px; /* Adjust padding as needed */
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 20px; /* Increase font size as needed */
-    text-align: center; /* Center the text horizontally */
-}
 
-.available {
-    background-color: violet;
-}
+    <style>
+        .rating {
+            width: 180px;
+        }
 
-.out-of-stock {
-    background-color: red;
-}
+        .rating__star {
+            cursor: pointer;
+            color: #dabd18b2;
+        }
 
-</style>
 
-        <section class="mt-50 mb-50">
-            <div class="container">
-                <div class="row flex-row-reverse">
-                    <div class="col-lg-9">
-                        <div class="product-detail accordion-detail">
-                            <div class="row mb-50">
-                                <div class="col-md-4 col-sm-12 col-xs-12">
-                                    <div class="detail-gallery">
-                                        <span class="zoom-icon"><i class="fi-rs-search"></i></span>
-                                        <!-- MAIN SLIDES -->
-                                        <div class="product-image-slider">
-                                            <% if (products.image && products.image.length > 0) { %>
-                                                <% products.image.forEach((image, index) => { %>
-                                                    <figure class="border-radius-10">
-                                                        <img src="/uploads/products/<%= image %>" alt="product image <%= index + 1 %>">
-                                                    </figure>
-                                                <% }); %>
-                                            <% } else { %>
-                                                <!-- Add a default image or handle the case when there are no images -->
+        .availability {
+            color: white;
+            padding: 5px 10px;
+            /* Adjust padding as needed */
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 20px;
+            /* Increase font size as needed */
+            text-align: center;
+            /* Center the text horizontally */
+        }
+
+        .available {
+            background-color: violet;
+        }
+
+        .out-of-stock {
+            background-color: red;
+        }
+
+        #review-stats{
+            margin-top: -90%px;
+            margin-left: 65%;
+        }
+    </style>
+
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row flex-row-reverse">
+                <div class="col-lg-9">
+                    <div class="product-detail accordion-detail">
+                        <div class="row mb-50">
+                            <div class="col-md-4 col-sm-12 col-xs-12">
+                                <div class="detail-gallery">
+                                    <span class="zoom-icon"><i class="fi-rs-search"></i></span>
+                                    <!-- MAIN SLIDES -->
+                                    <div class="product-image-slider">
+                                        <% if (products.image && products.image.length> 0) { %>
+                                            <% products.image.forEach((image, index)=> { %>
                                                 <figure class="border-radius-10">
-                                                    <img src="/path/to/default-image.jpg" alt="default image">
+                                                    <img src="/uploads/products/<%= image %>"
+                                                        alt="product image <%= index + 1 %>">
                                                 </figure>
-                                            <% } %>
-                                        </div>
-                                        
-                                        <!-- THUMBNAILS -->
-                                   
+                                                <% }); %>
+                                                    <% } else { %>
+                                                        <!-- Add a default image or handle the case when there are no images -->
+                                                        <figure class="border-radius-10">
+                                                            <img src="/path/to/default-image.jpg" alt="default image">
+                                                        </figure>
+                                                        <% } %>
                                     </div>
-                                    <!-- End Gallery -->
-                                    <div class="social-icons single-share">
-                                        <ul class="text-grey-5 d-inline-block">
-                                            <li><strong class="mr-10">Share this:</strong></li>
-                                            <li class="social-facebook"><a href="#"><img src="/assets/imgs/theme/icons/icon-facebook.svg" alt=""></a></li>
-                                            <li class="social-twitter"> <a href="#"><img src="/assets/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
-                                            <li class="social-instagram"><a href="#"><img src="/assets/imgs/theme/icons/icon-instagram.svg" alt=""></a></li>
-                                            <li class="social-linkedin"><a href="#"><img src="/assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a></li>
+
+                                    <!-- THUMBNAILS -->
+
+                                </div>
+                                <!-- End Gallery -->
+                               
+                            </div>
+
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="detail-info">
+                                    <h2 class="title-detail">
+                                        <%= products.name %>
+                                    </h2>
+                                    <div class="product-detail-rating">
+                                        <div class="pro-details-brand">
+                                            <span> Brands: <a href="shop-grid-right.html">
+                                                    <%= products.brand %>
+                                                </a></span>
+                                        </div>
+                                        <div class="product-rate-cover text-end">
+                                            <div class="product-rate d-inline-block">
+                                                <div class="product-rating" style="width:90%">
+                                                </div>
+                                            </div>
+                                            <span class="font-small ml-5 text-muted"> (25 reviews)</span>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix product-price-cover">
+                                        <div class="product-price primary-color float-left">
+                                            <ins><span class="text-brand">
+                                                    <%= products.offerprice %>
+                                                </span></ins>
+                                            <ins><span class="old-price font-md ml-15">
+                                                    <%= products.price %>
+                                                </span></ins>
+
+                                        </div>
+                                    </div>
+                                    <div class="bt-1 border-color-1 mt-15 mb-15"></div>
+                                    <div class="short-desc mb-30">
+                                        <p>
+                                            <%= products.specification %>
+                                        </p>
+                                    </div>
+                                    <div class="product_sort_info font-xs mb-30">
+                                        <ul>
+                                            <li class="mb-10"><i class="fi-rs-crown mr-5"></i> 1 Year World Wide
+                                                Warranty</li>
+                                            <li class="mb-10"><i class="fi-rs-refresh mr-5"></i> 30 Day Return Policy
+                                            </li>
+                                            <li><i class="fi-rs-credit-card mr-5"></i> Cash on Delivery available</li>
                                         </ul>
                                     </div>
-                                </div>
-                            
-                                <div class="col-md-6 col-sm-12 col-xs-12">
-                                    <div class="detail-info">
-                                        <h2 class="title-detail"><%= products.name %></h2>
-                                        <div class="product-detail-rating">
-                                            <div class="pro-details-brand">
-                                                <span> Brands: <a href="shop-grid-right.html"><%= products.brand %></a></span>
-                                            </div>
-                                            <div class="product-rate-cover text-end">
-                                                <div class="product-rate d-inline-block">
-                                                    <div class="product-rating" style="width:90%">
-                                                    </div>
-                                                </div>
-                                                <span class="font-small ml-5 text-muted"> (25 reviews)</span>
-                                            </div>
-                                        </div>
-                                        <div class="clearfix product-price-cover">
-                                            <div class="product-price primary-color float-left">
-                                                <ins><span class="text-brand"><%= products.offerprice %></span></ins>
-                                                <ins><span class="old-price font-md ml-15"><%= products.price %></span></ins>
-                                                
-                                            </div>
-                                        </div>
-                                        <div class="bt-1 border-color-1 mt-15 mb-15"></div>
-                                        <div class="short-desc mb-30">
-                                            <p><%= products.specification %></p>
-                                        </div>
-                                        <div class="product_sort_info font-xs mb-30">
-                                            <ul>
-                                                <li class="mb-10"><i class="fi-rs-crown mr-5"></i> 1 Year World Wide Warranty</li>
-                                                <li class="mb-10"><i class="fi-rs-refresh mr-5"></i> 30 Day Return Policy</li>
-                                                <li><i class="fi-rs-credit-card mr-5"></i> Cash on Delivery available</li>
-                                            </ul>
-                                        </div>
-                                        <div class="availability <%= products.quantity > 0 ? 'available' : 'out-of-stock' %>">
-                                            <% if (products.quantity > 0) { %>
-                                                Product available
+                                    <div
+                                        class="availability <%= products.quantity > 0 ? 'available' : 'out-of-stock' %>">
+                                        <% if (products.quantity> 0) { %>
+                                            Product available
                                             <% } else { %>
                                                 Out of stock
-                                            <% } %>
-                                        </div>
-                                        
-                                        
-                                        
-
-                                   
-                                       
-                                        <div class="bt-1 border-color-1 mt-30 mb-30"></div>
-                                        <div class="detail-extralink">
-                                            <div class="detail-qty border radius" id="quantityControl">
-                                                <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                                <span class="qty-val">1</span>
-                                                <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                            </div>
-                                            <div class="product-extra-link2">
-                                                
-                                                <button type="submit" class="button button-add-to-cart" onclick="addToCart('<%= products.id %>')">Add To Cart</button>
-
-                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                                                <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
-                                              
-                                                <div id="error-div" class="alert alert-danger" style="display: none;"></div>
-                                                      
-                                            </div>
-                                        </div>
-                                        
+                                                <% } %>
                                     </div>
-                                    <!-- Detail Info -->
+                                    <!-- Store the product ID as a data attribute -->
+                                    <div id="product-id" data-product-id="<%= products._id %>"></div>
+
+
+
+
+
+
+
+                                    <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                                    <div class="detail-extralink">
+                                        <div class="detail-qty border radius" id="quantityControl">
+                                            <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
+                                            <span class="qty-val">1</span>
+                                            <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
+                                        </div>
+                                        <div class="product-extra-link2">
+                                           
+
+                                            <button type="submit" class="button button-add-to-cart" id="addtocart"  >Add To Cart</button>
+
+                                            <a aria-label="Add To Wishlist" class="action-btn hover-up"
+                                                href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                            <a aria-label="Compare" class="action-btn hover-up"
+                                                href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+
+                                            <div id="error-div" class="alert alert-danger" style="display: none;"></div>
+
+                                        </div>
+                                    </div>
+
                                 </div>
 
-                            
+                                <!-- Detail Info -->
                             </div>
-                            
-                          
-                            
+                            <% if(locals.reviews && reviews.length > 0) { %>
+                                <h3 class="section-title style-1 mb-30 mt-30">Reviews <%= reviews.length %></h3>
+                                <% var totalstar = 0 %>
+                                <% var starCounts = [0, 0, 0, 0, 0]; // Array to store the count of each star rating %>
+                                <% var reviewCounter = 0; // Counter to limit to three reviews %>
+                                <% for(let i = 0; i < reviews.length; i++) { %>
+                                    <% totalstar += reviews[i].star %>
+                                    <% starCounts[reviews[i].star - 1]++; // Increment count for this star rating %>
+                                    <!-- Comments -->
+                                    <div class="comments-area style-2 <% if (reviewCounter >= 3) { %>hidden<% } %>">
+                                        <div class="row">
+                                            <div class="col-lg-8">
+                                                <div class="comment-list">
+                                                    <div class="single-comment justify-content-between d-flex">
+                                                        <div class="user justify-content-between d-flex">
+                                                            <div class="thumb text-center">
+                                                                <img src="assets/imgs/page/avatar-6.jpg" alt="">
+                                                                <h6><a href="#"><%= reviews[i].user[0].name %></a></h6>
+                                                                <p class="font-xxs"></p>
+                                                            </div>
+                                                            <div class="desc">
+                                                                <div class="rated">
+                                                                    <span class="rating__result"></span>
+                                                                    <% for(let j = 0; j < reviews[i].star; j++) { %>
+                                                                        <i class="rated__star fas fa-star"></i>
+                                                                    <% } %>
+                                                                </div>
+                                                                <p><%= reviews[i].message %></p>
+                                                                <div class="d-flex justify-content-between">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <p class="font-xs mr-30"><%= reviews[i].createdon %></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% reviewCounter++; %>
+                                <% } %>
+                                <div id="review-stats" class="col-lg-4">
+                                    <h4 class="mb-30">Customer reviews</h4>
+                                    <div class="d-flex mb-30">
+                                        <div class="product-rate d-inline-block mr-15">
+                                            <div class="product-rating" style="width:90%"></div>
+                                        </div>
+                                        <h6><%= Math.round(totalstar / reviews.length) %> out of 5</h6>
+                                    </div>
+                                    <% for(let k = 4; k >= 0; k--) { // Start from 5-star rating down to 1-star rating %>
+                                        <div class="progress">
+                                            <span><%= k + 1 %> star</span>
+                                            <div class="progress-bar" role="progressbar" style="width: <%= (starCounts[k] / reviews.length) * 100 %>%;"
+                                                aria-valuenow="<%= (starCounts[k] / reviews.length) * 100 %>" aria-valuemin="0" aria-valuemax="100"><%= Math.round((starCounts[k] / reviews.length) * 100) %>%</div>
+                                        </div>
+                                    <% } %>
+                                    <% if (reviews.length > 3) { %>
+                                        <br><br>
+                                        <button id="viewMoreButton" class="btn btn-primary">View More</button>
+                                    <% } %>
+                                </div>
+                            <% } %>
+                                            <!--comment form-->
+
+                                            <% if( locals.order && order.length > 0){ %>
+                                                
+
+                                            <div class="comment-form">
+                                                <h4 class="mb-15">Add a review</h4>
+
+                                            </div>
+                                            <div class="rating">
+                                                <span class="rating__result"></span>
+                                                <i class="rating__star far fa-star"></i>
+                                                <i class="rating__star far fa-star"></i>
+                                                <i class="rating__star far fa-star"></i>
+                                                <i class="rating__star far fa-star"></i>
+                                                <i class="rating__star far fa-star"></i>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-8 col-md-12">
+
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <textarea class="form-control w-100" name="comment"
+                                                                    id="comment" cols="30" rows="9"
+                                                                    placeholder="Write Comment"></textarea>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="submit" id="review-btn"
+                                                            class="button button-contactForm">Submit
+                                                            Review</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <% } %>
+
+
                         </div>
+
+
+
+
                     </div>
-             
+
+
+
                 </div>
             </div>
-        </section>
+
+        </div>
+        </div>
+    </section>
     </main>
     <%- include("../partials/footer") %>
 
-    
-    <!-- Preloader Start -->
-   <!-- ... Your HTML code ... -->
-   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-   <script>
-    
+        <!-- Preloader Start -->
+        <!-- ... Your HTML code ... -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                document.getElementById("addtocart").addEventListener("click",
+                function () {
+                   
+                    const productidInput = document.getElementById("product-id");
+                    const productID = productidInput.dataset.productId;
    
 
-function addToCart(productID) {
-   
+   const availableQuantity = parseInt("<%= products.quantity %>", 10);
+   const quantityElement = document.getElementById('quantityControl');
+   const quantityValue = parseInt(quantityElement.textContent.trim(), 10);
+   const imageUrl = $(".product-image-slider img:first").attr("src");
+   const errorMessage = document.getElementById("error-div")
 
-    const availableQuantity = parseInt("<%= products.quantity %>", 10);
-    const quantityElement = document.getElementById('quantityControl');
-    const quantityValue = parseInt(quantityElement.textContent.trim(), 10);
-    const imageUrl = $(".product-image-slider img:first").attr("src");
-    const errorMessage = document.getElementById("error-div")
-
-    if (quantityValue > availableQuantity || availableQuantity === 0) {
-        errorMessage.style.display = "block";
-        errorMessage.style.color = "red";
-        errorMessage.textContent = "Out Of Stock";
-        return ;
-        
-    }
-        errorMessage.style.display = "none";
+   if (quantityValue > availableQuantity || availableQuantity === 0) {
+       errorMessage.style.display = "block";
+       errorMessage.style.color = "red";
+       errorMessage.textContent = "Out Of Stock";
+       return ;
        
-
-    
-
-    $.ajax({
-        url: `/cart`,
-        method: "POST",
-        data: {
-            id: productID,
-            quantity: quantityValue,
-            availability: availableQuantity
-        },
-        success: function (res) {
-
-
-            if(res.status === true){
-                Swal.fire({
-                title: "Add This Product To Cart",
-                text: "continue shopping",
-                imageUrl: imageUrl,
-                imageWidth: 250,
-                imageHeight: 250,
-                imageAlt: "Custom image",
-                showCancelButton: true,
-                cancelButtonColor: "#d33",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = `/cart`;
-                }
-            })
-            
-        }else if(res.status === false){
-            Swal.fire({
-                                title: 'unavailable!!',
-                                text: res.message,
-                                icon: 'error', 
-                                timer: 2000,
-                            })
-        }
-           
-        },
-        error: function (error) {
-            console.error("Error:", error);
-        }
-    });
-}
-
-
-
-  </script>
-
-<!-- ... Your HTML code ... -->
+   }
+       errorMessage.style.display = "none";
+      
 
    
-    <!-- Vendor JS-->
-    <script src="/assets/js/vendor/modernizr-3.6.0.min.js"></script>
-    <script src="/assets/js/vendor/jquery-3.6.0.min.js"></script>
-    <script src="/assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
-    <script src="/assets/js/vendor/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/plugins/slick.js"></script>
-    <script src="/assets/js/plugins/jquery.syotimer.min.js"></script>
-    <script src="/assets/js/plugins/wow.js"></script>
-    <script src="/assets/js/plugins/jquery-ui.js"></script>
-    <script src="/assets/js/plugins/perfect-scrollbar.js"></script>
-    <script src="/assets/js/plugins/magnific-popup.js"></script>
-    <script src="/assets/js/plugins/select2.min.js"></script>
-    <script src="/assets/js/plugins/waypoints.js"></script>
-    <script src="/assets/js/plugins/counterup.js"></script>
-    <script src="/assets/js/plugins/jquery.countdown.min.js"></script>
-    <script src="/assets/js/plugins/images-loaded.js"></script>
-    <script src="/assets/js/plugins/isotope.js"></script>
-    <script src="/assets/js/plugins/scrollup.js"></script>
-    <script src="/assets/js/plugins/jquery.vticker-min.js"></script>
-    <script src="/assets/js/plugins/jquery.theia.sticky.js"></script>
-    <script src="/assets/js/plugins/jquery.elevatezoom.js"></script>
-    <!-- Template  JS -->
-    <script src="/assets/js/maind134.js?v=3.4"></script>
-    <script src="/assets/js/shopd134.js?v=3.4"></script>
-</body>
+
+   $.ajax({
+       url: `/cart`,
+       method: "POST",
+       data: {
+           id: productID,
+           quantity: quantityValue,
+           availability: availableQuantity
+       },
+       success: function (res) {
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-product-left.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:46 GMT -->
-</html>
+           if(res.status === true){
+               Swal.fire({
+               title: "Add This Product To Cart",
+               text: "continue shopping",
+               imageUrl: imageUrl,
+               imageWidth: 250,
+               imageHeight: 250,
+               imageAlt: "Custom image",
+               showCancelButton: true,
+               cancelButtonColor: "#d33",
+           }).then((result) => {
+               if (result.isConfirmed) {
+                   window.location.href = `/cart`;
+               }
+           })
+           
+       }else if(res.status === false){
+           Swal.fire({
+                               title: 'unavailable!!',
+                               text: res.message,
+                               icon: 'error', 
+                               timer: 2000,
+                           })
+       }
+          
+       },
+       error: function (error) {
+           console.error("Error:", error);
+       }
+   });
+})
+
+
+                document.getElementById('viewMoreButton').addEventListener('click', function() {
+        var hiddenComments = document.querySelectorAll('.comments-area.hidden');
+        hiddenComments.forEach(function(comment) {
+            comment.classList.remove('hidden');
+        });
+        this.style.display = 'none';
+    });
+
+                // Get the textarea element with the id "comment"
+
+
+
+
+                const ratingStars = [...document.getElementsByClassName("rating__star")];
+                let activeStarsCount = 0;
+                function executeRating(stars) {
+                    const starClassActive = "rating__star fas fa-star";
+                    const starClassInactive = "rating__star far fa-star";
+                    const starsLength = stars.length;
+                    // Counter for active stars
+
+                    stars.forEach((star, index) => {
+                        star.onclick = () => {
+                            activeStarsCount = index + 1;
+
+                            for (let i = 0; i < starsLength; i++) {
+                                stars[i].className = i < activeStarsCount ? starClassActive : starClassInactive;
+                            }
+
+                            // Log the count of active stars
+                        };
+                    });
+                }
+
+                executeRating(ratingStars);
+
+                document.getElementById("review-btn").addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const reviewInput = document.getElementById("comment");
+                    const reviewComment = reviewInput.value.trim();
+                    // Retrieve the product ID using dataset
+                    const productidInput = document.getElementById("product-id");
+                    const productid = productidInput.dataset.productId;
+
+
+                    $.ajax({
+                        url: "/reviewproduct",
+                        method: "POST",
+                        data: {
+                            star: activeStarsCount,
+                            comment: reviewComment,
+                            productid: productid
+                        },
+                        success: function (response) {
+                            console.log("response : ", response);
+                            if (response) {
+                                Swal.fire({
+                                    position: "bottom",
+
+                                    text: "rating uploaded",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+
+                        },
+                        error: function (xhr) {
+
+                        }
+                    })
+                });
+
+
+
+
+
+             
+
+
+            })
+
+        </script>
+
+        <!-- ... Your HTML code ... -->
+
+
+        <!-- Vendor JS-->
+        <script src="/assets/js/vendor/modernizr-3.6.0.min.js"></script>
+        <script src="/assets/js/vendor/jquery-3.6.0.min.js"></script>
+        <script src="/assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>
+        <script src="/assets/js/vendor/bootstrap.bundle.min.js"></script>
+        <script src="/assets/js/plugins/slick.js"></script>
+        <script src="/assets/js/plugins/jquery.syotimer.min.js"></script>
+        <script src="/assets/js/plugins/wow.js"></script>
+        <script src="/assets/js/plugins/jquery-ui.js"></script>
+        <script src="/assets/js/plugins/perfect-scrollbar.js"></script>
+        <script src="/assets/js/plugins/magnific-popup.js"></script>
+        <script src="/assets/js/plugins/select2.min.js"></script>
+        <script src="/assets/js/plugins/waypoints.js"></script>
+        <script src="/assets/js/plugins/counterup.js"></script>
+        <script src="/assets/js/plugins/jquery.countdown.min.js"></script>
+        <script src="/assets/js/plugins/images-loaded.js"></script>
+        <script src="/assets/js/plugins/isotope.js"></script>
+        <script src="/assets/js/plugins/scrollup.js"></script>
+        <script src="/assets/js/plugins/jquery.vticker-min.js"></script>
+        <script src="/assets/js/plugins/jquery.theia.sticky.js"></script>
+        <script src="/assets/js/plugins/jquery.elevatezoom.js"></script>
+        <!-- Template  JS -->
+        <script src="/assets/js/maind134.js?v=3.4"></script>
+        <script src="/assets/js/shopd134.js?v=3.4"></script>
+        </body>
+
+
+        <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/shop-product-left.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:46 GMT -->
+
+        </html>

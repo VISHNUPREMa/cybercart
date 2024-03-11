@@ -9,7 +9,8 @@ const orderController = require("../controller/admin/orderController");
 const couponController = require("../controller/admin/couponcontroller");
 const salesReportController = require("../controller/admin/salesReportController");
 const offerController = require("../controller/admin/offerController");
-const chartController = require("../controller/admin/chartcontroller")
+const chartController = require("../controller/admin/chartcontroller");
+const notificationController = require("../controller/admin/notificationController");
 
 const {isAdmin} = require("../middlewares/authentication")
 
@@ -78,7 +79,18 @@ router.get("/offers/delete",offerController.deleteOffer);
 
 
 router.post("/chart",chartController.getChartData);
-router.post("/barchart",chartController.getBarChartData)
+router.post("/barchart",chartController.getBarChartData);
+
+
+router.post("/validateproductreturn",notificationController.validateProductReturn)
+
+
+
+
+
+
+
+
 
 
 

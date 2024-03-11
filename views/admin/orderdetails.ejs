@@ -17,6 +17,10 @@
                             </span> <br>
                             <small class="text-muted">Order ID: <%= order.orderId %></small>
                         </div>
+
+                        <% if(order.status === "Returned" || order.status ==="Cancelled" || order.status === "Delivered"){ %>
+                            
+                            <% }else{ %>
                         
                         <div class="col-lg-6 col-md-6 ms-auto text-md-end">
                             <form action="/admin/changeorderstatus?id=<%= order._id %>" method="post">
@@ -33,6 +37,7 @@
                         </form>
                     
                         </div>
+                        <% } %>
                    
 
                     </div>
@@ -142,18 +147,24 @@
                         <div class="col-lg-1"></div>
                         <div class="col-lg-4">
                             <div class="box shadow-sm bg-light">
-                                <h6 class="mb-15">Payment info</h6>
+                                <h4 class="mb-15">Payment info</h4>
                                 <p>
                                     <%= order.payment %>
                                 </p>
                             </div>
-                            <div class="h-25 pt-4">
-                                <div class="mb-3">
-                                    <label>Notes</label>
-                                    <textarea class="form-control" name="notes" id="notes" placeholder="Type some note"></textarea>
-                                </div>
-                                <button class="btn btn-primary">Save note</button>
+                            <br><br>
+                            <div class="box shadow-sm bg-light">
+                                <h4 class="mb-15">Order Status</h4>
+                                <p>
+                                    <%= order.status %>
+                                </p> 
+                                <% if( order.status  === "Returned"){ %>
+                                    <h5>
+                                      Reason :   <%= order.reason %>
+                                    </h5>
+                                    <% } %>
                             </div>
+                           
                         </div> 
             
                     </div>

@@ -2,6 +2,7 @@ const User = require("../../model/userModel");
 const Category = require("../../model/category");
 const Products = require("../../model/productmanage");
 const Orders = require("../../model/orderSchema");
+const Notification = require("../../model/notificationSchema")
 const bcrypt = require("bcrypt");
 
 
@@ -166,9 +167,38 @@ const loadDashboardHome = async(req,res)=>{
             topProductsImages.push(product.image)
 
         }
+          
+        const notification = await Notification.aggregate([
+            {
+                $match: {} // You can add match conditions here if needed
+            },
+            {
+                $lookup: {
+                    from: "users", // The collection to perform the lookup
+                    localField: "sentbtuser", // Field in the current collection
+                    foreignField: "_id", // Field in the "users" collection
+                    as: "sentByUser" // Name of the field to store the result
+                }
+            },
+            {
+                $addFields: {
+                    sentByUser: { $arrayElemAt: ["$sentByUser", 0] } // Convert sentByUser array to single object
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    orderid: 1,
+                    message: 1,
+                    sentByUser: { _id: 1, name: 1, email: 1 } // Specify the fields you want from the user document
+                }
+            }
+        ]);
+        
+        console.log("notification with users: ", notification);
         
 
-        res.render("admin/admindashboard",{orders:OrderData,products:productData,categories:categoryData,users:userData,dashboardActive:true,brandNames,brandValues,brandNumbers,productNames,productValues,productNumbers,topProductsImages});
+        res.render("admin/admindashboard",{orders:OrderData,products:productData,categories:categoryData,users:userData,dashboardActive:true,brandNames,brandValues,brandNumbers,productNames,productValues,productNumbers,topProductsImages,notification});
 
     }
     catch(error){

@@ -149,6 +149,12 @@
                                                     </div>
                                                     <% } %>
                                             </div>
+
+                                            <h5>create new address</h5>
+                                                    <form action="/createaddress" method="get">
+                                                        <button class="submit submit-auto-width" type="submit">Create
+                                                            New</button>
+                                                    </form>
                                             <% } else { %>
                                                 <div class="card-body">
                                                     <p>No Address Found <i class="fi-rs-marker mr-10"></i></p>
@@ -158,11 +164,7 @@
                                                     </form>
                                                 </div>
                                                 <% } %>
-                                                    <h5>create new address</h5>
-                                                    <form action="/createaddress" method="get">
-                                                        <button class="submit submit-auto-width" type="submit">Create
-                                                            New</button>
-                                                    </form>
+                                                    
                                     </div>
                                 </div>
                             </div><br><br><br>

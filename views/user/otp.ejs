@@ -6,41 +6,88 @@
             <div class="heading_s1">
                 <h3 class="mb-30">Enter The OTP</h3>
             </div>
-            <form method="post" action="/verifyotp">
-                <% if(locals.message) { %>
-                    <div class="alert alert-danger"> <%= locals.message %></div>
-                <% } %>
+           
+                    <h4 id="error-msg" style="color: red;"></h4>
+             
 
                 <div class="form-group">
                     <input type="text" required="" name="otp" id="otp" placeholder="Enter OTP">
                 </div>
 
                 <div class="form-group">
-                    <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Enter</button><br>
+                    <button type="submit" class="btn btn-fill-out btn-block hover-up" id="enter" name="login">Enter</button><br>
                 </div>
-            </form>
-            <form action="/resendotp" method="post">
+           
+           
                 <button type="submit" id="resendButton" style="border: none; background: white; color: black; text-decoration: underline; cursor: pointer;" disabled>Resend</button>
-            </form>
-            <script>
-                var timeLeft = 30; 
-                var resendButton = document.getElementById('resendButton');
-                var timerId = setInterval(countdown, 1000);
-
-                function countdown() {
-                    if (timeLeft == 0) {
-                        clearTimeout(timerId);
-                        resendButton.innerHTML = 'Resend';
-                        resendButton.disabled = false;
-                    } else {
-                        resendButton.innerHTML = 'Resend in ' + timeLeft + ' seconds';
-                        timeLeft--;
-                    }
-                }
-            </script>
+           
+            
         </div>
     </div>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    var timeLeft = 30; 
+    var resendButton = document.getElementById('resendButton');
+    var timerId = setInterval(countdown, 1000);
+
+    function countdown() {
+        if (timeLeft == 0) {
+            clearTimeout(timerId);
+            resendButton.innerHTML = 'Resend';
+            resendButton.disabled = false;
+        } else {
+            resendButton.innerHTML = 'Resend in ' + timeLeft + ' seconds';
+            timeLeft--;
+        }
+    }
+
+
+    document.getElementById("resendButton").addEventListener("click",function(event){
+        event.preventDefault();
+        $.ajax({
+            url:"/resendotp",
+            method:"POST",
+            success:function(response){
+                console.log("response : ",response);
+              
+            },
+            error:function(xhr){
+                console.log("error : ",xhr);
+            }
+        })
+    })
+
+
+    document.getElementById("enter").addEventListener("click",function(){
+        event.preventDefault();
+        const otpInput = document.getElementById("otp");
+        const otp = otpInput.value.trim();
+        const errorInput = document.getElementById("error-msg");
+
+        $.ajax({
+            url:"/verifyotp",
+            method:"POST",
+            data:{
+                otp:otp
+            },
+            success:function(response){
+                console.log("response : ",response);
+                if(response.message == "success"){
+                    window.location.href = "/login"
+                }else if(response.message == "Invalid otp"){
+                    errorInput.textContent = "Invalid OTP"
+
+                }
+            },
+            error:function(xhr){
+                console.log("error : ",xhr);
+            }
+        })
+    })
+</script>
 
 <%- include("../partials/footer") %>
 

@@ -4,6 +4,7 @@ const Products = require("../../model/productmanage");
 const Orders = require("../../model/orderSchema");
 const Coupons = require("../../model/couponSchema");
 const Wallet = require("../../model/walletSchema");
+const Notification = require("../../model/notificationSchema")
 
 const moment = require('moment-timezone');
 const razorPay = require("razorpay");
@@ -108,16 +109,55 @@ const postorderDetails = async (req, res) => {
         const paymentMode = req.body.paymentmode;
 
         const userid = req.session.user;
+        const userObjectId = new ObjectId(userid)
         const userDetails = await Users.findById(userid);
+         
+        const orderData = await Users.aggregate([
+            { $match: { _id: userObjectId } },
+            { $unwind: "$cart" },
+            {
+                $project: {
+                    cart: {
+                        $mergeObjects: [
+                            "$cart",
+                            { id: { $toObjectId: "$cart.id" } } // Convert string to ObjectId
+                        ]
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "cart.id",  // Field in the current collection (Users)
+                    foreignField: "_id",     // Field in the referenced collection (products)
+                    as: "product"
+                }
+            },
+            { $unwind: "$product" }
+        ]);
+        
+        console.log("orderData : ", orderData);
+        let products = [];
+        for(let item of orderData){
+            item.product.quantity = item.cart.quantity;
+            products.push(item.product)
 
-        const productIDs = userDetails.cart.map(item => item.id);
-        const products = await Products.find({ _id: { $in: productIDs } });
+        }
+
+        console.log("products : ",products);
+
+        
+        
+
+    
         const address = await Address.findOne({ "address._id": addressID });
         const selectedAddress = address.address.find(addr => addr._id.toString() === addressID);
 
         const cartDetails = userDetails.cart;
+        console.log("cart details for order : ",cartDetails);
         const orderId = orderIdGenerate();
         const couponApplied = req.session.discountApplied ? req.session.discountApplied : 0;
+        console.log("before order details ");
 
         const orderDetails = await Orders.create({
             orderId: orderId,
@@ -133,6 +173,7 @@ const postorderDetails = async (req, res) => {
             couponapplied: Number(couponApplied)
         });
         delete req.session.discountApplied;
+        console.log("order data : ",orderDetails );
         
 
         req.session.orderDetails = orderDetails;
@@ -256,10 +297,12 @@ const deleteSingleProduct = async (req, res) => {
 
 
         let total = parseInt(req.query.total);
+        console.log("total : ",total);
 
 
 
         let subTotal = parseInt(req.query.subtotal);
+        console.log("subtotal : ",subTotal);
 
 
         const orderData = await Orders.findById(orderid);
@@ -273,6 +316,23 @@ const deleteSingleProduct = async (req, res) => {
         if (deleteProductIndex !== -1) {
             total -= subTotal;
             orderData.products[deleteProductIndex].status = "cancelled";
+            let allProductsCancelled = orderData.products.every(product => product.status === "cancelled");
+
+        if (allProductsCancelled) {
+            orderData.status = "Cancelled";
+            if(orderData.deliverycharge !== undefined){
+                orderData.deliverycharge = 0;
+            }
+
+            if(orderData.couponapplied !== undefined){
+                orderData.couponapplied = 0;
+
+            }
+            
+            
+        }
+
+
             if (orderData.products[deleteProductIndex].status === "cancelled") {
                 productData.quantity += quantity;
                 await productData.save();
@@ -285,6 +345,8 @@ const deleteSingleProduct = async (req, res) => {
         orderData.totalprice = total;
 
         await orderData.save();
+
+        
         res.redirect("/orderdetails?id=" + orderid);
 
     }
@@ -392,44 +454,20 @@ const verifyRazorpay = async (req, res) => {
 const returnOrder = async (req, res) => {
     try {
         const { orderId, reason } = req.body;
-        const orderDetails = await Orders.findById(orderId.trim());
-        orderDetails.reason = reason;
-        await orderDetails.save();
         const userid = req.session.user;
-        data={
-            amount :Number(orderDetails.totalprice),
-            createdOn :moment().tz('Asia/Kolkata').format('DD/MM/YYYY hh:mm:ss A'),
-            source:"Cancelled order"
-        }
+
+
+        const notification = await Notification.create({
+            sentbtuser: userid,
+            orderid : orderId.trim(),
+            message : reason.trim(),
+
+        })
+
+        console.log("notification : ",notification);
+
         
-        const walletData = await Wallet.findOne({userId:userid});
-       
-        if(walletData){
-            if(orderDetails.status === "Returned"){
-                res.status(200).json({message:"Money already credited on  wallet"})
-           
-            }else{
-
-                await Wallet.updateOne(
-                    {userId : userid},
-                    {$addToSet:{data:data}}
-                )
-
-                orderDetails.status = "Returned";
-                await orderDetails.save();
-
-            }
-
-
-            res.status(200).json({message:"order cancelled and your money credited on  wallet"})
-            
-         }else{
-            res.status(200).json({message:"your money will be credited within 7 days"});
-         }
-        
-
-
-
+            res.status(200).json({message:"return order placed your money will credit to wallet after validation"})
 
     }
     catch (error) {
@@ -465,14 +503,17 @@ const continuePaymentForPaymentFail = async(req,res)=>{
         console.log("continuePaymentForPaymentFail page error : ",continuePaymentForPaymentFail);
     }
 }
-
-
+  
+ 
 const postRepaymentData = async(req,res)=>{
     try{
         const orderid = req.body.orderId;
+        const newOrderPayment = req.body.paymentMethod
         const orderData = await Orders.findById(orderid);
         orderData.status = "Confirmed";
         const userid = req.session.user;
+        console.log("order payment method : ",newOrderPayment);
+        if(newOrderPayment === "Cash on Delivery"){
         for (const cartItem of orderData.cart) {
             const eachProductID = cartItem.id;
             const quantityToSubtract = parseInt(cartItem.quantity);
@@ -488,10 +529,52 @@ const postRepaymentData = async(req,res)=>{
                 { new: true }
             );
         }
-        
         await orderData.save();
         res.status(200).json({message:"order placed successfully"})
         console.log("order data : ",orderData.cart);
+
+    }else if(newOrderPayment === "UPI"){
+
+        for (const cartItem of orderData.cart) {
+            const eachProductID = cartItem.id;
+            const quantityToSubtract = parseInt(cartItem.quantity);
+
+            await Users.findOneAndUpdate(
+                { _id: userid },
+                { $unset: { cart: "" } }
+            );
+
+            await Products.findByIdAndUpdate(
+                eachProductID,
+                { $inc: { quantity: -quantityToSubtract } },
+                { new: true }
+            );
+        }
+        await orderData.save(); 
+        
+        const options = {
+            amount: orderData.totalprice * 100,
+            currency: 'INR',
+            receipt: orderid,
+
+        };
+
+        razorpayInstance.orders.create(options, async function (err, order) {
+            if (err) {
+                console.error(err);
+                res.status(500).json({ error: "Failed to create Razorpay order" });
+                return;
+            } else {
+
+                
+
+                 res.json({ payment: false, method: "UPI", razorpayOrder: order,order:orderData});
+            }
+        });
+
+    }
+        
+       
 
     }
     catch(error){

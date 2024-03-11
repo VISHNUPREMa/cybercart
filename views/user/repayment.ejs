@@ -23,7 +23,7 @@
                                             <th>Total</th>
                                         </tr>
                                     </thead>
-                                    <% for(i=0 ; i < order.cart.length ; i++){ %>
+                                    <% for(i=0 ; i < order.products.length ; i++){ %>
                                         <tbody>
                                             <tr>
                                                 <td class="image product-thumbnail"><img
@@ -32,15 +32,15 @@
                                                 <td>
                                                     <h5><a href="shop-product-full.html">
                                                             <%= order.products[i].name %>
-                                                        </a></h5> <span class="product-qty">x <%= order.cart[i].quantity
+                                                        </a></h5> <span class="product-qty">x <%= order.products[i].quantity
                                                             %></span>
                                                 </td>
-                                                <td>$180.00</td>
+                                                <td><%= order.products[i].quantity * order.products[i].offerprice %></td>
                                             </tr>
                                         </tbody>
                                         <% } %>
                                 </table>
-                                <h4 id="total">Total : <span>280</span></h4>
+                                
                             </div>
                             <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                             <div class="payment_method">
@@ -78,6 +78,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            let order = [];
             const button = document.getElementById("orderbtn");
             if (button) {
                 button.addEventListener("click", function (event) {
@@ -88,6 +89,8 @@
                     if (selectedPaymentOption) {
                         const orderId = selectedPaymentOption.getAttribute('data-order-id');
                         const paymentMethod = selectedPaymentOption.value;
+                        alert(paymentMethod)
+                    
 
                         // Perform AJAX request
                         $.ajax({
@@ -98,13 +101,88 @@
                                 console.log("response");
 
                                 if (response) {
-                                    Swal.fire({
+                                    console.log("response : ",response);
+
+                                    if(response.message == "order placed successfully"){
+
+                                        Swal.fire({
         text: "Your order has been placed successfully!",
         icon: "success"
     }).then(result => {
         
         window.location.href = "/shop";
     });
+
+                                    }else{
+
+
+                                        console.log("response : ",response);
+                                        order.push(response.order)
+                                var options = {
+                                    "key": "rzp_test_ViTIwChEKlbPsQ",
+                                    "amount": response.razorpayOrder.amount,
+                                    "currency": "INR",
+                                    "name": "CyberCart",
+                                    "description": "Test Transaction",
+                                    "image": "https://example.com/your_logo",
+                                    "order_id": response.razorpayOrder.id,
+                                    "handler": function (status) {
+
+                                        verifyPayment(response, status);
+
+                                    },
+                                    "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
+                                        "name": "customer name", //your customer's name
+                                        "email": "gaurav.kumar@example.com",
+                                        "contact": "9000090000"  //Provide the customer's phone number for better conversion rates 
+                                    },
+                                    "notes": {
+                                        "address": "Razorpay Corporate Office"
+                                    },
+                                    "theme": {
+                                        "color": "#3399cc"
+                                    }
+                                };
+                                var rzp1 = new Razorpay(options);
+                                rzp1.on('payment.failed', function (response) {
+
+                                    $.ajax({
+                    url: "/onlinepaymentfailed",
+                    method: "POST",
+                    data: {
+                        
+                        paymentFailed: true ,
+                        order:order
+                        
+                    },
+                    success: function (response) {
+                        if(response){
+                           
+
+
+Swal.fire({
+  icon: "error",
+  title: "Oops...",
+  text: response.message,
+  timer: 1500
+  
+}).then(result=>{
+    window.location.href = "/profile"
+})
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error : ",failure);
+                    }
+                });
+
+                                });
+
+                                rzp1.open();
+
+                                        
+                                    }
+      
                                 }
                             },
                             error: function (xhr) {
@@ -117,6 +195,49 @@
                     }
                 });
             }
+
+
+         
+            function verifyPayment(order, payment) {
+                console.log("order : ", order);
+                console.log("payment : ", payment);
+                console.log("payment : ",payment);
+
+                $.ajax({
+                    url: "/verifypayment",
+                    method: "POST",
+                    data: {
+                        order,
+                        payment
+                    },
+                    success: function (response) {
+                        console.log("response 1 : ", response);
+                        if (response.status == true) {
+                            Swal.fire({
+                                title: "Order success",
+                                text: "Order placed successfully",
+                                icon: "success",
+
+                                reverseButtons: true
+                            }).then(function (result) {
+
+
+                                window.location.href = "/shop";
+
+                            });
+
+
+                        }else if(response.status == false){
+                            Swal.fire("Payment Failed !!!");
+                            
+                        }
+                    }
+
+                })
+
+
+            }
+
         });
     </script>
 

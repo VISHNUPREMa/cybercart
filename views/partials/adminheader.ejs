@@ -155,12 +155,54 @@
             <div class="col-nav">
                 <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
                 <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link btn-icon" href="#">
-                            <i class="material-icons md-notifications animation-shake"></i>
-                            <span class="badge rounded-pill">3</span>
-                        </a>
-                    </li>
+                    <% if (locals.notification) { %>
+                        <li class="nav-item">
+                            <a class="nav-link btn-icon notification-btn" href="#">
+                                <i class="material-icons md-notifications animation-shake"></i>
+                                <span class="badge rounded-pill"><%= notification.length %></span>
+                            </a>
+                        </li>
+                    <% } else { %>
+                        <li class="nav-item">
+                            <a class="nav-link btn-icon" href="#">
+                                <i class="material-icons md-notifications animation-shake"></i>
+                            </a>
+                        </li>
+                    <% } %>
+                    
+                    <!-- Modal -->
+                    <div class="modal" tabindex="-1" role="dialog" id="notificationModal">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Notifications</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <% if (locals.notification && locals.notification.length > 0) { %>
+                                    <% locals.notification.forEach(function(notif) { %>
+                                <div class="modal-body">
+                                   
+                                            <h4>user : <%= notif.sentByUser.name %> </h4>
+                                            <p>purpose : Product Return</p>
+                                            <p> message : <%= notif.message %></p>
+                                            <a onclick="validateReturn('<%= notif._id %>')" class="btn btn-primary">Validate</a>
+                                   
+                                </div>
+                                <br>
+                                <% }); %>
+                                <% } else { %>
+                                    <p>No notifications</p>
+                                <% } %>
+                                <div class="modal-footer">
+                                    <button type="button" id="modal-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
                     <li class="nav-item">
                         <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
                     </li>
@@ -210,6 +252,56 @@
                    
                 </ul>
             </div>
+         
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+            <script>
+                  
+                  document.addEventListener('DOMContentLoaded', function () {
+        const notificationBtn = document.querySelector('.notification-btn');
+        const notificationModal = document.getElementById('notificationModal');
+        const modalClose = document.getElementById("modal-close");
+
+        if (notificationBtn && notificationModal && modalClose) {
+            notificationBtn.addEventListener('click', function (event) {
+                event.preventDefault();
+                $('#notificationModal').modal('show');
+            });
+
+            modalClose.addEventListener('click', function (event) {
+                event.preventDefault();
+                $('#notificationModal').modal('hide');
+            });
+        }
+    });
+
+    function validateReturn(id){
+   
+        $.ajax({
+            url:"/admin/validateproductreturn",
+            method:"POST",
+            data:{
+                id:id
+            },
+            success:function(response){
+                console.log("response : ",response);
+                Swal.fire({
+  title: "Good job!",
+  text: response.message,
+  icon: "success"
+}).then(result=>{
+    window.location.href = "/admin/dashboard"
+})
+
+            },
+            error:function(xhr){
+                console.log("xhr : ",xhr);
+
+            }
+        })
+    }
+
+            </script>
           
            
             
