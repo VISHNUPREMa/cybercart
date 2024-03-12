@@ -29,7 +29,7 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 app.set("view engine","ejs");
 
-const connect = mongoose.connect("mongodb+srv://vishnuprem5152:aV0yaITDMjrpiIXu@cluster0.ztasazg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+const connect = mongoose.connect("mongodb://vishnuprem5152:aV0yaITDMjrpiIXu@ac-eq693qp-shard-00-00.ztasazg.mongodb.net:27017,ac-eq693qp-shard-00-01.ztasazg.mongodb.net:27017,ac-eq693qp-shard-00-02.ztasazg.mongodb.net:27017/?ssl=true&replicaSet=atlas-itglmd-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster0");
 
 connect.then(()=>{
     console.log("Database connected");
