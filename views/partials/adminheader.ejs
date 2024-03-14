@@ -17,6 +17,10 @@
     <link rel="shortcut icon" type="image/x-icon" href="/admin_assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link href="/admin_assets/css/main.css" rel="stylesheet" type="text/css" />
+  
+
+    
+
 </head>
 
 
@@ -57,7 +61,7 @@
 
                   
                 <li class="menu-item <%= locals.userActive? 'active' : '' %> ">
-                    <a class="menu-link"   href="/admin/userlist"> <i class="icon material-icons md-store"></i>
+                    <a class="menu-link"   href="/admin/userlist"> <i class="icon material-icons md-person"></i>
                         <span class="text">users</span>
                     </a>
                    
@@ -65,7 +69,7 @@
 
 
                 <li class="menu-item <%= locals.categoryActive? 'active' : '' %> ">
-                    <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-store"></i>
+                    <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-category"></i>
                         <span class="text">category</span>
                     </a>
                 </li>
@@ -79,7 +83,9 @@
                 </li>
                 
                 <li class="menu-item <%= locals.productActive? 'active' : '' %>  ">
-                    <a class="menu-link" href="/admin/productlist"> <i class="icon material-icons md-store"></i>
+                    <a class="menu-link" href="/admin/productlist"> <i class="icon material-icons md-shopping_basket"></i>
+
+
                         <span class="text">View Products</span>
                     </a>
                 </li>
@@ -92,21 +98,21 @@
                 </li>
                 
                 <li class="menu-item <%= locals.couponActive? 'active' : '' %>">
-                    <a class="menu-link" href="/admin/coupons"> <i class="icon material-icons md-shopping_cart"></i>
+                    <a class="menu-link" href="/admin/coupons"> <i class="icon material-icons md-card_giftcard"></i>
                         <span class="text">Coupons</span>
                     </a>
                    
                 </li>
 
                 <li class="menu-item <%= locals.salesActive ? 'active' : '' %> ">
-                    <a class="menu-link" href="/admin/salesreport"> <i class="icon material-icons md-shopping_cart"></i>
+                    <a class="menu-link" href="/admin/salesreport"> <i class="icon material-icons md-attach_money"></i>
                         <span class="text">Sales Report</span>
                     </a>
                    
                 </li>
 
                 <li class="menu-item <%= locals.offerActive ? 'active' : '' %> ">
-                    <a class="menu-link" href="/admin/offers"> <i class="icon material-icons md-shopping_cart"></i>
+                    <a class="menu-link" href="/admin/offers"> <i class="icon material-icons md-local_offer"></i>
                         <span class="text">Offers</span>
                     </a>
                    
@@ -122,22 +128,7 @@
                
             </ul>
             <hr>
-            <ul class="menu-aside">
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
-                        <span class="text">Settings</span>
-                    </a>
-                    <div class="submenu">
-                        <a href="page-settings-1.html">Setting sample 1</a>
-                        <a href="page-settings-2.html">Setting sample 2</a>
-                    </div>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
-                        <span class="text"> Starter page </span>
-                    </a>
-                </li>
-            </ul>
+           
             <br>
             <br>
         </nav>

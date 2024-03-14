@@ -90,18 +90,4 @@ router.post("/validateproductreturn",notificationController.validateProductRetur
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 module.exports = router

@@ -14,7 +14,7 @@ const loadProductList = async(req,res)=>{
       
         
       
-        res.render("admin/productlist",{data,totalpage,currentPage: page,productActive:true})
+        res.render("admin/productList",{data,totalpage,currentPage: page,productActive:true})
 
     }
     catch(error){
