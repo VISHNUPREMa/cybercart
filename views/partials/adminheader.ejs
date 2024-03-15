@@ -157,9 +157,29 @@
                         <li class="nav-item">
                             <a class="nav-link btn-icon" href="#">
                                 <i class="material-icons md-notifications animation-shake"></i>
+                                
                             </a>
                         </li>
                     <% } %>
+
+                    
+                   <% if(locals.messages){ %>
+                    <li class="nav-item">
+                        <a class="nav-link btn-icon" href="/admin/messages">
+                            <i class="material-icons md-mail animation-shake"></i>
+                            <span class="badge rounded-pill"><%= messages.length %></span>
+                        </a>
+                    </li>
+                    <% }else{ %>
+                        <li class="nav-item">
+                            <a class="nav-link btn-icon" href="/admin/messages">
+                                <i class="material-icons md-mail animation-shake"></i>
+                              
+                            </a>
+                        </li>
+                        <% } %>
+                    
+                  
                     
                     <!-- Modal -->
                     <div class="modal" tabindex="-1" role="dialog" id="notificationModal">

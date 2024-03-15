@@ -1,0 +1,171 @@
+
+
+<%- include("../partials/adminheader") %>
+<style>
+    tr:hover td {
+    background-color: #FFE6E6; /* Change to your preferred highlight color */
+}
+
+td {
+    white-space: nowrap; /* Prevent line breaks */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Show ellipsis for overflowing content */
+    max-width: 150px; /* Adjust as needed */
+    word-wrap: break-word; /* Wrap long words */
+}
+
+td:hover {
+    white-space: normal; /* Allow line breaks on hover */
+    overflow: visible;
+    text-overflow: clip; /* Show full content without ellipsis on hover */
+}
+
+</style>
+
+
+        <section class="content-main">
+            <div class="content-header">
+                <h2 class="content-title">Messages </h2>
+            </div>
+            <% if(locals.messages){ %>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <!-- card-header end// -->
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                           
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Subject</th>
+                                            <th>phone</th>
+                                            <th>Content</th>
+                                            <th>Date</th>
+                                            <th class="text-end"> Action </th>
+                                        </tr>
+                                    </thead>
+                                    <% for(let i=0 ; i< messages.length ; i++){ %>
+                                        <tbody>
+                                            <tr>
+                                               
+                                                <td><%= messages[i].name %></td>
+                                                <td>
+                                                    <%= messages[i].email %>
+                                                </td>
+                                                <td><%= messages[i].subject %></td>
+                                                <td><%= messages[i].phone %></td>
+                                                <td><%= messages[i].message %></td>
+                                                <td><%= messages[i].messagedat %></td>
+                                                
+                                                <td class="text-end">
+                                                    <a href="#" id="delete-btn" class="btn btn-md rounded font-sm btn-delete" data-message-id="<%= messages[i]._id %>">Delete</a>
+                                                    <a href="#" class="btn btn-md rounded font-sm btn-reply" data-message-id="<%= messages[i]._id %>">Reply</a>
+                                                </td>
+                                                
+                                            
+                                            </tr>
+                                           
+    
+                                            
+                                        </tbody>
+                                        <% } %>
+                                </table>
+                            </div> <!-- table-responsive.// -->
+                        </div> 
+                        <!-- col end// -->
+                    
+                        
+                        
+                       <!-- col end// -->
+                    </div> <!-- row end// -->
+                </div> <!-- card-body // -->
+            </div>
+            
+            <% } %><!-- card end// -->
+           
+        </section>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    
+           <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll(".btn-delete");
+        const replyButtons = document.querySelectorAll(".btn-reply");
+
+        deleteButtons.forEach(function(button) {
+            button.addEventListener("click", function(event) {
+                event.preventDefault();
+                const messageId = this.getAttribute('data-message-id');
+                if(messageId){
+                    $.ajax({
+                        url:"/admin/messages/delete",
+                        method:"POST",
+                        data:{
+                            id:messageId
+                        },
+                        success:function(response){
+                            if(response){
+                                window.location.href = "/admin/messages"
+                            }
+                        },
+                        error:function(xhr){
+                            console.log("xhr : ",xhr);
+                        }
+                    })
+                }
+            });
+        });
+
+        replyButtons.forEach(function(button) {
+            button.addEventListener("click", async function(event) {
+                event.preventDefault();
+                const messageId = this.getAttribute('data-message-id');
+                if(messageId){
+                    const { value: text } = await Swal.fire({
+                        input: "textarea",
+                        inputLabel: "Message",
+                        inputPlaceholder: "Type your message here...",
+                        inputAttributes: {
+                            "aria-label": "Type your message here"
+                        },
+                        showCancelButton: true
+                    });
+                    if (text) {
+                        // User clicked on "OK"
+                        $.ajax({
+                            url:"/admin/messages/reply",
+                            method:"POST",
+                            data:{
+                                id:messageId,
+                                message: text // Pass the reply message
+                            },
+                            success:function(response){
+                                if(response){
+                                    window.location.href = "/admin/messages"
+                                }
+                            },
+                            error:function(xhr){
+                                console.log("xhr : ",xhr);
+                            }
+                        })
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
+        
+        
+
+
+   
+
+        

@@ -102,7 +102,12 @@ router.post("/addToWallet",walletController.addMoneyToWallet);
 router.get("/invoice",orderController.getInvoice);
 
 
-router.post("/reviewproduct",reviewController.postReviewDetails)
+router.post("/reviewproduct",reviewController.postReviewDetails);
+
+
+router.get("/about",userController.loadAboutPage);
+router.get("/contact",userController.loadContactPage);
+router.post("/contact",userController.postQueries)
 
 
 

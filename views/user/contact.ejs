@@ -1,0 +1,142 @@
+
+<%- include("../partials/header") %>
+
+
+
+
+
+
+    <main class="main">
+        
+        <section class="hero-2 bg-green">
+            <div class="hero-content">
+                <div class="container">
+                    <div class="text-center">
+                        <h4 class="text-brand mb-20">Get in touch</h4>
+                        <h1 class="mb-20 wow fadeIn animated font-xxl fw-900">
+                            Let's Talk About <br>Your <span class="text-style-1">Idea</span>
+                        </h1>
+                        <p class="w-50 m-auto mb-50 wow fadeIn animated">
+                            "VISHNU PREM: Self-taught MERN stack developer. Passionate about leveraging digital solutions. Committed to self-improvement and making a positive impact. Thriving on challenges and constantly exploring new technologies to innovate and create meaningful experiences in the digital realm."</p>
+                        <p class="wow fadeIn animated">
+                            <a class="btn btn-brand btn-lg font-weight-bold text-white border-radius-5 btn-shadow-brand hover-up" href="https://www.linkedin.com/in/vishnu-prem-developer/">About Me</a>
+                            
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+       
+        <section class="pt-50 pb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-10 m-auto">
+                        <div class="contact-from-area padding-20-row-col wow FadeInUp">
+                            <h3 class="mb-10 text-center">Drop me your Message</h3>
+                           
+                            
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="input-style mb-20">
+                                            <input name="name" placeholder="First Name" type="text" >
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="input-style mb-20">
+                                            <input name="email" placeholder="Your Email" type="email">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="input-style mb-20">
+                                            <input name="telephone" placeholder="Your Phone" type="tel">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="input-style mb-20">
+                                            <input name="subject" placeholder="Subject" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12">
+                                        <div class="textarea-style mb-30">
+                                            <textarea name="message" placeholder="Message"></textarea>
+                                        </div>
+                                        <button class="submit submit-auto-width" type="submit">Send message</button>
+                                    </div>
+                                </div>
+                            
+                            <p class="form-messege"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+        // Get the input values when the form is submitted
+        function handleSubmit(event) {
+            event.preventDefault(); // Prevent the form from submitting
+    
+            // Select input elements by their name attributes and get their values
+            const firstName = document.querySelector('input[name="name"]').value.trim();
+            const email = document.querySelector('input[name="email"]').value.trim();
+            const telephone = document.querySelector('input[name="telephone"]').value.trim();
+            const subject = document.querySelector('input[name="subject"]').value.trim();
+            const message = document.querySelector('textarea[name="message"]').value.trim();
+    
+            // Now you can do whatever you want with these trimmed values
+            console.log("First Name:", firstName);
+            console.log("Email:", email);
+            console.log("Telephone:", telephone);
+            console.log("Subject:", subject);
+            console.log("Message:", message);
+            $.ajax({
+                url:"/contact",
+                method:"POST",
+                data:{
+                    name: firstName,
+                    email:email,
+                    phone:telephone,
+                    subject:subject,
+                    message:message
+                },
+                success:function(response){
+                    console.log("response : ",response);
+                    if(response){
+                        const Toast = Swal.mixin({
+  toast: true,
+
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+  }
+});
+Toast.fire({
+  icon: "success",
+  title: "Message sent successfully !!!"
+});
+                    }
+     
+
+                },
+                error:function(xhr){
+                    console.log("xhr : ",xhr);
+
+                }
+                
+            })
+            
+            // For example, you can send these values to your server via AJAX or perform client-side validation.
+        }
+    
+        // Add event listener to the form
+        document.querySelector('.submit').addEventListener('click', handleSubmit);
+    </script>
+    
+
+
+    <%- include("../partials/footer") %>

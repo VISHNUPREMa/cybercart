@@ -5,6 +5,7 @@ const Offers = require("../../model/offerSchema");
 const Orders = require("../../model/orderSchema");
 const Referal = require("../../model/referalSchema");
 const Wallet = require("../../model/walletSchema");
+const Message = require("../../model/messageSchema");
 
 const { generateRandomOtp } = require("../../helper/otpGenerate");
 const bcrypt = require("bcrypt");
@@ -585,6 +586,53 @@ const laodShopPage = async(req,res)=>{
 }
 
 
+const loadAboutPage = async(req,res)=>{
+    try {
+        res.render("user/about")
+        
+    } catch (error) {
+        
+    }
+}
+
+
+const loadContactPage = async(req,res)=>{
+    
+ try {
+    res.render("user/contact")
+    
+ } catch (error) {
+    
+ }
+
+}
+
+
+const postQueries = async(req,res)=>{
+    try {
+        const{name,email,phone,subject,message} = req.body;
+        console.log([name,email,phone,subject,message]);
+        const messageData = await Message.create({
+            name:name,
+            email:email,
+            phone:phone,
+            subject:subject,
+            message:message,
+            messagedat:moment().tz('Asia/Kolkata').format('DD/MM/YYYY hh:mm:ss A'),
+        })
+
+        console.log("messageData : ",messageData);
+        if(messageData){
+            res.status(200).json({message:"Message sent sucessfully !!!"})
+        }
+
+        
+    } catch (error) {
+        
+    }
+}
+
+
 
 
 
@@ -610,7 +658,10 @@ resndOtpForForgetpassword,
 laodShopPage,
 newPasswordReset,
 loadOtpPageForPassword,
-newPasswordVerify
+newPasswordVerify,
+loadAboutPage,
+loadContactPage,
+postQueries
 
 
 

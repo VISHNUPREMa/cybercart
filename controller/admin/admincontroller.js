@@ -2,7 +2,8 @@ const User = require("../../model/userModel");
 const Category = require("../../model/category");
 const Products = require("../../model/productmanage");
 const Orders = require("../../model/orderSchema");
-const Notification = require("../../model/notificationSchema")
+const Notification = require("../../model/notificationSchema");
+const Messages = require("../../model/messageSchema")
 const bcrypt = require("bcrypt");
 
 
@@ -195,10 +196,12 @@ const loadDashboardHome = async(req,res)=>{
             }
         ]);
         
-        console.log("notification with users: ", notification);
+       
+        const messages = await Messages.find({})
+        
         
 
-        res.render("admin/admindashboard",{orders:OrderData,products:productData,categories:categoryData,users:userData,dashboardActive:true,brandNames,brandValues,brandNumbers,productNames,productValues,productNumbers,topProductsImages,notification});
+        res.render("admin/admindashboard",{orders:OrderData,products:productData,categories:categoryData,users:userData,dashboardActive:true,brandNames,brandValues,brandNumbers,productNames,productValues,productNumbers,topProductsImages,notification,messages});
 
     }
     catch(error){
