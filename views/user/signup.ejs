@@ -91,7 +91,8 @@ const confirmPassword_error = document.getElementById("confirmPassword_error");
 
 function validateName() {
     const name = username.value.trim();
-    if (name === "") {
+    const nameRegex = /^[a-zA-Z]+(?:\s+[a-zA-Z]+)*$/ ;
+    if (!nameRegex.test(name)) {
         name_error.style.display = "block";
         name_error.style.color = "red";
         name_error.textContent = "Enter a valid name";

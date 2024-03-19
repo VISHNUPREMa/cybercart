@@ -310,6 +310,12 @@
        errorMessage.textContent = "Out Of Stock";
        return ;
        
+   }else if(quantityValue > 5){
+    errorMessage.style.display = "block";
+       errorMessage.style.color = "red";
+       errorMessage.textContent = "Minimum purchase amount quantityy";
+       return ;
+
    }
        errorMessage.style.display = "none";
       
@@ -343,7 +349,7 @@
                }
            })
            
-       }else if(res.status === false){
+       }else if(res.status == false){
            Swal.fire({
                                title: 'unavailable!!',
                                text: res.message,
@@ -353,8 +359,10 @@
        }
           
        },
-       error: function (error) {
-           console.error("Error:", error);
+       error: function (xhr) {
+        console.log("error : ",xhr);
+        Swal.fire(xhr.responseJSON.message
+);
        }
    });
 })

@@ -33,7 +33,7 @@ const validateProductReturn = async(req,res)=>{
         orderDetails.reason = notificationData.message;
         await orderDetails.save();
         const userid = notificationData.sentbtuser ;
-        console.log("user id : ",userid);
+        
         data={
             amount :Number(orderDetails.totalprice),
             createdOn :moment().tz('Asia/Kolkata').format('DD/MM/YYYY hh:mm:ss A'),
@@ -43,7 +43,7 @@ const validateProductReturn = async(req,res)=>{
         // const userIdObject = mongoose.Types.ObjectId(userid);
 
         const walletData = await Wallet.findOne({userId:userid})
-        console.log("wallet data : ", walletData);
+        
 
         await Notification.findByIdAndDelete(notificationID);
        

@@ -39,7 +39,7 @@ const getOrderDetails = async(req,res)=>{
         const desiredAddress = addressDetails.address.find(address => address._id.toString() === addressId.toString());
 
 
-        console.log("address : ",desiredAddress);
+     
 
         
 

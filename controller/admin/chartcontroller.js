@@ -51,12 +51,8 @@ const getChartData = async (req, res) => {
 
         // Fill missing days with 0 orders
         const filledOrdersData = fillMissingDays(ordersByDayOfWeek);
-        console.log("filledOrdersData",filledOrdersData);
-        // const countsArray = Object.values(filledOrdersData);
-
-        // console.log("countsArray : ",countsArray);
-        // console.log("products : ",products);
-        // console.log("users : ",users);
+   
+      
      
         res.status(200).json({ order: filledOrdersData, product:products , user:users });
 

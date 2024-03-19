@@ -44,7 +44,7 @@ const getAdminOfferPage = async (req, res) => {
                         product.offerprice -= correspondingOffer.discount;
                         product.discountApplied = true;
                         await product.save();
-                        console.log("Product (brand) updated: ", product);
+                        
                     }
                 }
               }
@@ -78,12 +78,12 @@ const getAdminOfferPage = async (req, res) => {
                 const startDate = new Date(correspondingOffer.start.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
         const endDate = new Date(correspondingOffer.end.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
                 if(today >= startDate && today <= endDate){
-                    console.log("corresponding offers 2 : ",correspondingOffer);
+                   
                 if(product.discountApplied === false){
                     product.offerprice -= correspondingOffer.discount;
                 product.discountApplied = true;
                 await product.save();
-                console.log("products (category) : ",product);
+             
 
                 }
             }

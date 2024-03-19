@@ -112,7 +112,7 @@ const sortedByBrands = (a,b)=>{
 }
 
 const sortedProductsByBrands = newproductData.sort(sortedByBrands).slice(0, 8);
-console.log("offer data : ",offerData);
+
 
 
 
@@ -127,7 +127,7 @@ console.log("offer data : ",offerData);
             res.render("user/home",{user:user,category:categoryData,products:productData,bestproduct:sortedProductsData,bestbrands:sortedProductsByBrands,totalPages:totalPages,currentPage: page,offer:offerData});
 
         }else{
-            res.render("user/home");
+            res.render("user/home",{products:newproductData,category:categoryData});
         }
 
         
@@ -174,13 +174,13 @@ const signInUser = async (req, res) => {
         
         const { formData } = req.body;
         const { username, email, mobile, password, referal } = formData;
-        console.log([username, email, mobile, password]);
+    
           
 
       if(referal){
         const referalData = await Referal.findOne({code:referal});
        const referedUserWallet = await Wallet.findOne({userId:referalData.owner});
-       console.log("referedUserWallet",referedUserWallet);  
+        
         
 
     if (referedUserWallet) {
@@ -195,7 +195,7 @@ const signInUser = async (req, res) => {
             { $push: { data: newTransaction } }
         );
     
-        console.log("New transaction added to referedUserWallet.");
+        
     }
     
 
@@ -225,7 +225,7 @@ const signInUser = async (req, res) => {
 
 
         await sendOtpEmail(email, otp);
-        console.log([username,email,mobile,password]);
+        
 
 
         
@@ -309,7 +309,7 @@ const signInUser = async (req, res) => {
 
         })
 
-        console.log("referal data :",referalData);
+        
        
 
         req.session.successMessage = "Signup successful. Please login with your credentials.";
@@ -588,7 +588,7 @@ const laodShopPage = async(req,res)=>{
 
 const loadAboutPage = async(req,res)=>{
     try {
-        res.render("user/about")
+        res.render("user/about",{user:true})
         
     } catch (error) {
         
@@ -599,7 +599,7 @@ const loadAboutPage = async(req,res)=>{
 const loadContactPage = async(req,res)=>{
     
  try {
-    res.render("user/contact")
+    res.render("user/contact",{user:true})
     
  } catch (error) {
     

@@ -5,10 +5,9 @@ const moment = require("moment-timezone")
 const postReviewDetails = async (req, res) => {
     try {
         const { star, comment, productid } = req.body;
-        console.log([star, comment, productid]);
+    
         const userid = req.session.user;
-        console.log("user id : ", userid);
-        console.log(Number(star));
+     
        
         const reviewData = await Reviews.create({
             reviewbyuser: new ObjectId(userid),
@@ -18,7 +17,6 @@ const postReviewDetails = async (req, res) => {
             createdon: moment().tz('Asia/Kolkata').format('DD/MM/YYYY hh:mm:ss A'),
         });
 
-        console.log("reviewData : ", reviewData);
         res.status(200).json({message:"review upload successfully"})
         
     } catch(error) {

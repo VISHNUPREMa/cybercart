@@ -13,7 +13,7 @@ const loadProductDetails = async(req,res)=>{
         const productID = req.params.id;
         const userid = req.session.user;
         const orderData = await Orders.find({"products._id":productID,userid: userid})
-        console.log("order data : ",orderData);
+  
         
        
         
@@ -41,7 +41,7 @@ const loadProductDetails = async(req,res)=>{
             }
         ]);
 
-        console.log("reviews : ", reviews);
+     
 
         
 

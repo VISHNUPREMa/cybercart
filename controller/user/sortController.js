@@ -7,7 +7,7 @@ const categorySort = async(req,res)=>{
     try{
 
         const category = req.query.category;
-        console.log("category : ",category);
+   
         const userid = req.session.user;
         const products = await Products.find({category:category});
         

@@ -52,7 +52,7 @@ const postEditProduct = async (req, res) => {
         const productID = req.params.id;
         
         const data = req.body;
-        console.log(data);
+     
         const images = [];
         if (req.files && req.files.length > 0) {
             for (let i = 0; i < req.files.length; i++) {
@@ -115,7 +115,7 @@ const deleteProduct = async(req,res)=>{
         // Save the updated product
         await product.save();
 
-        console.log('Product listing status updated:', product);
+        
         
         // Redirect back to the product list page
         res.redirect("/admin/productlist");

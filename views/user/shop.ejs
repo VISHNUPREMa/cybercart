@@ -72,7 +72,7 @@
                         <ul class="categories">
                             <% if (typeof category !== 'undefined' && category) { %>
                                 <% for (let i = 0; i < category.length; i++) { %>
-                                    <li><a href="/categorysort/?category=<%= category[i].name %>"><%= category[i].name %></a></li>
+                                    <li><a href="/categorysort/?category=<%= category[i]._id %>"><%= category[i].name %></a></li>
                                 <% } %>
                             <% } else { %>
                                 <li><a href="#">Default Category 1</a></li>

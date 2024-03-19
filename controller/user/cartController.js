@@ -16,7 +16,7 @@ const addToCart = async(req,res)=>{
           const userDetails = await Users.findById(userID);
 
           const productDetails = await Products.findById(productID);
-          console.log("products : ",productDetails);
+          
           
         if (!userDetails) {
             return res.json({ status: false, message: "User not found" });
@@ -60,10 +60,10 @@ const addToCart = async(req,res)=>{
                        
                         res.status(200).json({status:true});
                     }else{
-                        res.status(404).json({ status: false, message: "Out of stock" });
+                        res.status(404).json({ status: false, message: "Out of stock " });
                     }
                 }else{
-                    res.status(500).json({ status: false, message: "Out of stock" });
+                    res.status(500).json({ status: false, message: "product quantity exceed" });
 
                 }
 
@@ -106,7 +106,7 @@ const loadCartPage = async (req, res) => {
            
             { $match: { "matchedProductDetails.isListed": true } }
         ]);
-
+ 
 
 
        

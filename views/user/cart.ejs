@@ -199,7 +199,7 @@ function changeQuantity(productId, cartQuantity, count, productPrice, i, product
             icon: "question",
             timer: 1500
         });
-        return;
+        return ;
     }else if (count === 1 && newQuantity > parseInt(productQuantity)) {
         Swal.fire({
             title: "Invalid Entry",
@@ -207,7 +207,25 @@ function changeQuantity(productId, cartQuantity, count, productPrice, i, product
             icon: "question",
             timer: 1500
         });
-        return;
+        return false;
+    }else if(count === 1 && newQuantity > 5 ){
+        Swal.fire({
+            title: "Invalid Entry",
+            text: "Minimum purchase quntity is 5",
+            icon: "question",
+            timer: 1500
+        });
+        return false;
+
+    }else if(newQuantity > 5 ){
+        Swal.fire({
+            title: "Invalid Entry",
+            text: "Minimum purchase quntity is 5",
+            icon: "question",
+            timer: 1500
+        });
+        return false;
+
     }
 
     

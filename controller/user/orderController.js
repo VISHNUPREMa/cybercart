@@ -41,7 +41,7 @@ const loadCheckoutPage = async (req, res) => {
         const deliverycharge = await Orders.find({deliverycharge:500})
 
 
-        console.log("delivery charge items : ",deliverycharge);
+        
 
 
 
@@ -136,7 +136,7 @@ const postorderDetails = async (req, res) => {
             { $unwind: "$product" }
         ]);
         
-        console.log("orderData : ", orderData);
+       
         let products = [];
         for(let item of orderData){
             item.product.quantity = item.cart.quantity;
@@ -144,7 +144,7 @@ const postorderDetails = async (req, res) => {
 
         }
 
-        console.log("products : ",products);
+        
 
         
         
@@ -154,10 +154,10 @@ const postorderDetails = async (req, res) => {
         const selectedAddress = address.address.find(addr => addr._id.toString() === addressID);
 
         const cartDetails = userDetails.cart;
-        console.log("cart details for order : ",cartDetails);
+       
         const orderId = orderIdGenerate();
         const couponApplied = req.session.discountApplied ? req.session.discountApplied : 0;
-        console.log("before order details ");
+       
 
         const orderDetails = await Orders.create({
             orderId: orderId,
@@ -173,7 +173,7 @@ const postorderDetails = async (req, res) => {
             couponapplied: Number(couponApplied)
         });
         delete req.session.discountApplied;
-        console.log("order data : ",orderDetails );
+        
         
 
         req.session.orderDetails = orderDetails;
@@ -297,12 +297,12 @@ const deleteSingleProduct = async (req, res) => {
 
 
         let total = parseInt(req.query.total);
-        console.log("total : ",total);
+        
 
 
 
         let subTotal = parseInt(req.query.subtotal);
-        console.log("subtotal : ",subTotal);
+    
 
 
         const orderData = await Orders.findById(orderid);
@@ -481,7 +481,7 @@ const getInvoice = async (req, res) => {
         const orderId = req.query.id;
         const orderData = await Orders.findById(orderId) 
         const invoiceNumber = orderIdGenerate();
-        console.log("orderDate : ",orderData);
+        
         res.render("user/invoice", { order: orderData, invoice: invoiceNumber });
     } catch (error) {
         console.log("Error retrieving invoice:", error);
@@ -512,7 +512,7 @@ const postRepaymentData = async(req,res)=>{
         const orderData = await Orders.findById(orderid);
         orderData.status = "Confirmed";
         const userid = req.session.user;
-        console.log("order payment method : ",newOrderPayment);
+       
         if(newOrderPayment === "Cash on Delivery"){
         for (const cartItem of orderData.cart) {
             const eachProductID = cartItem.id;
@@ -531,7 +531,7 @@ const postRepaymentData = async(req,res)=>{
         }
         await orderData.save();
         res.status(200).json({message:"order placed successfully"})
-        console.log("order data : ",orderData.cart);
+     
 
     }else if(newOrderPayment === "UPI"){
 

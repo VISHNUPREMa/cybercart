@@ -106,6 +106,8 @@
     const altphoneError = document.getElementById("altphone_error");
     const alphabet =   /^[A-Za-z\s]+$/;
     const digits = /^[0-9]+$/;
+    const houseNameRegex = /^(?:[a-zA-Z0-9]+(?:\s+[a-zA-Z0-9]+)*)?$/;
+
     let phone;
 
 
@@ -156,10 +158,10 @@
             houenameError.textContent = "Enter valid House name"
 
         }
-        else if(!alphabet.test(housename)){
+        else if(!houseNameRegex.test(housename)){
             houenameError.style.display = "block";
             houenameError.style.color = "red";
-            houenameError.textContent = "Enter can only contain alphabets"
+            houenameError.textContent = "Address name can contain alphabets or numbers"
 
         }
         else{

@@ -35,7 +35,7 @@ const getFilteredSalesReport = async (req, res) => {
                 const formattedDate = today.format('DD/MM/YYYY hh:mm:ss A').toString();
                 const orders = await Orders.find({ });
                 let orderData =[]
-                console.log("today : ",today);
+               
                 
                 for (let order of orders) {
                     const orderDate = moment(order.createdon); 
@@ -86,7 +86,7 @@ const getFilteredSalesReport = async (req, res) => {
             let parts = dateString.split("-");
             let reversedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
             const formattedDate = moment(reversedDate, 'DD-MM-YYYY').format('DD/MM/YYYY').toString();
-            console.log("date : ",formattedDate);
+           
             const orderData = await Orders.find({ createdon: { $regex :  formattedDate }  });
       
 
