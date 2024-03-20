@@ -32,30 +32,30 @@ const getFilteredSalesReport = async (req, res) => {
           
             if (filterOptions === "Daily") {
                 const today = moment().startOf('day');
-                const formattedDate = today.format('DD/MM/YYYY hh:mm:ss A').toString();
-                const orders = await Orders.find({ });
-                let orderData =[]
-               
+                const formattedDate = today.format('DD/MM/YYYY hh:mm:ss A');
                 
+                const orders = await Orders.find({});
+                let orderData = [];
+            
                 for (let order of orders) {
-                    const orderDate = moment(order.createdon); 
-                    if (orderDate.isSameOrAfter(formattedDate, 'day')) {
-                        
+                    const orderDate = moment(order.createdon, 'DD/MM/YYYY hh:mm:ss A');
+                  
+                    if (orderDate.isSame(today, 'day')) { 
                         orderData.push(order);
                     }
                 }
             
-
                 return res.render("admin/salesreport", { orders: orderData });
-            } else if (filterOptions === "weekly") {
+            }
+             else if (filterOptions === "weekly") {
                 let orderData = [];
                 const startOfWeek = moment().startOf('week');
+                const endOfWeek = moment().endOf('week');
                 const formattedDate = startOfWeek.format('DD/MM/YYYY hh:mm:ss A').toString();
                 const orders = await Orders.find({ });
                 for(let order of orders){
-                    const orderDate = moment(order.createdon);
-                    if (orderDate.isSameOrAfter(formattedDate, 'day')) {
-                        
+                    const orderDate = moment(order.createdon, 'DD/MM/YYYY hh:mm:ss A');
+                    if (orderDate.isBetween(startOfWeek, endOfWeek)) {
                         orderData.push(order);
                     }
 
