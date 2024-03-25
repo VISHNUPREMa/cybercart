@@ -11,6 +11,10 @@ const mongoose = require('mongoose');
 const loadProductDetails = async(req,res)=>{
     try{
         const productID = req.params.id;
+        if (!mongoose.Types.ObjectId.isValid(productID)) {
+            // If the productId is not a valid ObjectId, respond with an error page
+            res.render("general/error")
+        }
         const userid = req.session.user;
         const orderData = await Orders.find({"products._id":productID,userid: userid})
   
@@ -18,6 +22,7 @@ const loadProductDetails = async(req,res)=>{
        
         
         const productsData = await Products.findById(productID);
+        
        
         const reviews = await Reviews.aggregate([
             {
@@ -45,11 +50,16 @@ const loadProductDetails = async(req,res)=>{
 
         
 
- res.render("user/productdetails",{user:true,products:productsData,reviews,order:orderData});
+if(userid){
+    res.render("user/productdetails",{user:true,products:productsData,reviews,order:orderData});
+}else{
+    res.render("user/productdetails",{user:false,products:productsData,reviews,order:orderData});
+}
 
     }
     catch(error){
         console.log(error,"loadProductDetails page error");
+        res.render("general/error")
     }
 }
 

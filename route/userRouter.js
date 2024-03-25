@@ -40,7 +40,7 @@ router.post("/passwordreset",userController.newPasswordReset)
 router.get("/logout",isUser,userController.logoutUser);
 
 router.get("/shop",isUser,userController.laodShopPage);
-router.get("/productdetail/:id",isUser,productController.loadProductDetails);
+router.get("/productdetail/:id",productController.loadProductDetails);
 
 
 router.get("/profile",isUser,userProfileController.getProfilePage);
