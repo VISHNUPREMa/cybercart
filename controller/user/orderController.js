@@ -369,7 +369,7 @@ const deleteSingleProduct = async (req, res) => {
 
 const deleteOrder = async (req, res) => {
     try {
-        const orderId = req.body.orderId.trim();
+        const orderId = req.body.orderId.trim();    
 
         const orderDetails = await Orders.findById(orderId);
 
@@ -390,7 +390,8 @@ const deleteOrder = async (req, res) => {
 
             }
         }
-        await Orders.findByIdAndDelete(orderId);
+        orderDetails.status = "Cancelled";
+        await orderDetails.save();
         res.status(200).json({ success: true, message: "Your order has been deleted" });
 
 

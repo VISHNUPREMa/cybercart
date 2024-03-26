@@ -98,7 +98,13 @@
                                                                 </span>
                                                                 <% } else { %>
                                                                     <!-- Otherwise, render the delete button as usual -->
-                                                                    <a href="deletesingleproduct/?orderid=<%= order._id %>&&productid=<%= order.products[i]._id %>&&total=<%= order.totalprice %>&&subtotal=<%= order.products[i].offerprice * order.cart[i].quantity %>&&quantity=<%= order.cart[i].quantity %>"
+                                                                    <% let subtotal = order.products[i].offerprice * order.cart[i].quantity;
+   if (order.couponapplied !== 0) {
+       subtotal -= order.couponapplied;
+       order.couponapplied = 0; // Reset couponapplied to 0
+   }
+%>
+                                                                    <a href="deletesingleproduct/?orderid=<%= order._id %>&&productid=<%= order.products[i]._id %>&&total=<%= order.totalprice %>&&subtotal=<%= subtotal %>&&quantity=<%= order.cart[i].quantity %>"
                                                                         class="text-muted">
                                                                         <i class="fi-rs-trash"></i>
                                                                     </a>
@@ -195,14 +201,22 @@
                 <button class="btn btn-primary" type="submit" id="returnorder" name="returnorder"
                     value="Cancel Order">Return Order</button>
 
-                <% }else if(order.status==="Returned" || order.products.every(product => product.status === 'cancelled') ){ %>
+                <% }else if(order.status==="Returned"  ){ %>
                     <a href="/shop">already returned go back to shop</a>
                     
 
                     <% }else if(order.status==="payment Pending" ){ %>
                     <button class="btn btn-primary" type="submit" id="pending-order" name="pending-order"
                         value="Cancel Order">Order Cancel</button>
-                    <% }else{ %>
+                    <% }else if(order.products.every(product => product.status === 'cancelled')){ %>
+                        <a href="/shop">already Cancelled go back to shop</a>
+
+
+                        <% }else if(order.status==="Cancelled" ){ %>
+                            <a href="/shop">already Cancelled go back to shop</a>
+
+
+                            <% }else{ %>
                         <button class="btn btn-primary" type="submit" id="cancelorder" name="cancelorder"
                         value="Cancel Order">Cancel Order</button>
                         <% } %>
